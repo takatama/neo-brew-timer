@@ -5,9 +5,9 @@ interface EquipmentItem {
   href: string;
 }
 
-type ItemKind = "filter" | "dripper" | "kettle" | "scale" | "grinder" | "canister";
+type ItemKind = "filter" | "dripper" | "kettle" | "scale" | "grinder" | "comandante" | "canister";
 
-type NewsAdKind = ItemKind;
+type NewsAdKind = Exclude<ItemKind, "comandante">;
 
 type NewsAdLinks = Record<NewsAdKind, string>;
 
@@ -18,6 +18,7 @@ const AMAZON_SEARCH_KEYWORDS: Record<SupportedLanguage, Record<ItemKind, string>
     scale: "コーヒー スケール",
     kettle: "コーヒー 電気ケトル",
     grinder: "コーヒーグラインダー 臼式",
+    comandante: "コマンダンテ グラインダー",
     canister: "コーヒー キャニスター",
   },
   en: {
@@ -26,6 +27,7 @@ const AMAZON_SEARCH_KEYWORDS: Record<SupportedLanguage, Record<ItemKind, string>
     scale: "coffee scale",
     kettle: "pour over electric kettle",
     grinder: "burr coffee grinder",
+    comandante: "Comandante grinder",
     canister: "coffee bean canister",
   },
 };
@@ -40,14 +42,24 @@ const AMAZON_BASE_URL: Record<SupportedLanguage, string> = {
   en: "https://www.amazon.com/s",
 };
 
-function toUrlQuery(query: string): string {
-  return encodeURIComponent(query);
-}
+const AMAZON_EXTRA_PARAMS: Partial<Record<SupportedLanguage, Record<string, string>>> = {
+  ja: {
+    emi: "AN1VRQENFRJN5",
+  },
+  en: {
+    emi: "ATVPDKIKX0DER",
+  },
+};
 
 export function buildAmazonSearchUrl(language: SupportedLanguage, query: string): string {
   const baseUrl = AMAZON_BASE_URL[language];
   const tag = AMAZON_ASSOCIATE_TAG[language];
-  return `${baseUrl}?k=${toUrlQuery(query)}&tag=${tag}`;
+  const params = new URLSearchParams({
+    k: query,
+    tag,
+    ...AMAZON_EXTRA_PARAMS[language],
+  });
+  return `${baseUrl}?${params.toString()}`;
 }
 
 export function getEquipmentItems(language: SupportedLanguage): EquipmentItem[] {
@@ -57,6 +69,7 @@ export function getEquipmentItems(language: SupportedLanguage): EquipmentItem[] 
       { name: "V60 フィルター", href: buildAmazonSearchUrl("ja", AMAZON_SEARCH_KEYWORDS.ja.filter) },
       { name: "スケール", href: buildAmazonSearchUrl("ja", AMAZON_SEARCH_KEYWORDS.ja.scale) },
       { name: "ケトル", href: buildAmazonSearchUrl("ja", AMAZON_SEARCH_KEYWORDS.ja.kettle) },
+      { name: "グラインダー / ミル", href: buildAmazonSearchUrl("ja", AMAZON_SEARCH_KEYWORDS.ja.comandante) },
       { name: "キャニスター", href: buildAmazonSearchUrl("ja", AMAZON_SEARCH_KEYWORDS.ja.canister) },
     ];
   }
@@ -66,6 +79,7 @@ export function getEquipmentItems(language: SupportedLanguage): EquipmentItem[] 
     { name: "V60 Filters", href: buildAmazonSearchUrl("en", AMAZON_SEARCH_KEYWORDS.en.filter) },
     { name: "Coffee Scale", href: buildAmazonSearchUrl("en", AMAZON_SEARCH_KEYWORDS.en.scale) },
     { name: "Pour-over kettle", href: buildAmazonSearchUrl("en", AMAZON_SEARCH_KEYWORDS.en.kettle) },
+    { name: "Grinder / Mill", href: buildAmazonSearchUrl("en", AMAZON_SEARCH_KEYWORDS.en.comandante) },
     { name: "Bean canister", href: buildAmazonSearchUrl("en", AMAZON_SEARCH_KEYWORDS.en.canister) },
   ];
 }
