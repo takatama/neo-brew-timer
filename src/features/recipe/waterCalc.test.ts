@@ -4,11 +4,12 @@ import {
   calcFlavor1,
   calcFlavor2,
   calcStrength,
+  calcEqualPour,
   computeSteps,
   getCurrentStepIndex,
   formatTime,
 } from "./waterCalc";
-import { newHybridMethod } from "./recipe";
+import { neoBrewMethod } from "./recipe";
 
 describe("getTotalWater", () => {
   it("calculates total water with 15:1 ratio", () => {
@@ -58,90 +59,94 @@ describe("calcStrength", () => {
   });
 });
 
+describe("calcEqualPour", () => {
+  it("calculates one tenth of total water for 10 pours", () => {
+    expect(calcEqualPour(300, 10)).toBe(30);
+  });
+});
+
 describe("computeSteps", () => {
-  it("produces 6 steps for the hybrid method", () => {
-    const steps = computeSteps(newHybridMethod, 20, "neutral");
-    expect(steps).toHaveLength(6);
+  it("produces 10 pours and one finish step for Neo Brew", () => {
+    const steps = computeSteps(neoBrewMethod, 20, "neutral");
+    expect(steps).toHaveLength(11);
   });
 
   it("neutral 20g: final cumulative is 300g", () => {
-    const steps = computeSteps(newHybridMethod, 20, "neutral");
+    const steps = computeSteps(neoBrewMethod, 20, "neutral");
     expect(steps[steps.length - 1].cumulative).toBe(300);
   });
 
   it("neutral 20g: step water amounts are correct", () => {
-    const steps = computeSteps(newHybridMethod, 20, "neutral");
-    // flavor1=60, flavor2=60, strength=90, strength=90, 0, 0
-    expect(steps[0].increment).toBe(60);
-    expect(steps[0].cumulative).toBe(60);
-    expect(steps[1].increment).toBe(60);
-    expect(steps[1].cumulative).toBe(120);
-    expect(steps[2].increment).toBe(90);
-    expect(steps[2].cumulative).toBe(210);
-    expect(steps[3].increment).toBe(90);
-    expect(steps[3].cumulative).toBe(300);
-    expect(steps[4].increment).toBe(0);
-    expect(steps[4].cumulative).toBe(300);
-    expect(steps[5].increment).toBe(0);
-    expect(steps[5].cumulative).toBe(300);
+    const steps = computeSteps(neoBrewMethod, 20, "neutral");
+    expect(steps.slice(0, 10).map((s) => s.increment)).toEqual([
+      30, 30, 30, 30, 30, 30, 30, 30, 30, 30,
+    ]);
+    expect(steps.map((s) => s.cumulative)).toEqual([
+      30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 300,
+    ]);
   });
 
-  it("sweet 20g: flavor1 < flavor2", () => {
-    const steps = computeSteps(newHybridMethod, 20, "sweet");
-    expect(steps[0].increment).toBeLessThan(steps[1].increment);
+  it("sweet 20g: keeps equal pours", () => {
+    const steps = computeSteps(neoBrewMethod, 20, "sweet");
+    expect(steps[0].increment).toBe(steps[1].increment);
   });
 
-  it("sour 20g: flavor1 > flavor2", () => {
-    const steps = computeSteps(newHybridMethod, 20, "sour");
-    expect(steps[0].increment).toBeGreaterThan(steps[1].increment);
+  it("sour 20g: keeps equal pours", () => {
+    const steps = computeSteps(neoBrewMethod, 20, "sour");
+    expect(steps[0].increment).toBe(steps[1].increment);
   });
 
   it("preserves step timing", () => {
-    const steps = computeSteps(newHybridMethod, 20, "neutral");
-    expect(steps.map((s) => s.timeSec)).toEqual([0, 40, 90, 130, 165, 210]);
+    const steps = computeSteps(neoBrewMethod, 20, "neutral");
+    expect(steps.map((s) => s.timeSec)).toEqual([0, 30, 45, 60, 75, 90, 105, 120, 135, 150, 210]);
   });
 
   it("preserves action types", () => {
-    const steps = computeSteps(newHybridMethod, 20, "neutral");
+    const steps = computeSteps(neoBrewMethod, 20, "neutral");
     expect(steps.map((s) => s.actionType)).toEqual([
-      "switch_close_pour",
-      "switch_open_pour",
-      "pour_cool",
-      "switch_close_pour",
-      "switch_open",
+      "pour",
+      "pour",
+      "pour",
+      "pour",
+      "pour",
+      "pour",
+      "pour",
+      "pour",
+      "pour",
+      "pour",
       "none",
     ]);
   });
 
   it("handles different bean amounts", () => {
-    const steps10 = computeSteps(newHybridMethod, 10, "neutral");
-    const steps30 = computeSteps(newHybridMethod, 30, "neutral");
+    const steps10 = computeSteps(neoBrewMethod, 10, "neutral");
+    const steps30 = computeSteps(neoBrewMethod, 30, "neutral");
     expect(steps10[steps10.length - 1].cumulative).toBe(150);
     expect(steps30[steps30.length - 1].cumulative).toBe(450);
   });
 });
 
 describe("getCurrentStepIndex", () => {
-  const steps = computeSteps(newHybridMethod, 20, "neutral");
+  const steps = computeSteps(neoBrewMethod, 20, "neutral");
 
   it("returns 0 at time 0", () => {
     expect(getCurrentStepIndex(steps, 0)).toBe(0);
   });
 
   it("returns 0 just before step 2", () => {
-    expect(getCurrentStepIndex(steps, 39.9)).toBe(0);
+    expect(getCurrentStepIndex(steps, 29.9)).toBe(0);
   });
 
-  it("returns 1 at time 40", () => {
-    expect(getCurrentStepIndex(steps, 40)).toBe(1);
+  it("returns 1 at time 30", () => {
+    expect(getCurrentStepIndex(steps, 30)).toBe(1);
   });
 
   it("returns last step at final time", () => {
-    expect(getCurrentStepIndex(steps, 210)).toBe(5);
+    expect(getCurrentStepIndex(steps, 210)).toBe(10);
   });
 
   it("returns last step beyond final time", () => {
-    expect(getCurrentStepIndex(steps, 999)).toBe(5);
+    expect(getCurrentStepIndex(steps, 999)).toBe(10);
   });
 });
 
@@ -166,3 +171,4 @@ describe("formatTime", () => {
     expect(formatTime(90.7)).toBe("1:30");
   });
 });
+

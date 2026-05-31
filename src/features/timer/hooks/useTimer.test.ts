@@ -4,11 +4,9 @@ import { useTimer } from "./useTimer";
 import type { ComputedStep } from "../../recipe/types";
 
 const makeSteps = (): ComputedStep[] => [
-  { timeSec: 0, actionType: "switch_close_pour", waterAmountType: "flavor1", cumulative: 50, increment: 50 },
-  { timeSec: 40, actionType: "switch_open_pour", waterAmountType: "flavor2", cumulative: 120, increment: 70 },
-  { timeSec: 90, actionType: "pour_cool", waterAmountType: "strength", cumulative: 210, increment: 90 },
-  { timeSec: 130, actionType: "switch_close_pour", waterAmountType: "strength", cumulative: 300, increment: 90 },
-  { timeSec: 165, actionType: "switch_open", waterAmountType: "none", cumulative: 300, increment: 0 },
+  { timeSec: 0, actionType: "pour", waterAmountType: "equalPour", cumulative: 30, increment: 30 },
+  { timeSec: 30, actionType: "pour", waterAmountType: "equalPour", cumulative: 60, increment: 30 },
+  { timeSec: 45, actionType: "pour", waterAmountType: "equalPour", cumulative: 90, increment: 30 },
   { timeSec: 210, actionType: "none", waterAmountType: "none", cumulative: 300, increment: 0 },
 ];
 
@@ -94,9 +92,9 @@ describe("useTimer", () => {
       result.current.start();
     });
 
-    // Advance performance.now by 41 seconds to cross step 1 boundary (40s)
+    // Advance performance.now by 31 seconds to cross step 1 boundary (30s)
     const startTime = performance.now();
-    vi.spyOn(performance, "now").mockReturnValue(startTime + 41000);
+    vi.spyOn(performance, "now").mockReturnValue(startTime + 31000);
 
     act(() => {
       vi.advanceTimersByTime(100);
@@ -119,9 +117,9 @@ describe("useTimer", () => {
       result.current.start();
     });
 
-    // Advance to 35.1 seconds (5 seconds before step at 40s)
+    // Advance to 25.1 seconds (5 seconds before step at 30s)
     const startTime = performance.now();
-    vi.spyOn(performance, "now").mockReturnValue(startTime + 35100);
+    vi.spyOn(performance, "now").mockReturnValue(startTime + 25100);
 
     act(() => {
       vi.advanceTimersByTime(100);

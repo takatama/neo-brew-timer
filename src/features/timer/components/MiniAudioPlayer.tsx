@@ -246,7 +246,7 @@ export function MiniAudioPlayer({
 
     navigator.mediaSession.metadata = new MediaMetadata({
       title: track.title,
-      artist: "COCO Timer",
+      artist: "Neo Brew Timer",
       album: "Coffee Timer BGM",
       artwork: [
         { src: track.artworkUrl, sizes: "96x96", type: "image/webp" },

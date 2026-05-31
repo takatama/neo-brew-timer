@@ -12,9 +12,9 @@ export default defineConfig({
         disabled: true,
       },
       manifest: {
-        name: 'COCO Timer',
-        short_name: 'COCO Timer',
-        description: 'A timer for the Hario Switch New Hybrid Method',
+        name: 'Neo Brew Timer',
+        short_name: 'Neo Brew',
+        description: "A timer for Tetsu Kasuya's Neo Brew multi-pour drip recipe",
         theme_color: '#6d4c41',
         background_color: '#FBF4F0',
         display: 'standalone',

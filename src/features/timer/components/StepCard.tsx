@@ -23,6 +23,8 @@ function VerbText({ step }: { step: ComputedStep }) {
   );
 
   switch (step.actionType) {
+    case "pour":
+      return <>{t("timer.pour")}</>;
     case "switch_close_pour":
       return withNote(t("timer.close"), t("timer.up"));
     case "switch_open_pour":
@@ -48,7 +50,11 @@ function InstructionText({ step }: { step: ComputedStep }) {
   }
 
   const amount = step.cumulative;
-  if (step.actionType === "switch_close_pour" || step.actionType === "switch_open_pour") {
+  if (
+    step.actionType === "pour" ||
+    step.actionType === "switch_close_pour" ||
+    step.actionType === "switch_open_pour"
+  ) {
     return (
       <Trans
         i18nKey="timer.pourToAmount"

@@ -1,4 +1,4 @@
-export { newHybridMethod } from "./recipe";
+export { neoBrewMethod } from "./recipe";
 export {
   getTotalWater,
   calcFlavor1,

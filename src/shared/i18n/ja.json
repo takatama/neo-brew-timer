@@ -1,7 +1,7 @@
 {
   "app": {
-    "title": "COCO Timer",
-    "footer": "COCO Timer"
+    "title": "Neo Brew Timer",
+    "footer": "Neo Brew Timer"
   },
   "settings": {
     "title": "設定",
@@ -28,8 +28,8 @@
     "developer": "開発者向け"
   },
   "intro": {
-    "title": "新しいハイブリッドメソッド",
-    "description": "粕谷哲氏の新しいハイブリッドメソッドは、Hario Switchで抽出方法の良いとこ取りを実現。他の抽出法と異なり、最初に粉全体をしっかり浸すことで自然な甘みを引き出し、その後ドリップで華やかな風味を、最後に低温浸漬でまろやかさをプラス。結果、濃厚なボディと抜群の甘み、クリアな味わいが楽しめる一杯に。ぜひこのレシピを試してみてください。",
+    "title": "Neo Brew",
+    "description": "粕谷哲氏の最新式ドリップレシピ（多回数レシピ）です。豆20gに対してお湯300g、比率は1:15。浅煎りの豆を超粗挽きにし、95〜96℃の高温のお湯を30gずつ10回に分けて注ぎます。Switchは使わず、ドリップだけで甘さと質感を引き出します。",
     "youtube": "動画で確認",
     "start": "始める",
     "skip": "スキップ"
@@ -47,7 +47,7 @@
     "detailsAction": "見る",
     "closeAction": "閉じる",
     "equipment": "必要な器具",
-    "affiliate": "Amazonのアソシエイトとして、COCO Timerは適格販売により収入を得ています。",
+    "affiliate": "Amazonのアソシエイトとして、Neo Brew Timerは適格販売により収入を得ています。",
     "water": "湯量",
     "debugBgmType": "デバッグBGMタイプ",
     "debugBgmWeekday": "平日",
@@ -71,17 +71,18 @@
     "resetConfirm": "リセットしますか？",
     "resetConfirmAction": "リセットする",
     "resetCancelAction": "キャンセル",
-    "recipe": "新しいハイブリッドメソッド",
+    "recipe": "Neo Brew",
     "editParams": "設定を変更",
     "timeline": "タイムライン",
     "openWaitNoPour": "開けて待つ（注がない）",
     "pourTo": "まで注ぐ",
+    "pour": "注ぐ",
     "close": "閉じる",
     "open": "開ける",
     "up": "上",
     "down": "下",
-    "enjoyCoffee": "美味しいコーヒーをどうぞ☕️",
-    "coolTo": "70℃まで下げる",
+    "enjoyCoffee": "美味しいコーヒーをどうぞ",
+    "coolTo": "温度を下げる",
     "finish": "完成",
     "wait": "待つ",
     "screenOn": "画面はオンのままです",
@@ -96,11 +97,16 @@
     "waterChipLabel": "湯量"
   },
   "stepLabels": [
-    "閉じて蒸らし",
-    "開けて1湯目",
-    "2湯目",
-    "閉じて低温の3湯目",
-    "開ける",
+    "1投目",
+    "2投目",
+    "3投目",
+    "4投目",
+    "5投目",
+    "6投目",
+    "7投目",
+    "8投目",
+    "9投目",
+    "10投目",
     "完成"
   ],
   "news": {
@@ -113,8 +119,8 @@
         "description": "コーヒーはあるのにフィルターがない朝、ありませんか。"
       },
       "dripper": {
-        "title": "HARIO Switch ドリッパー",
-        "description": "COCO Timer のレシピは、このドリッパーから始まりました。"
+        "title": "V60 ドリッパー",
+        "description": "浸漬もドリップもできる便利なドリッパーです。"
       },
       "kettle": {
         "title": "温度調整付きコーヒーケトル",

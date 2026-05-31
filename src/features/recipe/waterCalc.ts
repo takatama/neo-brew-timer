@@ -18,13 +18,19 @@ export function calcStrength(total: number): number {
   return Math.round((total * 0.6) / 2);
 }
 
+export function calcEqualPour(total: number, pourCount: number): number {
+  return Math.round(total / pourCount);
+}
+
 export function computeSteps(
   recipe: Recipe,
   beans: number,
   flavor: FlavorProfile,
 ): ComputedStep[] {
   const total = getTotalWater(beans, recipe.waterRatio);
+  const equalPourCount = recipe.steps.filter((step) => step.waterAmountType === "equalPour").length;
   let cumulative = 0;
+  let equalPourIndex = 0;
 
   return recipe.steps.map((step) => {
     let increment: number;
@@ -37,6 +43,12 @@ export function computeSteps(
         break;
       case "strength":
         increment = calcStrength(total);
+        break;
+      case "equalPour":
+        equalPourIndex += 1;
+        increment = equalPourIndex === equalPourCount
+          ? total - cumulative
+          : calcEqualPour(total, equalPourCount);
         break;
       case "none":
         increment = 0;

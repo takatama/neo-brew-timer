@@ -20,7 +20,7 @@ export function IntroPage() {
         <img
           className={styles.heroImage}
           src={heroImage}
-          alt="New Hybrid Method"
+          alt="Neo Brew"
         />
         <div className={styles.heroTitle}>{t("intro.title")}</div>
         <div className={styles.heroDesc}>{t("intro.description")}</div>
@@ -30,7 +30,7 @@ export function IntroPage() {
         <div className="card-title">{t("intro.youtube")}</div>
         <div className={styles.videoWrap}>
           <iframe
-            src="https://www.youtube.com/embed/4FeUp_zNiiY"
+            src="https://www.youtube.com/embed/k0nsShguOsU"
             title="YouTube video player"
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

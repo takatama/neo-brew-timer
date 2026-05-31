@@ -3,11 +3,12 @@ export type FlavorProfile = "sweet" | "neutral" | "sour";
 export type ActionType =
   | "switch_close_pour"
   | "switch_open_pour"
+  | "pour"
   | "pour_cool"
   | "switch_open"
   | "none";
 
-export type WaterAmountType = "flavor1" | "flavor2" | "strength" | "none";
+export type WaterAmountType = "flavor1" | "flavor2" | "strength" | "equalPour" | "none";
 
 export interface RecipeStep {
   timeSec: number;

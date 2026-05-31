@@ -1,15 +1,20 @@
 import type { Recipe } from "./types";
 
-export const newHybridMethod: Recipe = {
-  id: "new-hybrid-method",
+export const neoBrewMethod: Recipe = {
+  id: "neo-brew",
   waterRatio: 15,
-  waterTemp: 90,
+  waterTemp: 96,
   steps: [
-    { timeSec: 0, actionType: "switch_close_pour", waterAmountType: "flavor1" },
-    { timeSec: 40, actionType: "switch_open_pour", waterAmountType: "flavor2" },
-    { timeSec: 90, actionType: "pour_cool", waterAmountType: "strength" },
-    { timeSec: 130, actionType: "switch_close_pour", waterAmountType: "strength" },
-    { timeSec: 165, actionType: "switch_open", waterAmountType: "none" },
+    { timeSec: 0, actionType: "pour", waterAmountType: "equalPour" },
+    { timeSec: 30, actionType: "pour", waterAmountType: "equalPour" },
+    { timeSec: 45, actionType: "pour", waterAmountType: "equalPour" },
+    { timeSec: 60, actionType: "pour", waterAmountType: "equalPour" },
+    { timeSec: 75, actionType: "pour", waterAmountType: "equalPour" },
+    { timeSec: 90, actionType: "pour", waterAmountType: "equalPour" },
+    { timeSec: 105, actionType: "pour", waterAmountType: "equalPour" },
+    { timeSec: 120, actionType: "pour", waterAmountType: "equalPour" },
+    { timeSec: 135, actionType: "pour", waterAmountType: "equalPour" },
+    { timeSec: 150, actionType: "pour", waterAmountType: "equalPour" },
     { timeSec: 210, actionType: "none", waterAmountType: "none" },
   ],
 };

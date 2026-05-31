@@ -4,7 +4,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useSessionStore } from "../../features/timer/store";
 import { useSettingsStore } from "../../features/settings/store";
 import type { BgmDayOfWeek } from "../../features/settings/types";
-import { newHybridMethod, computeSteps, getTotalWater } from "../../features/recipe";
+import { neoBrewMethod, computeSteps, getTotalWater } from "../../features/recipe";
 import type { FlavorProfile } from "../../features/recipe";
 import { CoffeeNews } from "../../features/timer/components/CoffeeNews";
 import { Timeline } from "../../features/timer/components/Timeline";
@@ -39,8 +39,8 @@ export function SetupPage() {
   }, []);
 
   const lang: SupportedLanguage = i18n.language === "ja" ? "ja" : "en";
-  const steps = computeSteps(newHybridMethod, beans, flavor);
-  const totalWater = getTotalWater(beans, newHybridMethod.waterRatio);
+  const steps = computeSteps(neoBrewMethod, beans, flavor);
+  const totalWater = getTotalWater(beans, neoBrewMethod.waterRatio);
   const stepLabels: string[] = t("stepLabels", { returnObjects: true }) as string[];
   const equipment = getEquipmentItems(lang);
 
@@ -48,7 +48,6 @@ export function SetupPage() {
     navigate("/timer?autostart=1");
   };
 
-  const flavorOptions: FlavorProfile[] = ["sweet", "neutral", "sour"];
   return (
     <main className="content">
       <section className="card">
@@ -69,21 +68,6 @@ export function SetupPage() {
           >
             ＋
           </button>
-        </div>
-      </section>
-
-      <section className="card">
-        <div className="card-title">{t("setup.flavor")}</div>
-        <div className="choice-row">
-          {flavorOptions.map((f) => (
-            <button
-              key={f}
-              className={`choice${flavor === f ? " active" : ""}`}
-              onClick={() => setFlavor(f)}
-            >
-              {t(`setup.${f}`)}
-            </button>
-          ))}
         </div>
       </section>
 
@@ -115,7 +99,7 @@ export function SetupPage() {
           <img
             className={styles.detailsImage}
             src={heroImage}
-            alt="New Hybrid Method"
+            alt="Neo Brew"
           />
           <div className={styles.detailsText}>{t("intro.description")}</div>
           <div>
@@ -133,7 +117,7 @@ export function SetupPage() {
           </div>
           <div className={styles.detailsVideo}>
             <iframe
-              src="https://www.youtube.com/embed/4FeUp_zNiiY"
+              src="https://www.youtube.com/embed/k0nsShguOsU"
               title="YouTube video player"
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

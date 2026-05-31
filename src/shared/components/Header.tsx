@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { SettingsModal } from '../../features/settings/SettingsModal';
 import styles from './Header.module.css';
 
@@ -21,6 +22,7 @@ const SettingsIcon = () => (
 );
 
 export function Header() {
+  const { t } = useTranslation();
   const [settingsOpen, setSettingsOpen] = useState(false);
 
   return (
@@ -34,7 +36,7 @@ export function Header() {
             alt=""
             aria-hidden="true"
           />
-          <span>COCO Timer</span>
+          <span>{t("app.title")}</span>
         </div>
         <button
           className={styles.iconBtn}

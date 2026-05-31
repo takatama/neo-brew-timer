@@ -1,20 +1,20 @@
-# COCO Timer Specification (HIG + Material Design)
+# Neo Brew Timer Specification (HIG + Material Design)
 
 ## 1. Purpose / Goals
 
-- Provide a step-driven brewing timer optimized for the Hario Switch “New Hybrid Method”.
+- Provide a step-driven brewing timer optimized for Tetsu Kasuya's Neo Brew multi-pour drip recipe.
 - Minimize thinking during brewing with clear, single-focus guidance.
 - Offer multimodal guidance (visual, vibration, voice) for hands-busy contexts.
 - Show an animation preview 5 seconds before each step.
 
 ## 2. Product Name & Subtitle
 
-- COCO Timer
-- A timer for the Hario Switch New Hybrid Method
+- Neo Brew Timer
+- A timer for the Neo Brew multi-pour drip recipe
 
 ## 3. Target Users / Context
 
-- People brewing with the Hario Switch and multi-step recipes.
+- People brewing Neo Brew or other multi-step drip recipes.
 - Users in kitchens who cannot stare at the screen continuously.
 - Users who need reliable step timing and non-visual cues.
 
@@ -36,8 +36,8 @@
 
 ### In Scope
 
-- Single recipe: New Hybrid Method.
-- Setup (beans + flavor), timer, settings.
+- Single recipe: Neo Brew.
+- Setup (beans), timer, settings.
 - Intro screen shown only once.
 
 ### Out of Scope
@@ -48,7 +48,7 @@
 ## 6. Information Architecture
 
 - Intro (first-time only)
-- Setup (Beans + Flavor + Recipe details)
+- Setup (Beans + Recipe details)
 - Timer (Main brewing screen)
 - Settings (language/notification/voice/animation/debug)
 
@@ -64,13 +64,12 @@
 **Primary focus**
 
 - Beans amount (+/−)
-- Flavor selection (Sweet / Balance / Sour)
+- Water preview for 10 equal pours
 
 **Sections**
 
-- App Bar: COCO Timer
+- App Bar: Neo Brew Timer
 - Beans control
-- Flavor selection (centered)
 - Start button
 - Step Water Card (below Start)
 - Recipe details (collapsible): image, description, YouTube
@@ -83,8 +82,8 @@
 
 **Sections**
 
-- App Bar: COCO Timer + Settings
-- Summary Card: recipe name, beans, flavor, total water (reference)
+- App Bar: Neo Brew Timer + Settings
+- Summary Card: recipe name, beans, total water (reference)
 - Work Instruction Card: STEP X / N, verb, instruction, remaining time, progress bar
 - Animation Card: temporary, appears 5 seconds before next step
 - Controls: Play / Pause / Reset

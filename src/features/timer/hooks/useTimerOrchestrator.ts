@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useSettingsStore } from "../../settings/store";
 import { useSessionStore } from "../store";
-import { newHybridMethod, computeSteps, getTotalWater } from "../../recipe";
+import { neoBrewMethod, computeSteps, getTotalWater } from "../../recipe";
 import { useTimer } from "./useTimer";
 import { useWakeLock } from "./useWakeLock";
 import { useNotification } from "./useNotification";
@@ -15,10 +15,10 @@ export function useTimerOrchestrator() {
   const wakeLock = useWakeLock();
 
   const steps = useMemo(
-    () => computeSteps(newHybridMethod, beans, flavor),
+    () => computeSteps(neoBrewMethod, beans, flavor),
     [beans, flavor],
   );
-  const totalWater = getTotalWater(beans, newHybridMethod.waterRatio);
+  const totalWater = getTotalWater(beans, neoBrewMethod.waterRatio);
 
   const [overlayStep, setOverlayStep] = useState<{
     index: number;

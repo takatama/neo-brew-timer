@@ -1,5 +1,5 @@
 {
-	"name": "coco-timer",
+	"name": "neo-brew-timer",
 	"version": "1.0.0",
 	"private": true,
 	"scripts": {
@@ -13,11 +13,11 @@
 		"prebuild": "npm run generate:icons"
 	},
 	"dependencies": {
-		"i18next": "^25.8.13",
+		"i18next": "^26.3.0",
 		"lottie-web": "^5.13.0",
 		"react": "^19.2.4",
 		"react-dom": "^19.2.4",
-		"react-i18next": "^16.5.4",
+		"react-i18next": "^17.0.8",
 		"react-router-dom": "^7.13.1",
 		"zustand": "^5.0.11"
 	},
@@ -27,12 +27,18 @@
 		"@types/react": "^19.2.14",
 		"@types/react-dom": "^19.2.3",
 		"@vite-pwa/assets-generator": "^1.0.2",
-		"@vitejs/plugin-react": "^5.1.4",
-		"jsdom": "^28.1.0",
-		"typescript": "^5.9.3",
-		"vite": "^7.3.1",
+		"@vitejs/plugin-react": "^6.0.2",
+		"jsdom": "^29.1.1",
+		"typescript": "^6.0.3",
+		"vite": "^8.0.14",
 		"vite-plugin-pwa": "^1.2.0",
 		"vitest": "^4.0.18",
-		"wrangler": "^3.109.2"
+		"wrangler": "^4.95.0"
+	},
+	"allowScripts": {
+		"sharp@0.34.5": true,
+		"sharp@0.33.5": true,
+		"workerd@1.20260526.1": true,
+		"esbuild@0.27.3": true
 	}
 }

@@ -1,13 +1,13 @@
-# COCO Timer
+# Neo Brew Timer
 
-**A timer for the Hario Switch New Hybrid Method**
+**A timer for Tetsu Kasuya's Neo Brew multi-pour drip recipe**
 
-COCO Timer is a React SPA, step-driven brewing timer designed for hands-busy coffee brewing. The UI keeps attention on the current action and uses audio/vibration to guide the next step without constant screen focus.
+Neo Brew Timer is a React SPA, step-driven brewing timer designed for hands-busy coffee brewing. It guides 10 pours at a 1:15 coffee-to-water ratio, with audio/vibration support so you do not need to keep staring at the screen.
 
 ## Pages
 
 - `/intro` – first-time intro (image, description, YouTube)
-- `/setup` – beans + flavor selection, step water preview
+- `/setup` – beans selection and step water preview
 - `/timer` – main timer UI
 
 `/` automatically routes first-time users to Intro and returning users to Setup.

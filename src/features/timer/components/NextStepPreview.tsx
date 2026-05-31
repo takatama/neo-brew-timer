@@ -19,6 +19,15 @@ function AnimationInstructionText({
 }) {
   const { t } = useTranslation();
 
+  if (step.actionType === "pour") {
+    return (
+      <Trans
+        i18nKey="timer.pourToAmount"
+        values={{ amount: displayAmount }}
+        components={{ num: <span className="pour-number" />, unit: <span className="pour-unit" /> }}
+      />
+    );
+  }
   if (step.actionType === "switch_close_pour") {
     return (
       <Trans
@@ -62,6 +71,7 @@ export function NextStepPreview({ step, prevCumulative, visible }: Props) {
   const startRef = useRef<number>(0);
 
   const isPour =
+    step.actionType === "pour" ||
     step.actionType === "switch_close_pour" ||
     step.actionType === "switch_open_pour" ||
     step.actionType === "pour_cool";

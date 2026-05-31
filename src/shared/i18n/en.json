@@ -1,7 +1,7 @@
 {
   "app": {
-    "title": "COCO Timer",
-    "footer": "COCO Timer"
+    "title": "Neo Brew Timer",
+    "footer": "Neo Brew Timer"
   },
   "settings": {
     "title": "Settings",
@@ -28,8 +28,8 @@
     "developer": "Developer"
   },
   "intro": {
-    "title": "New Hybrid Method",
-    "description": "Tetsu Kasaya's evolved hybrid recipe for the Hario Switch brilliantly combines the best of both worlds. It begins with a full-immersion bloom to draw out deep sweetness, shifts to a pour-over to highlight aromatic notes, and finishes with a cool immersion that smooths the cup. The result is a coffee with a robust body, exquisite sweetness, and crystal-clear flavor.",
+    "title": "Neo Brew",
+    "description": "Tetsu Kasuya's latest multi-pour drip recipe. Use 20g coffee and 300g water at a 1:15 ratio. Grind very coarse, keep the water hot at 95-96C, and pour 30g at a time for 10 pours. No Switch is needed; this is a straight drip recipe focused on sweetness and texture.",
     "youtube": "Watch on YouTube",
     "start": "Start",
     "skip": "Skip"
@@ -47,7 +47,7 @@
     "detailsAction": "View",
     "closeAction": "Close",
     "equipment": "Required gear",
-    "affiliate": "As an Amazon Associate, COCO Timer earns from qualifying purchases.",
+    "affiliate": "As an Amazon Associate, Neo Brew Timer earns from qualifying purchases.",
     "water": "Water",
     "debugBgmType": "Debug BGM Type",
     "debugBgmWeekday": "Weekday",
@@ -71,16 +71,17 @@
     "resetConfirm": "Reset timer?",
     "resetConfirmAction": "Reset",
     "resetCancelAction": "Cancel",
-    "recipe": "New Hybrid Method",
+    "recipe": "Neo Brew",
     "editParams": "Edit settings",
     "timeline": "Timeline",
     "openWaitNoPour": "Open and wait (no pour)",
     "pourTo": "Pour to",
+    "pour": "POUR",
     "close": "CLOSE",
     "open": "OPEN",
     "up": "UP",
     "down": "DOWN",
-    "enjoyCoffee": "Enjoy your coffee☕️",
+    "enjoyCoffee": "Enjoy your coffee",
     "coolTo": "Cool to",
     "finish": "FINISH",
     "wait": "WAIT",
@@ -96,11 +97,16 @@
     "waterChipLabel": "Water"
   },
   "stepLabels": [
-    "Close & Bloom",
-    "Open: 1st pour",
-    "2nd pour",
-    "Close: cool 3rd pour",
-    "Open",
+    "Pour 1",
+    "Pour 2",
+    "Pour 3",
+    "Pour 4",
+    "Pour 5",
+    "Pour 6",
+    "Pour 7",
+    "Pour 8",
+    "Pour 9",
+    "Pour 10",
     "Finish"
   ],
   "news": {
@@ -113,8 +119,8 @@
         "description": "Ever had coffee but no filters in the morning?"
       },
       "dripper": {
-        "title": "HARIO Switch Dripper",
-        "description": "COCO Timer recipes are built around the HARIO Switch."
+        "title": "V60 Dripper",
+        "description": "A flexible dripper for immersion and pour-over recipes."
       },
       "kettle": {
         "title": "Temperature-Control Coffee Kettle",
