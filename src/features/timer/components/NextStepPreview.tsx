@@ -19,7 +19,7 @@ function AnimationInstructionText({
 }) {
   const { t } = useTranslation();
 
-  if (step.actionType === "pour") {
+  if (step.actionType === "bloom" || step.actionType === "pour") {
     return (
       <Trans
         i18nKey="timer.pourToAmount"
@@ -58,6 +58,9 @@ function AnimationInstructionText({
   if (step.actionType === "switch_open") {
     return <>{t("timer.openWaitNoPour")}</>;
   }
+  if (step.actionType === "drawdown") {
+    return <>{t("timer.waitForDrawdown")}</>;
+  }
   if (step.actionType === "none") {
     return <>{t("timer.enjoyCoffee")}</>;
   }
@@ -71,6 +74,7 @@ export function NextStepPreview({ step, prevCumulative, visible }: Props) {
   const startRef = useRef<number>(0);
 
   const isPour =
+    step.actionType === "bloom" ||
     step.actionType === "pour" ||
     step.actionType === "switch_close_pour" ||
     step.actionType === "switch_open_pour" ||

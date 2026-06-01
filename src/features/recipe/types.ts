@@ -1,11 +1,13 @@
 export type FlavorProfile = "sweet" | "neutral" | "sour";
 
 export type ActionType =
+  | "bloom"
   | "switch_close_pour"
   | "switch_open_pour"
   | "pour"
   | "pour_cool"
   | "switch_open"
+  | "drawdown"
   | "none";
 
 export type WaterAmountType = "flavor1" | "flavor2" | "strength" | "equalPour" | "none";

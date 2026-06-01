@@ -15,6 +15,7 @@ const lottieAssetPaths: Record<string, string> = {
 };
 
 export function buildLottieQueue(actionType: string): string[] {
+  if (actionType === "bloom") return ["pour"];
   if (actionType === "switch_close_pour") return ["switch_close", "pour"];
   if (actionType === "switch_open_pour") return ["switch_open", "pour"];
   if (actionType === "pour_cool") return ["pour", "cool"];

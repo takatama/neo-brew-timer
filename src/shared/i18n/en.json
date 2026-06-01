@@ -76,7 +76,10 @@
     "timeline": "Timeline",
     "openWaitNoPour": "Open and wait (no pour)",
     "pourTo": "Pour to",
+    "bloom": "BLOOM",
     "pour": "POUR",
+    "drawdown": "WAIT",
+    "waitForDrawdown": "Wait for drawdown",
     "close": "CLOSE",
     "open": "OPEN",
     "up": "UP",
@@ -97,7 +100,7 @@
     "waterChipLabel": "Water"
   },
   "stepLabels": [
-    "Pour 1",
+    "Bloom",
     "Pour 2",
     "Pour 3",
     "Pour 4",
@@ -107,6 +110,7 @@
     "Pour 8",
     "Pour 9",
     "Pour 10",
+    "Wait",
     "Finish"
   ],
   "news": {

@@ -66,9 +66,9 @@ describe("calcEqualPour", () => {
 });
 
 describe("computeSteps", () => {
-  it("produces 10 pours and one finish step for Neo Brew", () => {
+  it("produces 10 pours, one drawdown step, and one finish step for Neo Brew", () => {
     const steps = computeSteps(neoBrewMethod, 20, "neutral");
-    expect(steps).toHaveLength(11);
+    expect(steps).toHaveLength(12);
   });
 
   it("neutral 20g: final cumulative is 300g", () => {
@@ -82,7 +82,7 @@ describe("computeSteps", () => {
       30, 30, 30, 30, 30, 30, 30, 30, 30, 30,
     ]);
     expect(steps.map((s) => s.cumulative)).toEqual([
-      30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 300,
+      30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 300, 300,
     ]);
   });
 
@@ -98,12 +98,13 @@ describe("computeSteps", () => {
 
   it("preserves step timing", () => {
     const steps = computeSteps(neoBrewMethod, 20, "neutral");
-    expect(steps.map((s) => s.timeSec)).toEqual([0, 30, 45, 60, 75, 90, 105, 120, 135, 150, 210]);
+    expect(steps.map((s) => s.timeSec)).toEqual([0, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165, 210]);
   });
 
   it("preserves action types", () => {
     const steps = computeSteps(neoBrewMethod, 20, "neutral");
     expect(steps.map((s) => s.actionType)).toEqual([
+      "bloom",
       "pour",
       "pour",
       "pour",
@@ -113,7 +114,7 @@ describe("computeSteps", () => {
       "pour",
       "pour",
       "pour",
-      "pour",
+      "drawdown",
       "none",
     ]);
   });
@@ -142,11 +143,11 @@ describe("getCurrentStepIndex", () => {
   });
 
   it("returns last step at final time", () => {
-    expect(getCurrentStepIndex(steps, 210)).toBe(10);
+    expect(getCurrentStepIndex(steps, 210)).toBe(11);
   });
 
   it("returns last step beyond final time", () => {
-    expect(getCurrentStepIndex(steps, 999)).toBe(10);
+    expect(getCurrentStepIndex(steps, 999)).toBe(11);
   });
 });
 

@@ -23,6 +23,8 @@ function VerbText({ step }: { step: ComputedStep }) {
   );
 
   switch (step.actionType) {
+    case "bloom":
+      return <>{t("timer.bloom")}</>;
     case "pour":
       return <>{t("timer.pour")}</>;
     case "switch_close_pour":
@@ -32,6 +34,8 @@ function VerbText({ step }: { step: ComputedStep }) {
       return withNote(t("timer.open"), t("timer.down"));
     case "switch_open":
       return withNote(t("timer.open"), t("timer.down"));
+    case "drawdown":
+      return <>{t("timer.drawdown")}</>;
     case "none":
       return <>{t("timer.finish")}</>;
     default:
@@ -45,6 +49,9 @@ function InstructionText({ step }: { step: ComputedStep }) {
   if (step.actionType === "none") {
     return <>{t("timer.enjoyCoffee")}</>;
   }
+  if (step.actionType === "drawdown") {
+    return <>{t("timer.waitForDrawdown")}</>;
+  }
   if (step.actionType === "switch_open") {
     return <>{t("timer.openWaitNoPour")}</>;
   }
@@ -52,6 +59,7 @@ function InstructionText({ step }: { step: ComputedStep }) {
   const amount = step.cumulative;
   if (
     step.actionType === "pour" ||
+    step.actionType === "bloom" ||
     step.actionType === "switch_close_pour" ||
     step.actionType === "switch_open_pour"
   ) {
