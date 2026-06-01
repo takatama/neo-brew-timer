@@ -42,12 +42,17 @@ const AMAZON_BASE_URL: Record<SupportedLanguage, string> = {
   en: "https://www.amazon.com/s",
 };
 
-const AMAZON_EXTRA_PARAMS: Partial<Record<SupportedLanguage, Record<string, string>>> = {
+const AMAZON_SELLER_FILTER: Record<SupportedLanguage, string> = {
+  ja: "AN1VRQENFRJN5",
+  en: "ATVPDKIKX0DER",
+};
+
+const AMAZON_EXTRA_PARAMS: Record<SupportedLanguage, Record<string, string>> = {
   ja: {
-    emi: "AN1VRQENFRJN5",
+    rh: `p_6:${AMAZON_SELLER_FILTER.ja}`,
   },
   en: {
-    emi: "ATVPDKIKX0DER",
+    rh: `p_6:${AMAZON_SELLER_FILTER.en}`,
   },
 };
 
@@ -55,11 +60,11 @@ export function buildAmazonSearchUrl(language: SupportedLanguage, query: string)
   const baseUrl = AMAZON_BASE_URL[language];
   const tag = AMAZON_ASSOCIATE_TAG[language];
   const params = new URLSearchParams({
-    k: query,
-    tag,
+    k: query.replace(/\s+/g, "+"),
     ...AMAZON_EXTRA_PARAMS[language],
+    tag,
   });
-  return `${baseUrl}?${params.toString()}`;
+  return `${baseUrl}?${params.toString().replace(/%2B/g, "+")}`;
 }
 
 export function getEquipmentItems(language: SupportedLanguage): EquipmentItem[] {
