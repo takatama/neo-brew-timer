@@ -13,7 +13,7 @@ type NewsAdLinks = Record<NewsAdKind, string>;
 
 const AMAZON_SEARCH_KEYWORDS: Record<SupportedLanguage, Record<ItemKind, string>> = {
   ja: {
-    dripper: "V60 ドリッパー",
+    dripper: "V60 ドリッパー Neo",
     filter: "V60 フィルター",
     scale: "コーヒー スケール",
     kettle: "コーヒー 電気ケトル",
@@ -22,7 +22,7 @@ const AMAZON_SEARCH_KEYWORDS: Record<SupportedLanguage, Record<ItemKind, string>
     canister: "コーヒー キャニスター",
   },
   en: {
-    dripper: "V60 dripper",
+    dripper: "V60 Dripper Neo",
     filter: "V60 filters",
     scale: "coffee scale",
     kettle: "pour over electric kettle",
@@ -70,7 +70,7 @@ export function buildAmazonSearchUrl(language: SupportedLanguage, query: string)
 export function getEquipmentItems(language: SupportedLanguage): EquipmentItem[] {
   if (language === "ja") {
     return [
-      { name: "V60 ドリッパー", href: buildAmazonSearchUrl("ja", AMAZON_SEARCH_KEYWORDS.ja.dripper) },
+      { name: "V60 ドリッパー Neo", href: buildAmazonSearchUrl("ja", AMAZON_SEARCH_KEYWORDS.ja.dripper) },
       { name: "V60 フィルター", href: buildAmazonSearchUrl("ja", AMAZON_SEARCH_KEYWORDS.ja.filter) },
       { name: "スケール", href: buildAmazonSearchUrl("ja", AMAZON_SEARCH_KEYWORDS.ja.scale) },
       { name: "ケトル", href: buildAmazonSearchUrl("ja", AMAZON_SEARCH_KEYWORDS.ja.kettle) },
@@ -80,7 +80,7 @@ export function getEquipmentItems(language: SupportedLanguage): EquipmentItem[] 
   }
 
   return [
-    { name: "V60 Dripper", href: buildAmazonSearchUrl("en", AMAZON_SEARCH_KEYWORDS.en.dripper) },
+    { name: "V60 Dripper Neo", href: buildAmazonSearchUrl("en", AMAZON_SEARCH_KEYWORDS.en.dripper) },
     { name: "V60 Filters", href: buildAmazonSearchUrl("en", AMAZON_SEARCH_KEYWORDS.en.filter) },
     { name: "Coffee Scale", href: buildAmazonSearchUrl("en", AMAZON_SEARCH_KEYWORDS.en.scale) },
     { name: "Pour-over kettle", href: buildAmazonSearchUrl("en", AMAZON_SEARCH_KEYWORDS.en.kettle) },
