@@ -15,7 +15,6 @@ export const neoBrewMethod: Recipe = {
     { timeSec: 120, actionType: "pour", waterAmountType: "equalPour" },
     { timeSec: 135, actionType: "pour", waterAmountType: "equalPour" },
     { timeSec: 150, actionType: "pour", waterAmountType: "equalPour" },
-    { timeSec: 165, actionType: "drawdown", waterAmountType: "none" },
     { timeSec: 210, actionType: "none", waterAmountType: "none" },
   ],
 };
