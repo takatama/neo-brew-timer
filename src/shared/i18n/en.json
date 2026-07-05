@@ -29,7 +29,7 @@
   },
   "intro": {
     "title": "Neo Brew",
-    "description": "Tetsu Kasuya's latest multi-pour drip recipe. Use 20g coffee and 300g water at a 1:15 ratio. Light roast is recommended, and dark roast is not a great fit for this recipe. Grind extremely coarse; with a Comandante grinder, use 40-45 clicks, which is much coarser than usual. Keep the water hot at 95-96C to make up for the lower extraction efficiency of the very coarse grind, then pour 30g at a time for 10 pours. No Switch is needed; this is a straight drip recipe focused on sweetness and texture.",
+    "description": "Tetsu Kasuya's latest multi-pour drip recipe for the HARIO V60 Dripper Neo. Use 20g coffee and 300g water at a 1:15 ratio. Grind light-roast coffee extremely coarse, keep the water hot at 95-96C, then pour 30g at a time for 10 pours. A simple recipe focused on sweetness and texture.",
     "youtube": "Watch on YouTube",
     "start": "Start",
     "skip": "Skip"
@@ -122,8 +122,8 @@
         "description": "Ever had coffee but no filters in the morning?"
       },
       "dripper": {
-        "title": "V60 Dripper",
-        "description": "A flexible dripper for immersion and pour-over recipes."
+        "title": "V60 Dripper Neo",
+        "description": "A simple cone dripper that fits the Neo Brew recipe."
       },
       "kettle": {
         "title": "Temperature-Control Coffee Kettle",

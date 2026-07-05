@@ -22,7 +22,7 @@ const AMAZON_SEARCH_KEYWORDS: Record<SupportedLanguage, Record<ItemKind, string>
     canister: "コーヒー キャニスター",
   },
   en: {
-    dripper: "V60 dripper",
+    dripper: "V60 Dripper Neo",
     filter: "V60 filters",
     scale: "coffee scale",
     kettle: "pour over electric kettle",
@@ -80,7 +80,7 @@ export function getEquipmentItems(language: SupportedLanguage): EquipmentItem[] 
   }
 
   return [
-    { name: "V60 Dripper", href: buildAmazonSearchUrl("en", AMAZON_SEARCH_KEYWORDS.en.dripper) },
+    { name: "V60 Dripper Neo", href: buildAmazonSearchUrl("en", AMAZON_SEARCH_KEYWORDS.en.dripper) },
     { name: "V60 Filters", href: buildAmazonSearchUrl("en", AMAZON_SEARCH_KEYWORDS.en.filter) },
     { name: "Coffee Scale", href: buildAmazonSearchUrl("en", AMAZON_SEARCH_KEYWORDS.en.scale) },
     { name: "Pour-over kettle", href: buildAmazonSearchUrl("en", AMAZON_SEARCH_KEYWORDS.en.kettle) },
