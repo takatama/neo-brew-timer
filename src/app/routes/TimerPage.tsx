@@ -66,6 +66,15 @@ export function TimerPage() {
           remainingSeconds={remainingToNext}
           progress={progress}
           isImminent={isImminent}
+          nextStepPreview={
+            overlayStep && animation && steps[overlayStep.index] ? (
+              <NextStepPreview
+                step={steps[overlayStep.index]}
+                prevCumulative={overlayStep.prevCumulative}
+                visible={true}
+              />
+            ) : undefined
+          }
         />
       )}
 
@@ -98,14 +107,6 @@ export function TimerPage() {
           {t("timer.reset")}
         </button>
       </section>
-
-      {overlayStep && animation && steps[overlayStep.index] && (
-        <NextStepPreview
-          step={steps[overlayStep.index]}
-          prevCumulative={overlayStep.prevCumulative}
-          visible={true}
-        />
-      )}
 
       <Timeline
         steps={steps}

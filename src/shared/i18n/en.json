@@ -63,7 +63,7 @@
   },
   "timer": {
     "currentStep": "Current Step",
-    "nextStep": "Next Step is...",
+    "nextStep": "Next",
     "remaining": "Remaining",
     "play": "Play",
     "pause": "Pause",
