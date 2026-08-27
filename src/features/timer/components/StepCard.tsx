@@ -99,7 +99,9 @@ export function StepCard({
   return (
     <section className={`card ${styles.primaryCard}${isImminent ? ` ${styles.imminent}` : ""}`}>
       <div className={styles.cardBody}>
-        <div className={styles.instruction}>
+        <div
+          className={`${styles.instruction}${nextStepPreview ? ` ${styles.instructionWithPreview}` : ""}`}
+        >
           <div className={styles.stepMeta}>
             STEP {stepIndex + 1} / {totalSteps}
           </div>
