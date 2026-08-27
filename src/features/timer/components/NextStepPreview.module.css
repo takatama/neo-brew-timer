@@ -5,8 +5,14 @@
   text-align: center;
 }
 
+.animationCard :global(.card-title) {
+  margin-bottom: 0;
+  font-size: 0.8rem;
+}
+
 .animationText {
-  font-size: 0.9rem;
+  font-size: 0.8rem;
+  line-height: 1.2;
   color: var(--md-text);
   white-space: nowrap;
 }

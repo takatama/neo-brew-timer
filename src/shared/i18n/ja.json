@@ -63,7 +63,7 @@
   },
   "timer": {
     "currentStep": "今のステップ",
-    "nextStep": "次のステップは...",
+    "nextStep": "次は",
     "remaining": "残り時間",
     "play": "再生",
     "pause": "一時停止",
