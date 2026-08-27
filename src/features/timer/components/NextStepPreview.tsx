@@ -121,17 +121,15 @@ export function NextStepPreview({ step, prevCumulative, visible }: Props) {
   if (!visible) return null;
 
   return (
-    <section className={`card ${styles.animationCard}`}>
+    <div className={styles.animationCard}>
       <div className="card-title">{t("timer.nextStep")}</div>
-      <div className={styles.animationRow}>
-        <LottiePlayer animationKeys={lottieKeys} />
-        <div className={styles.animationText}>
-          <AnimationInstructionText
-            step={step}
-            displayAmount={isPour ? displayAmount : step.cumulative}
-          />
-        </div>
+      <LottiePlayer animationKeys={lottieKeys} />
+      <div className={styles.animationText}>
+        <AnimationInstructionText
+          step={step}
+          displayAmount={isPour ? displayAmount : step.cumulative}
+        />
       </div>
-    </section>
+    </div>
   );
 }

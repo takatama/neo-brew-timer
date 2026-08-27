@@ -10,6 +10,22 @@
     var(--shadow-2);
 }
 
+.cardBody {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.instruction {
+  min-width: 0;
+  flex: 1;
+}
+
+.nextStep {
+  flex: 0 0 auto;
+}
+
 .stepMeta {
   font-size: 0.75rem;
   color: var(--md-text-muted);
@@ -34,4 +50,14 @@
   font-size: 1rem;
   color: var(--md-text);
   margin-bottom: 10px;
+}
+
+@media (max-width: 480px) {
+  .cardBody {
+    gap: 8px;
+  }
+
+  .stepVerb {
+    font-size: 2.2rem;
+  }
 }
