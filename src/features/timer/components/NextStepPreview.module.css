@@ -2,11 +2,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 88px;
   text-align: center;
 }
 
 .animationCard :global(.card-title) {
-  margin-bottom: 0;
+  margin-bottom: 4px;
   font-size: 0.8rem;
 }
 
