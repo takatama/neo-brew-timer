@@ -14,7 +14,13 @@ interface Props {
   nextStepPreview?: ReactNode;
 }
 
-function VerbText({ step }: { step: ComputedStep }) {
+function VerbText({
+  step,
+  stepIndex,
+}: {
+  step: ComputedStep;
+  stepIndex: number;
+}) {
   const { t } = useTranslation();
 
   const withNote = (label: string, note: string) => (
@@ -28,7 +34,7 @@ function VerbText({ step }: { step: ComputedStep }) {
     case "bloom":
       return <>{t("timer.bloom")}</>;
     case "pour":
-      return <>{t("timer.pour")}</>;
+      return <>{t(stepIndex === 9 ? "timer.brew" : "timer.pour")}</>;
     case "switch_close_pour":
       return withNote(t("timer.close"), t("timer.up"));
     case "switch_open_pour":
@@ -45,7 +51,13 @@ function VerbText({ step }: { step: ComputedStep }) {
   }
 }
 
-function InstructionText({ step }: { step: ComputedStep }) {
+function InstructionText({
+  step,
+  stepIndex,
+}: {
+  step: ComputedStep;
+  stepIndex: number;
+}) {
   const { t } = useTranslation();
 
   if (step.actionType === "none") {
@@ -59,6 +71,16 @@ function InstructionText({ step }: { step: ComputedStep }) {
   }
 
   const amount = step.cumulative;
+  if (step.actionType === "pour" && stepIndex >= 1 && stepIndex <= 8) {
+    return (
+      <Trans
+        i18nKey="timer.toAmount"
+        values={{ amount }}
+        components={{ num: <span className="pour-number" />, unit: <span className="pour-unit" /> }}
+      />
+    );
+  }
+
   if (
     step.actionType === "pour" ||
     step.actionType === "bloom" ||
@@ -106,10 +128,10 @@ export function StepCard({
             STEP {stepIndex + 1} / {totalSteps}
           </div>
           <div className={styles.stepVerb}>
-            <VerbText step={step} />
+            <VerbText step={step} stepIndex={stepIndex} />
           </div>
           <div className={styles.stepSub}>
-            <InstructionText step={step} />
+            <InstructionText step={step} stepIndex={stepIndex} />
           </div>
         </div>
         {nextStepPreview && (

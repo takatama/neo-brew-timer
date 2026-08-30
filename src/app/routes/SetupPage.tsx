@@ -105,14 +105,16 @@ export function SetupPage() {
           <div>
             <div className={styles.detailsSubTitle}>{t("setup.steps")}</div>
             <div className={styles.stepList}>
-              {steps.map((step, idx) => (
-                <div key={`${step.timeSec}-${step.actionType}`} className={styles.stepItem}>
-                  <span>
-                    Step {idx + 1}: {stepLabels[idx] ?? ""}
-                  </span>
-                  <span>{step.cumulative}g</span>
-                </div>
-              ))}
+              {steps
+                .filter((step) => step.actionType !== "none")
+                .map((step, idx) => (
+                  <div key={`${step.timeSec}-${step.actionType}`} className={styles.stepItem}>
+                    <span>
+                      Step {idx + 1}: {stepLabels[idx] ?? ""}
+                    </span>
+                    <span>{step.cumulative}g</span>
+                  </div>
+                ))}
             </div>
           </div>
           <div className={styles.detailsVideo}>

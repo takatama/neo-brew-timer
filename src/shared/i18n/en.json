@@ -78,6 +78,7 @@
     "pourTo": "Pour to",
     "bloom": "BLOOM",
     "pour": "POUR",
+    "brew": "BREW",
     "drawdown": "WAIT",
     "waitForDrawdown": "Wait for drawdown",
     "close": "CLOSE",
@@ -96,6 +97,7 @@
     "flavorLabel": "Flavor",
     "waterLabel": "Water",
     "pourToAmount": "Pour to <num>{{amount}}</num><unit>g</unit>",
+    "toAmount": "To <num>{{amount}}</num><unit>g</unit>",
     "beansChipLabel": "Beans",
     "waterChipLabel": "Water"
   },
