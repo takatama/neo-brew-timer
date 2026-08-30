@@ -32,6 +32,7 @@ export function TimerPage() {
   } = useTimerOrchestrator();
 
   const isFinishStep = currentStep?.actionType === "none";
+  const brewStepCount = steps.filter((step) => step.actionType !== "none").length;
   const { debugEnabled, debugSpeed, setDebugSpeed, language } = useSettingsStore();
   const { news, loading: newsLoading } = useCoffeeNews(language);
   const [resetDialogOpen, setResetDialogOpen] = useState(false);
@@ -62,7 +63,7 @@ export function TimerPage() {
         <StepCard
           step={currentStep}
           stepIndex={timer.currentStepIndex}
-          totalSteps={steps.length}
+          totalSteps={brewStepCount}
           remainingSeconds={remainingToNext}
           progress={progress}
           isImminent={isImminent}
@@ -80,8 +81,6 @@ export function TimerPage() {
 
       {currentStep?.actionType === "none" && (
         <FinishCard
-          stepIndex={timer.currentStepIndex}
-          totalSteps={steps.length}
           news={news}
           newsLoading={newsLoading}
         />

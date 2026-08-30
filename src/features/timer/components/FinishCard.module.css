@@ -3,12 +3,6 @@
   box-shadow: var(--shadow-2);
 }
 
-.stepMeta {
-  font-size: 0.75rem;
-  color: var(--md-text-muted);
-  letter-spacing: 0.4px;
-}
-
 .stepVerb {
   font-size: 2.6rem;
   font-weight: 800;

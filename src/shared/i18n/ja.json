@@ -78,6 +78,7 @@
     "pourTo": "まで注ぐ",
     "bloom": "蒸らす",
     "pour": "注ぐ",
+    "brew": "抽出",
     "drawdown": "待つ",
     "waitForDrawdown": "落ちきるまで待つ",
     "close": "閉じる",
@@ -96,6 +97,7 @@
     "flavorLabel": "味わい",
     "waterLabel": "抽出量",
     "pourToAmount": "<num>{{amount}}</num><unit>g</unit> まで注ぐ",
+    "toAmount": "<num>{{amount}}</num><unit>g</unit> まで",
     "beansChipLabel": "豆",
     "waterChipLabel": "湯量"
   },
