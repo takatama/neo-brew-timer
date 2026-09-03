@@ -48,7 +48,6 @@ export function TimerPage() {
   return (
     <main className="content">
       <section className="card">
-        <div>{t("timer.recipe")}</div>
         <div className={styles.chipRow}>
           <span className={styles.chip}>{t("timer.beansChipLabel")} {beans}g</span>
           <span className={styles.chip}>{t("timer.waterChipLabel")} {totalWater}g</span>

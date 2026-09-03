@@ -35,9 +35,12 @@
   letter-spacing: 0.4px;
 }
 
-.timelineGroup {
-  margin-top: 3px;
+.locationGroup {
   margin-bottom: 14px;
+}
+
+.locationGroup .stepMeta {
+  margin-bottom: 3px;
 }
 
 .stepVerb {

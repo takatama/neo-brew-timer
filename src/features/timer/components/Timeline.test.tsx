@@ -26,5 +26,6 @@ describe("Timeline", () => {
       "100%",
     ]);
     expect(container.querySelector("[class*='currentStep']")).toHaveStyle({ left: "25%" });
+    expect(container.querySelectorAll("[class*='passedStep']")).toHaveLength(1);
   });
 });

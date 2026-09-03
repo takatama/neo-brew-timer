@@ -126,19 +126,19 @@ export function StepCard({
   return (
     <section className={`card ${styles.primaryCard}${isImminent ? ` ${styles.imminent}` : ""}`}>
       <div className={styles.cardBody}>
-        <div
-          className={`${styles.instruction}${nextStepPreview ? ` ${styles.instructionWithPreview}` : ""}`}
-        >
+        <div className={styles.locationGroup}>
           <div className={styles.stepMeta}>
             STEP {stepIndex + 1} / {totalSteps}
           </div>
-          <div className={styles.timelineGroup}>
-            <Timeline
-              steps={steps}
-              currentStepIndex={stepIndex}
-              currentTime={currentTime}
-            />
-          </div>
+          <Timeline
+            steps={steps}
+            currentStepIndex={stepIndex}
+            currentTime={currentTime}
+          />
+        </div>
+        <div
+          className={`${styles.instruction}${nextStepPreview ? ` ${styles.instructionWithPreview}` : ""}`}
+        >
           <div className={styles.stepVerb}>
             <VerbText step={step} stepIndex={stepIndex} />
           </div>

@@ -34,10 +34,12 @@ export function Timeline({ steps, currentStepIndex, currentTime }: Props) {
         />
         {steps.map((step, index) => {
           const position = totalTime ? (step.timeSec / totalTime) * 100 : 0;
+          const isCurrent = index === currentStepIndex;
+          const isPassed = index < currentStepIndex;
           return (
             <span
               key={`${step.timeSec}-${step.actionType}`}
-              className={`${styles.stepNode}${index === currentStepIndex ? ` ${styles.currentStep}` : ""}`}
+              className={`${styles.stepNode}${isPassed ? ` ${styles.passedStep}` : ""}${isCurrent ? ` ${styles.currentStep}` : ""}`}
               style={{ left: `${position}%` }}
             />
           );
