@@ -6,10 +6,9 @@ interface Props {
   steps: ComputedStep[];
   currentStepIndex: number;
   currentTime: number;
-  hideCard?: boolean;
 }
 
-export function Timeline({ steps, currentStepIndex, currentTime, hideCard = false }: Props) {
+export function Timeline({ steps, currentStepIndex, currentTime }: Props) {
   const totalTime = steps.length > 0 ? steps[steps.length - 1].timeSec : 0;
   const nowRatio = totalTime ? Math.min(1, Math.max(0, currentTime / totalTime)) : 0;
 
@@ -21,9 +20,11 @@ export function Timeline({ steps, currentStepIndex, currentTime, hideCard = fals
         <div className={styles.timelineNow} style={{ left: `${nowRatio * 100}%` }} />
         {steps.map((step, index) => {
           const isCurrent = index === currentStepIndex;
+          const isCompleted = index < currentStepIndex;
           const classes = [
             styles.step,
             isCurrent ? styles.current : "",
+            isCompleted ? styles.completed : "",
           ]
             .filter(Boolean)
             .join(" ");
@@ -40,10 +41,6 @@ export function Timeline({ steps, currentStepIndex, currentTime, hideCard = fals
       </div>
     </>
   );
-
-  if (hideCard) {
-    return timelineContent;
-  }
 
   return (
     <section className={`card ${styles.timelineCard}`}>

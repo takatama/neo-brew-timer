@@ -4,19 +4,6 @@
   margin-bottom: 4px;
 }
 
-.nextTarget {
-  color: var(--md-text-muted);
-  font-size: 0.95rem;
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-.nextTarget span {
-  font-size: 0.75rem;
-  font-weight: 500;
-  margin-right: 2px;
-}
-
 .progress {
   height: 6px;
   background: #eadfce;

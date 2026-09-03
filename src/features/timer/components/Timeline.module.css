@@ -55,6 +55,11 @@
   box-shadow: 0 0 0 3px var(--md-surface), 0 0 0 5px var(--md-accent);
 }
 
+.completed {
+  border-color: var(--md-accent);
+  background: var(--md-accent);
+}
+
 .timeLabels {
   display: flex;
   justify-content: space-between;

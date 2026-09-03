@@ -10,7 +10,7 @@ interface Props {
   remainingSeconds: number;
   progress: number;
   isImminent: boolean;
-  nextTarget: number;
+  nextTarget?: number;
 }
 
 function VerbText({
@@ -117,6 +117,8 @@ export function StepCard({
   isImminent,
   nextTarget,
 }: Props) {
+  const { t } = useTranslation();
+
   return (
     <section className={`card ${styles.primaryCard}${isImminent ? ` ${styles.imminent}` : ""}`}>
       <div className={styles.cardBody}>
@@ -129,6 +131,11 @@ export function StepCard({
           </div>
           <div className={styles.stepSub}>
             <InstructionText step={step} stepIndex={stepIndex} />
+            {nextTarget !== undefined && (
+              <span className={styles.nextTarget}>
+                {t("timer.nextStep")} {nextTarget}g
+              </span>
+            )}
           </div>
         </div>
         <div className={styles.countdownArea}>
@@ -136,7 +143,6 @@ export function StepCard({
             remainingSeconds={remainingSeconds}
             progress={progress}
             isImminent={isImminent}
-            nextTarget={nextTarget}
           />
         </div>
       </div>
