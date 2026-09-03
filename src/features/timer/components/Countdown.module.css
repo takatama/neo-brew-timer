@@ -1,24 +1,4 @@
 .stepTime {
   font-size: 2rem;
   font-weight: 700;
-  margin-bottom: 4px;
-}
-
-.progress {
-  height: 6px;
-  background: #eadfce;
-  border-radius: 999px;
-  overflow: hidden;
-  margin-top: 6px;
-  position: absolute;
-  right: 20px;
-  bottom: 16px;
-  left: 20px;
-}
-
-.progressFill {
-  height: 100%;
-  width: 0%;
-  background: var(--md-accent);
-  transition: width 0.2s linear;
 }

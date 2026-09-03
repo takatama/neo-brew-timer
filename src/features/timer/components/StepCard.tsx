@@ -134,27 +134,31 @@ export function StepCard({
         currentStepIndex={stepIndex}
         currentTime={currentTime}
       />
-      <div className={styles.actionRow}>
-        <div className={styles.stepVerb}>
-          <VerbText step={step} stepIndex={stepIndex} />
+      <div className={styles.instructionZone}>
+        <div className={styles.actionRow}>
+          <div className={styles.stepVerb}>
+            <VerbText step={step} stepIndex={stepIndex} />
+          </div>
+          <div className={styles.countdownArea}>
+            <Countdown remainingSeconds={remainingSeconds} />
+          </div>
         </div>
-        <div className={styles.countdownArea}>
-          <Countdown
-            remainingSeconds={remainingSeconds}
-            progress={progress}
-            isImminent={isImminent}
-          />
+        <div className={styles.detailRow}>
+          <div className={styles.stepSub}>
+            <InstructionText step={step} stepIndex={stepIndex} />
+          </div>
+          {nextTarget !== undefined && (
+            <div className={styles.nextTarget}>
+              <span>{t("timer.nextStep")}</span> {nextTarget}g
+            </div>
+          )}
         </div>
       </div>
-      <div className={styles.detailRow}>
-        <div className={styles.stepSub}>
-          <InstructionText step={step} stepIndex={stepIndex} />
-        </div>
-        {nextTarget !== undefined && (
-          <div className={styles.nextTarget}>
-            {t("timer.nextStep")} {nextTarget}g
-          </div>
-        )}
+      <div className={styles.progress} aria-hidden="true">
+        <div
+          className={styles.progressFill}
+          style={{ width: `${(progress * 100).toFixed(2)}%` }}
+        />
       </div>
     </section>
   );

@@ -1,6 +1,5 @@
 .primaryCard {
-  position: relative;
-  padding-bottom: 46px;
+  padding: 22px;
   border: 2px solid var(--md-primary);
   box-shadow: var(--shadow-2);
 }
@@ -19,6 +18,10 @@
   gap: 20px;
 }
 
+.instructionZone {
+  margin-top: 20px;
+}
+
 .actionRow {
   align-items: center;
 }
@@ -32,7 +35,7 @@
   font-size: 0.75rem;
   color: var(--md-text-muted);
   letter-spacing: 0.4px;
-  margin-bottom: 8px;
+  margin-bottom: 5px;
 }
 
 .stepVerb {
@@ -57,16 +60,36 @@
 }
 
 .nextTarget {
-  color: var(--md-text-muted);
+  color: var(--md-text);
   font-size: 0.85rem;
   font-weight: 600;
   text-align: right;
   white-space: nowrap;
 }
 
+.nextTarget span {
+  color: var(--md-text-muted);
+  font-weight: 500;
+}
+
 .countdownArea {
   min-width: 92px;
   text-align: right;
+}
+
+.progress {
+  height: 6px;
+  margin-top: 14px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #eadfce;
+}
+
+.progressFill {
+  height: 100%;
+  width: 0%;
+  background: var(--md-accent);
+  transition: width 0.2s linear;
 }
 
 @media (max-width: 480px) {
