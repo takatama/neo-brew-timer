@@ -121,22 +121,12 @@ export function StepCard({
 
   return (
     <section className={`card ${styles.primaryCard}${isImminent ? ` ${styles.imminent}` : ""}`}>
-      <div className={styles.cardBody}>
-        <div className={styles.instruction}>
-          <div className={styles.stepMeta}>
-            STEP {stepIndex + 1} / {totalSteps}
-          </div>
-          <div className={styles.stepVerb}>
-            <VerbText step={step} stepIndex={stepIndex} />
-          </div>
-          <div className={styles.stepSub}>
-            <InstructionText step={step} stepIndex={stepIndex} />
-            {nextTarget !== undefined && (
-              <span className={styles.nextTarget}>
-                {t("timer.nextStep")} {nextTarget}g
-              </span>
-            )}
-          </div>
+      <div className={styles.stepMeta}>
+        STEP {stepIndex + 1} / {totalSteps}
+      </div>
+      <div className={styles.actionRow}>
+        <div className={styles.stepVerb}>
+          <VerbText step={step} stepIndex={stepIndex} />
         </div>
         <div className={styles.countdownArea}>
           <Countdown
@@ -145,6 +135,16 @@ export function StepCard({
             isImminent={isImminent}
           />
         </div>
+      </div>
+      <div className={styles.detailRow}>
+        <div className={styles.stepSub}>
+          <InstructionText step={step} stepIndex={stepIndex} />
+        </div>
+        {nextTarget !== undefined && (
+          <div className={styles.nextTarget}>
+            {t("timer.nextStep")} {nextTarget}g
+          </div>
+        )}
       </div>
     </section>
   );
