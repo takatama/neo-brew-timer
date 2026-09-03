@@ -1,0 +1,84 @@
+.timeline {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 14px;
+  width: 100%;
+  min-height: 24px;
+}
+
+.track {
+  position: relative;
+  height: 20px;
+}
+
+.track::before,
+.elapsedLine {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  height: 3px;
+  border-radius: 999px;
+  transform: translateY(-50%);
+}
+
+.track::before {
+  right: 0;
+  background: #d6c7b5;
+}
+
+.elapsedLine {
+  z-index: 1;
+  background: var(--md-accent);
+}
+
+.stepNode,
+.currentTime {
+  position: absolute;
+  top: 50%;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.stepNode {
+  z-index: 2;
+  width: 9px;
+  height: 9px;
+  border: 2px solid var(--md-secondary);
+  background: var(--md-surface);
+}
+
+.currentStep {
+  z-index: 4;
+  width: 9px;
+  height: 9px;
+  border: 2px solid var(--md-accent);
+  background: var(--md-accent);
+  box-shadow:
+    0 0 0 3px var(--md-surface),
+    0 0 0 5px var(--md-accent);
+}
+
+.passedStep {
+  border-color: var(--md-accent);
+  background: var(--md-accent);
+}
+
+.currentTime {
+  z-index: 3;
+  width: 6px;
+  height: 6px;
+  background: var(--md-accent);
+}
+
+.timeLabel {
+  color: var(--md-text-muted);
+  font-size: 0.68rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.endTime {
+  text-align: right;
+}

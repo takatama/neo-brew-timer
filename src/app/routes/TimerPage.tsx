@@ -6,7 +6,6 @@ import { useSettingsStore } from "../../features/settings/store";
 import { StepCard } from "../../features/timer/components/StepCard";
 import { FinishCard } from "../../features/timer/components/FinishCard";
 import { NextStepPreview } from "../../features/timer/components/NextStepPreview";
-import { Timeline } from "../../features/timer/components/Timeline";
 import { useCoffeeNews } from "../../features/timer/hooks/useCoffeeNews";
 import { ConfirmDialog } from "../../shared/components/ConfirmDialog";
 import styles from "./TimerPage.module.css";
@@ -49,7 +48,6 @@ export function TimerPage() {
   return (
     <main className="content">
       <section className="card">
-        <div>{t("timer.recipe")}</div>
         <div className={styles.chipRow}>
           <span className={styles.chip}>{t("timer.beansChipLabel")} {beans}g</span>
           <span className={styles.chip}>{t("timer.waterChipLabel")} {totalWater}g</span>
@@ -76,6 +74,8 @@ export function TimerPage() {
               />
             ) : undefined
           }
+          steps={steps}
+          currentTime={timer.currentTime}
         />
       )}
 
@@ -106,12 +106,6 @@ export function TimerPage() {
           {t("timer.reset")}
         </button>
       </section>
-
-      <Timeline
-        steps={steps}
-        currentStepIndex={timer.currentStepIndex}
-        currentTime={timer.currentTime}
-      />
 
       <ConfirmDialog
         open={resetDialogOpen}

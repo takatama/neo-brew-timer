@@ -4,10 +4,9 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useSessionStore } from "../../features/timer/store";
 import { useSettingsStore } from "../../features/settings/store";
 import type { BgmDayOfWeek } from "../../features/settings/types";
-import { neoBrewMethod, computeSteps, getTotalWater } from "../../features/recipe";
+import { neoBrewMethod, computeSteps } from "../../features/recipe";
 import type { FlavorProfile } from "../../features/recipe";
 import { CoffeeNews } from "../../features/timer/components/CoffeeNews";
-import { Timeline } from "../../features/timer/components/Timeline";
 import { useCoffeeNews } from "../../features/timer/hooks/useCoffeeNews";
 import styles from "./SetupPage.module.css";
 import { getEquipmentItems, type SupportedLanguage } from "../../shared/affiliate/amazon";
@@ -40,7 +39,6 @@ export function SetupPage() {
 
   const lang: SupportedLanguage = i18n.language === "ja" ? "ja" : "en";
   const steps = computeSteps(neoBrewMethod, beans, flavor);
-  const totalWater = getTotalWater(beans, neoBrewMethod.waterRatio);
   const stepLabels: string[] = t("stepLabels", { returnObjects: true }) as string[];
   const equipment = getEquipmentItems(lang);
 
@@ -74,19 +72,6 @@ export function SetupPage() {
       <button className={styles.btnPrimary} onClick={handleStart}>
         {t("setup.start")}
       </button>
-
-      <section className={`card ${styles.timelineCard}`}>
-        <div className="card-title">{t("timer.timeline")}</div>
-        <div className={styles.timelineHint}>
-          {t("setup.water")}: {totalWater}g
-        </div>
-        <Timeline
-          steps={steps}
-          currentStepIndex={0}
-          currentTime={0}
-          hideCard
-        />
-      </section>
 
       <details className="card" open={detailsOpen} onToggle={(e) => setDetailsOpen((e.target as HTMLDetailsElement).open)}>
         <summary className={styles.detailsSummary}>
