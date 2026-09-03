@@ -1,76 +1,28 @@
 .timelineCard {
-  padding-bottom: 12px;
-  max-height: 220px;
-  overflow: visible;
+  padding: 14px 20px 10px;
 }
 
 .timelineStepper {
   position: relative;
-  height: 112px;
-  overflow: visible;
-  padding: 34px 18px 8px 18px;
+  height: 18px;
+  margin: 0 7px;
 }
 
 .step {
   position: absolute;
-  top: 44px;
-  transform: translateX(-50%);
-  text-align: center;
-  min-width: 64px;
-  border-radius: var(--radius-sm);
-  font-size: 0.75rem;
-}
-
-.step::before {
-  content: '';
-  position: absolute;
-  top: -5px;
-  left: 50%;
-  width: 2px;
+  top: 9px;
+  width: 10px;
   height: 10px;
-  border-radius: 2px;
-  background: var(--md-secondary);
-  border: none;
-}
-
-.timelineTime {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 0.7rem;
-  color: var(--md-text-muted);
-  white-space: nowrap;
-}
-
-.timelineLabel {
-  font-size: 0.7rem;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  white-space: nowrap;
-}
-
-.odd .timelineTime {
-  top: -42px;
-}
-
-.even .timelineTime {
-  top: -24px;
-}
-
-.odd .timelineLabel {
-  top: 16px;
-}
-
-.even .timelineLabel {
-  top: 38px;
+  transform: translate(-50%, -50%);
+  border: 2px solid var(--md-secondary);
+  border-radius: 50%;
+  background: var(--md-surface);
+  z-index: 3;
 }
 
 .timelineLine {
   position: absolute;
-  left: 18px;
-  right: 18px;
-  top: 44px;
+  inset: 8px 0 auto;
   height: 2px;
   background: #d6c7b5;
   border-radius: 2px;
@@ -78,30 +30,35 @@
 
 .timelineNow {
   position: absolute;
-  top: 44px;
+  top: 9px;
+  width: 6px;
+  height: 6px;
   transform: translate(-50%, -50%);
-  font-size: 0.8rem;
-  color: var(--md-primary);
+  border-radius: 50%;
+  background: var(--md-accent);
+  z-index: 4;
 }
 
-.completed {
+.timelineProgress {
+  position: absolute;
+  left: 0;
+  top: 8px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--md-accent);
+  z-index: 2;
+}
+
+.current {
+  border-color: var(--md-accent);
+  background: var(--md-accent);
+  box-shadow: 0 0 0 3px var(--md-surface), 0 0 0 5px var(--md-accent);
+}
+
+.timeLabels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 3px;
   color: var(--md-text-muted);
-  text-decoration: line-through;
-}
-
-.inactive {
-  opacity: 0.5;
-}
-
-/* First step: label left-edge starts at the tick position (center of step) */
-.firstStep .timelineLabel {
-  left: 50%;
-  transform: none;
-}
-
-/* Last step: label right-edge ends at the tick position (center of step) */
-.lastStep .timelineLabel {
-  left: auto;
-  right: 50%;
-  transform: none;
+  font-size: 0.7rem;
 }

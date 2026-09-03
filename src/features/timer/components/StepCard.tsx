@@ -1,5 +1,4 @@
 import { Trans, useTranslation } from "react-i18next";
-import type { ReactNode } from "react";
 import type { ComputedStep } from "../../recipe/types";
 import { Countdown } from "./Countdown";
 import styles from "./StepCard.module.css";
@@ -11,7 +10,7 @@ interface Props {
   remainingSeconds: number;
   progress: number;
   isImminent: boolean;
-  nextStepPreview?: ReactNode;
+  nextTarget: number;
 }
 
 function VerbText({
@@ -116,14 +115,12 @@ export function StepCard({
   remainingSeconds,
   progress,
   isImminent,
-  nextStepPreview,
+  nextTarget,
 }: Props) {
   return (
     <section className={`card ${styles.primaryCard}${isImminent ? ` ${styles.imminent}` : ""}`}>
       <div className={styles.cardBody}>
-        <div
-          className={`${styles.instruction}${nextStepPreview ? ` ${styles.instructionWithPreview}` : ""}`}
-        >
+        <div className={styles.instruction}>
           <div className={styles.stepMeta}>
             STEP {stepIndex + 1} / {totalSteps}
           </div>
@@ -134,15 +131,15 @@ export function StepCard({
             <InstructionText step={step} stepIndex={stepIndex} />
           </div>
         </div>
-        {nextStepPreview && (
-          <div className={styles.nextStep}>{nextStepPreview}</div>
-        )}
+        <div className={styles.countdownArea}>
+          <Countdown
+            remainingSeconds={remainingSeconds}
+            progress={progress}
+            isImminent={isImminent}
+            nextTarget={nextTarget}
+          />
+        </div>
       </div>
-      <Countdown
-        remainingSeconds={remainingSeconds}
-        progress={progress}
-        isImminent={isImminent}
-      />
     </section>
   );
 }

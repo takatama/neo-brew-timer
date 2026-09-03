@@ -1,7 +1,20 @@
 .stepTime {
   font-size: 2rem;
   font-weight: 700;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
+}
+
+.nextTarget {
+  color: var(--md-text-muted);
+  font-size: 0.95rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.nextTarget span {
+  font-size: 0.75rem;
+  font-weight: 500;
+  margin-right: 2px;
 }
 
 .progress {
@@ -10,6 +23,10 @@
   border-radius: 999px;
   overflow: hidden;
   margin-top: 6px;
+  position: absolute;
+  right: 20px;
+  bottom: 16px;
+  left: 20px;
 }
 
 .progressFill {

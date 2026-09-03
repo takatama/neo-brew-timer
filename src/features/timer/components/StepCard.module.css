@@ -1,5 +1,6 @@
 .primaryCard {
   position: relative;
+  padding-bottom: 32px;
   border: 2px solid var(--md-primary);
   box-shadow: var(--shadow-2);
 }
@@ -12,21 +13,19 @@
 }
 
 .cardBody {
-  display: block;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 20px;
 }
 
 .instruction {
   min-width: 0;
 }
 
-.instructionWithPreview {
-  padding-right: 112px;
-}
-
-.nextStep {
-  position: absolute;
-  right: 32px;
-  bottom: 30px;
+.countdownArea {
+  min-width: 92px;
+  text-align: right;
 }
 
 .stepMeta {
@@ -52,19 +51,15 @@
 .stepSub {
   font-size: 1rem;
   color: var(--md-text);
-  margin-bottom: 10px;
+  margin-bottom: 0;
 }
 
 @media (max-width: 480px) {
-  .instructionWithPreview {
-    padding-right: 100px;
-  }
-
-  .nextStep {
-    right: 28px;
-  }
-
   .stepVerb {
     font-size: 2.2rem;
+  }
+
+  .cardBody {
+    gap: 12px;
   }
 }

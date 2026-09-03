@@ -5,7 +5,6 @@ import { useTimerOrchestrator } from "../../features/timer/hooks/useTimerOrchest
 import { useSettingsStore } from "../../features/settings/store";
 import { StepCard } from "../../features/timer/components/StepCard";
 import { FinishCard } from "../../features/timer/components/FinishCard";
-import { NextStepPreview } from "../../features/timer/components/NextStepPreview";
 import { Timeline } from "../../features/timer/components/Timeline";
 import { useCoffeeNews } from "../../features/timer/hooks/useCoffeeNews";
 import { ConfirmDialog } from "../../shared/components/ConfirmDialog";
@@ -21,12 +20,10 @@ export function TimerPage() {
     totalWater,
     currentStep,
     timer,
-    overlayStep,
     remainingToNext,
     progress,
     isImminent,
     isRunningOrStarting,
-    animation,
     handlePlayPause,
     handleReset,
   } = useTimerOrchestrator();
@@ -67,15 +64,7 @@ export function TimerPage() {
           remainingSeconds={remainingToNext}
           progress={progress}
           isImminent={isImminent}
-          nextStepPreview={
-            overlayStep && animation && steps[overlayStep.index] ? (
-              <NextStepPreview
-                step={steps[overlayStep.index]}
-                prevCumulative={overlayStep.prevCumulative}
-                visible={true}
-              />
-            ) : undefined
-          }
+          nextTarget={steps[timer.currentStepIndex + 1]?.cumulative ?? currentStep.cumulative}
         />
       )}
 
@@ -85,6 +74,12 @@ export function TimerPage() {
           newsLoading={newsLoading}
         />
       )}
+
+      <Timeline
+        steps={steps}
+        currentStepIndex={timer.currentStepIndex}
+        currentTime={timer.currentTime}
+      />
 
       <section className={styles.controls}>
         {!isFinishStep && (
@@ -106,12 +101,6 @@ export function TimerPage() {
           {t("timer.reset")}
         </button>
       </section>
-
-      <Timeline
-        steps={steps}
-        currentStepIndex={timer.currentStepIndex}
-        currentTime={timer.currentTime}
-      />
 
       <ConfirmDialog
         open={resetDialogOpen}
