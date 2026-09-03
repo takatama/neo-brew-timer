@@ -2,6 +2,7 @@ import { Trans, useTranslation } from "react-i18next";
 import type { ReactNode } from "react";
 import type { ComputedStep } from "../../recipe/types";
 import { Countdown } from "./Countdown";
+import { Timeline } from "./Timeline";
 import styles from "./StepCard.module.css";
 
 interface Props {
@@ -12,6 +13,8 @@ interface Props {
   progress: number;
   isImminent: boolean;
   nextStepPreview?: ReactNode;
+  steps: ComputedStep[];
+  currentTime: number;
 }
 
 function VerbText({
@@ -117,6 +120,8 @@ export function StepCard({
   progress,
   isImminent,
   nextStepPreview,
+  steps,
+  currentTime,
 }: Props) {
   return (
     <section className={`card ${styles.primaryCard}${isImminent ? ` ${styles.imminent}` : ""}`}>
@@ -126,6 +131,13 @@ export function StepCard({
         >
           <div className={styles.stepMeta}>
             STEP {stepIndex + 1} / {totalSteps}
+          </div>
+          <div className={styles.timelineGroup}>
+            <Timeline
+              steps={steps}
+              currentStepIndex={stepIndex}
+              currentTime={currentTime}
+            />
           </div>
           <div className={styles.stepVerb}>
             <VerbText step={step} stepIndex={stepIndex} />

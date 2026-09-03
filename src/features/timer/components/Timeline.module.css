@@ -1,107 +1,79 @@
-.timelineCard {
-  padding-bottom: 12px;
-  max-height: 220px;
-  overflow: visible;
+.timeline {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 24px;
 }
 
-.timelineStepper {
+.track {
   position: relative;
-  height: 112px;
-  overflow: visible;
-  padding: 34px 18px 8px 18px;
+  height: 20px;
 }
 
-.step {
+.track::before,
+.elapsedLine {
+  content: "";
   position: absolute;
-  top: 44px;
-  transform: translateX(-50%);
-  text-align: center;
-  min-width: 64px;
-  border-radius: var(--radius-sm);
-  font-size: 0.75rem;
+  top: 50%;
+  left: 0;
+  height: 3px;
+  border-radius: 999px;
+  transform: translateY(-50%);
 }
 
-.step::before {
-  content: '';
-  position: absolute;
-  top: -5px;
-  left: 50%;
-  width: 2px;
-  height: 10px;
-  border-radius: 2px;
-  background: var(--md-secondary);
-  border: none;
-}
-
-.timelineTime {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 0.7rem;
-  color: var(--md-text-muted);
-  white-space: nowrap;
-}
-
-.timelineLabel {
-  font-size: 0.7rem;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  white-space: nowrap;
-}
-
-.odd .timelineTime {
-  top: -42px;
-}
-
-.even .timelineTime {
-  top: -24px;
-}
-
-.odd .timelineLabel {
-  top: 16px;
-}
-
-.even .timelineLabel {
-  top: 38px;
-}
-
-.timelineLine {
-  position: absolute;
-  left: 18px;
-  right: 18px;
-  top: 44px;
-  height: 2px;
+.track::before {
+  right: 0;
   background: #d6c7b5;
-  border-radius: 2px;
 }
 
-.timelineNow {
+.elapsedLine {
+  z-index: 1;
+  background: var(--md-accent);
+}
+
+.stepNode,
+.currentTime {
   position: absolute;
-  top: 44px;
+  top: 50%;
+  border-radius: 50%;
   transform: translate(-50%, -50%);
-  font-size: 0.8rem;
-  color: var(--md-primary);
 }
 
-.completed {
+.stepNode {
+  z-index: 2;
+  width: 9px;
+  height: 9px;
+  border: 2px solid var(--md-secondary);
+  background: var(--md-surface);
+}
+
+.currentStep {
+  z-index: 4;
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--md-accent);
+  background: var(--md-accent);
+  box-shadow:
+    0 0 0 3px var(--md-surface),
+    0 0 0 5px var(--md-accent);
+}
+
+.currentTime {
+  z-index: 3;
+  width: 6px;
+  height: 6px;
+  background: var(--md-accent);
+}
+
+.timeLabel {
   color: var(--md-text-muted);
-  text-decoration: line-through;
+  font-size: 0.68rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
-.inactive {
-  opacity: 0.5;
-}
-
-/* First step: label left-edge starts at the tick position (center of step) */
-.firstStep .timelineLabel {
-  left: 50%;
-  transform: none;
-}
-
-/* Last step: label right-edge ends at the tick position (center of step) */
-.lastStep .timelineLabel {
-  left: auto;
-  right: 50%;
-  transform: none;
+.endTime {
+  text-align: right;
 }

@@ -1,5 +1,4 @@
 import { useTranslation } from "react-i18next";
-import { useRef, useEffect, useState } from "react";
 import type { ComputedStep } from "../../recipe/types";
 import { formatTime } from "../../recipe/waterCalc";
 import styles from "./Timeline.module.css";
@@ -8,77 +7,45 @@ interface Props {
   steps: ComputedStep[];
   currentStepIndex: number;
   currentTime: number;
-  hideCard?: boolean;
 }
 
-export function Timeline({ steps, currentStepIndex, currentTime, hideCard = false }: Props) {
+export function Timeline({ steps, currentStepIndex, currentTime }: Props) {
   const { t } = useTranslation();
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [width, setWidth] = useState(0);
+  const totalTime = steps.at(-1)?.timeSec ?? 0;
+  const currentTimeRatio = totalTime
+    ? Math.min(1, Math.max(0, currentTime / totalTime))
+    : 0;
 
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-    const observer = new ResizeObserver(() => {
-      setWidth(el.clientWidth);
-    });
-    observer.observe(el);
-    setWidth(el.clientWidth);
-    return () => observer.disconnect();
-  }, []);
-
-  const totalTime = steps.length > 0 ? steps[steps.length - 1].timeSec : 0;
-  const pad = 18;
-  const lineWidth = Math.max(0, width - pad * 2);
-  const stepLabels: string[] = t("stepLabels", { returnObjects: true }) as string[];
-
-  const nowRatio = totalTime ? currentTime / totalTime : 0;
-  const nowLeft = pad + lineWidth * nowRatio;
-
-  const timelineContent = (
-    <div className={styles.timelineStepper} ref={containerRef}>
-        <div className={styles.timelineLine} />
+  return (
+    <div
+      className={styles.timeline}
+      role="img"
+      aria-label={t("timer.timeline")}
+    >
+      <span className={styles.timeLabel}>{formatTime(0)}</span>
+      <div className={styles.track}>
         <div
-          className={styles.timelineNow}
-          style={{ left: `${nowLeft}px` }}
-        >
-          ▶
-        </div>
+          className={styles.elapsedLine}
+          style={{ width: `${currentTimeRatio * 100}%` }}
+        />
+        <span
+          className={styles.currentTime}
+          style={{ left: `${currentTimeRatio * 100}%` }}
+        />
         {steps.map((step, index) => {
-          const isCurrent = index === currentStepIndex;
-          const isCompleted = index < currentStepIndex;
-          const classes = [
-            styles.step,
-            index % 2 === 0 ? styles.odd : styles.even,
-            isCurrent ? "" : styles.inactive,
-            isCompleted ? styles.completed : "",
-            index === 0 ? styles.firstStep : "",
-            index === steps.length - 1 ? styles.lastStep : "",
-          ]
-            .filter(Boolean)
-            .join(" ");
-          const ratio = totalTime ? step.timeSec / totalTime : 0;
-          const leftPx = pad + lineWidth * ratio;
+          const position = totalTime ? (step.timeSec / totalTime) * 100 : 0;
           return (
-            <div key={`${step.timeSec}-${step.actionType}`} className={classes} style={{ left: `${leftPx}px` }}>
-              <div className={styles.timelineTime}>{formatTime(step.timeSec)}</div>
-              <div className={styles.timelineLabel}>
-                {stepLabels[index] ?? ""}
-              </div>
-            </div>
+            <span
+              key={`${step.timeSec}-${step.actionType}`}
+              className={`${styles.stepNode}${index === currentStepIndex ? ` ${styles.currentStep}` : ""}`}
+              style={{ left: `${position}%` }}
+            />
           );
         })}
       </div>
-  );
-
-  if (hideCard) {
-    return timelineContent;
-  }
-
-  return (
-    <section className={`card ${styles.timelineCard}`}>
-      <div className="card-title">{t("timer.timeline")}</div>
-      {timelineContent}
-    </section>
+      <span className={`${styles.timeLabel} ${styles.endTime}`}>
+        {formatTime(totalTime)}
+      </span>
+    </div>
   );
 }
