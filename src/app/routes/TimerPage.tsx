@@ -5,7 +5,6 @@ import { useTimerOrchestrator } from "../../features/timer/hooks/useTimerOrchest
 import { useSettingsStore } from "../../features/settings/store";
 import { StepCard } from "../../features/timer/components/StepCard";
 import { FinishCard } from "../../features/timer/components/FinishCard";
-import { Timeline } from "../../features/timer/components/Timeline";
 import { useCoffeeNews } from "../../features/timer/hooks/useCoffeeNews";
 import { ConfirmDialog } from "../../shared/components/ConfirmDialog";
 import styles from "./TimerPage.module.css";
@@ -58,11 +57,13 @@ export function TimerPage() {
       {currentStep && currentStep.actionType !== "none" && (
         <StepCard
           step={currentStep}
+          steps={steps}
           stepIndex={timer.currentStepIndex}
           totalSteps={brewStepCount}
           remainingSeconds={remainingToNext}
           progress={progress}
           isImminent={isImminent}
+          currentTime={timer.currentTime}
           nextTarget={timer.currentStepIndex < brewStepCount - 1
             ? steps[timer.currentStepIndex + 1]?.cumulative
             : undefined}
@@ -75,12 +76,6 @@ export function TimerPage() {
           newsLoading={newsLoading}
         />
       )}
-
-      <Timeline
-        steps={steps}
-        currentStepIndex={timer.currentStepIndex}
-        currentTime={timer.currentTime}
-      />
 
       <section className={styles.controls}>
         {!isFinishStep && (

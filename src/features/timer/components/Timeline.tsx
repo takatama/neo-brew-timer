@@ -13,8 +13,9 @@ export function Timeline({ steps, currentStepIndex, currentTime }: Props) {
   const nowRatio = totalTime ? Math.min(1, Math.max(0, currentTime / totalTime)) : 0;
 
   const timelineContent = (
-    <>
-      <div className={styles.timelineStepper} aria-label={`${formatTime(currentTime)} / ${formatTime(totalTime)}`}>
+    <div className={styles.timelineRow} aria-label={`${formatTime(currentTime)} / ${formatTime(totalTime)}`}>
+      <span className={styles.timeLabel}>{formatTime(0)}</span>
+      <div className={styles.timelineStepper}>
         <div className={styles.timelineLine} />
         <div className={styles.timelineProgress} style={{ width: `${nowRatio * 100}%` }} />
         <div className={styles.timelineNow} style={{ left: `${nowRatio * 100}%` }} />
@@ -35,16 +36,9 @@ export function Timeline({ steps, currentStepIndex, currentTime }: Props) {
           );
         })}
       </div>
-      <div className={styles.timeLabels}>
-        <span>{formatTime(0)}</span>
-        <span>{formatTime(totalTime)}</span>
-      </div>
-    </>
+      <span className={styles.timeLabel}>{formatTime(totalTime)}</span>
+    </div>
   );
 
-  return (
-    <section className={`card ${styles.timelineCard}`}>
-      {timelineContent}
-    </section>
-  );
+  return timelineContent;
 }

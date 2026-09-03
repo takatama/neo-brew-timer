@@ -32,6 +32,7 @@
   font-size: 0.75rem;
   color: var(--md-text-muted);
   letter-spacing: 0.4px;
+  margin-bottom: 8px;
 }
 
 .stepVerb {
