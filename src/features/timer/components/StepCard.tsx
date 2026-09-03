@@ -2,7 +2,7 @@ import { Trans, useTranslation } from "react-i18next";
 import type { ReactNode } from "react";
 import type { ComputedStep } from "../../recipe/types";
 import { Countdown } from "./Countdown";
-import { Timeline } from "./Timeline";
+import { BrewTimeline } from "./BrewTimeline";
 import styles from "./StepCard.module.css";
 
 interface Props {
@@ -130,7 +130,7 @@ export function StepCard({
           <div className={styles.stepMeta}>
             STEP {stepIndex + 1} / {totalSteps}
           </div>
-          <Timeline
+          <BrewTimeline
             steps={steps}
             currentStepIndex={stepIndex}
             currentTime={currentTime}

@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import type { ComputedStep } from "../../recipe/types";
 import { formatTime } from "../../recipe/waterCalc";
-import styles from "./Timeline.module.css";
+import styles from "./BrewTimeline.module.css";
 
 interface Props {
   steps: ComputedStep[];
@@ -9,7 +9,7 @@ interface Props {
   currentTime: number;
 }
 
-export function Timeline({ steps, currentStepIndex, currentTime }: Props) {
+export function BrewTimeline({ steps, currentStepIndex, currentTime }: Props) {
   const { t } = useTranslation();
   const totalTime = steps.at(-1)?.timeSec ?? 0;
   const currentTimeRatio = totalTime

@@ -1,7 +1,7 @@
 import { render } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import type { ComputedStep } from "../../recipe/types";
-import { Timeline } from "./Timeline";
+import { BrewTimeline } from "./BrewTimeline";
 
 const steps: ComputedStep[] = [0, 15, 45, 60].map((timeSec) => ({
   timeSec,
@@ -11,10 +11,10 @@ const steps: ComputedStep[] = [0, 15, 45, 60].map((timeSec) => ({
   increment: 0,
 }));
 
-describe("Timeline", () => {
+describe("BrewTimeline", () => {
   it("positions step nodes and elapsed time in proportion to the total duration", () => {
     const { container } = render(
-      <Timeline steps={steps} currentStepIndex={1} currentTime={30} />,
+      <BrewTimeline steps={steps} currentStepIndex={1} currentTime={30} />,
     );
     const positionedMarkers = [...container.querySelectorAll<HTMLElement>("[style*='left']")];
 
