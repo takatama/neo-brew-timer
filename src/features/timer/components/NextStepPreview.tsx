@@ -8,6 +8,7 @@ interface Props {
   step: ComputedStep;
   prevCumulative: number;
   visible: boolean;
+  isFirstStep?: boolean;
 }
 
 function AnimationInstructionText({
@@ -67,7 +68,12 @@ function AnimationInstructionText({
   return <>{t("timer.wait")}</>;
 }
 
-export function NextStepPreview({ step, prevCumulative, visible }: Props) {
+export function NextStepPreview({
+  step,
+  prevCumulative,
+  visible,
+  isFirstStep = false,
+}: Props) {
   const { t } = useTranslation();
   const [displayAmount, setDisplayAmount] = useState(prevCumulative);
   const rafRef = useRef<number | null>(null);
@@ -122,7 +128,9 @@ export function NextStepPreview({ step, prevCumulative, visible }: Props) {
 
   return (
     <div className={styles.animationCard}>
-      <div className="card-title">{t("timer.nextStep")}</div>
+      <div className="card-title">
+        {t(isFirstStep ? "timer.firstStep" : "timer.nextStep")}
+      </div>
       <LottiePlayer animationKeys={lottieKeys} />
       <div className={styles.animationText}>
         <AnimationInstructionText

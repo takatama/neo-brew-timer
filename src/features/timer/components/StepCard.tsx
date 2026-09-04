@@ -142,9 +142,11 @@ export function StepCard({
           <div className={styles.stepVerb}>
             <VerbText step={step} stepIndex={stepIndex} />
           </div>
-          <div className={styles.stepSub}>
-            <InstructionText step={step} stepIndex={stepIndex} />
-          </div>
+          {!(stepIndex === 0 && nextStepPreview) && (
+            <div className={styles.stepSub}>
+              <InstructionText step={step} stepIndex={stepIndex} />
+            </div>
+          )}
         </div>
         {nextStepPreview && (
           <div className={styles.nextStep}>{nextStepPreview}</div>

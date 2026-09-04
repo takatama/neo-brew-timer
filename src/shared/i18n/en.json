@@ -64,6 +64,7 @@
   "timer": {
     "currentStep": "Current Step",
     "nextStep": "Next",
+    "firstStep": "First",
     "remaining": "Remaining",
     "play": "Play",
     "pause": "Pause",
