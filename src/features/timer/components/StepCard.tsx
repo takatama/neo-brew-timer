@@ -155,11 +155,13 @@ export function StepCard({
           <div className={styles.nextStep}>{nextStepPreview}</div>
         )}
       </div>
-      <Countdown
-        remainingSeconds={remainingSeconds}
-        progress={progress}
-        isImminent={isImminent}
-      />
+      <div className={styles.countdown}>
+        <Countdown
+          remainingSeconds={remainingSeconds}
+          progress={progress}
+          isImminent={isImminent}
+        />
+      </div>
     </section>
   );
 }
