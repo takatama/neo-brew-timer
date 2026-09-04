@@ -49,8 +49,12 @@ export function TimerPage() {
     <main className="content">
       <section className="card">
         <div className={styles.chipRow}>
-          <span className={styles.chip}>{t("timer.beansChipLabel")} {beans}g</span>
-          <span className={styles.chip}>{t("timer.waterChipLabel")} {totalWater}g</span>
+          <span className={styles.chip}>
+            {t("timer.beansChipLabel")} <span className={styles.chipValue}>{beans}g</span>
+          </span>
+          <span className={styles.chip}>
+            {t("timer.waterChipLabel")} <span className={styles.chipValue}>{totalWater}g</span>
+          </span>
         </div>
         <button className={styles.textLink} onClick={() => navigate("/setup")}>
           {t("timer.editParams")}
