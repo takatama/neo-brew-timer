@@ -17,6 +17,7 @@
 
 .instruction {
   min-width: 0;
+  margin-inline: 16px;
 }
 
 .instructionWithPreview {
@@ -25,8 +26,12 @@
 
 .nextStep {
   position: absolute;
-  right: 32px;
+  right: 48px;
   bottom: 30px;
+}
+
+.countdown {
+  margin-inline: 16px;
 }
 
 .stepMeta {
@@ -68,12 +73,17 @@
 }
 
 @media (max-width: 480px) {
+  .instruction,
+  .countdown {
+    margin-inline: 12px;
+  }
+
   .instructionWithPreview {
     padding-right: 100px;
   }
 
   .nextStep {
-    right: 28px;
+    right: 44px;
   }
 
   .stepVerb {
