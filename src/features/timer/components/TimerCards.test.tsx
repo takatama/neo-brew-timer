@@ -33,7 +33,7 @@ describe("timer cards", () => {
     expect(screen.queryByText("Next")).not.toBeInTheDocument();
   });
 
-  it("hides the step-one target only during the startup preview", () => {
+  it("preserves the hidden initial target's layout until the timer starts", () => {
     const { container, rerender } = render(
       <StepCard
         step={firstStep}
@@ -42,7 +42,7 @@ describe("timer cards", () => {
         remainingSeconds={30}
         progress={0}
         isImminent={false}
-        isStartupPreview
+        hideTargetAmount
         nextStepPreview={<div>animation</div>}
         steps={[firstStep]}
         currentTime={0}

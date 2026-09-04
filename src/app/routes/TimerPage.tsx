@@ -65,7 +65,11 @@ export function TimerPage() {
           remainingSeconds={remainingToNext}
           progress={progress}
           isImminent={isImminent}
-          isStartupPreview={overlayStep?.index === 0}
+          hideTargetAmount={
+            timer.status === "idle" &&
+            timer.currentStepIndex === 0 &&
+            timer.currentTime === 0
+          }
           nextStepPreview={
             overlayStep && animation && steps[overlayStep.index] ? (
               <NextStepPreview
