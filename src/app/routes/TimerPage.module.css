@@ -2,7 +2,7 @@
 .chipRow {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 10px;
 }
 
 .chip {
@@ -10,8 +10,8 @@
   background: var(--md-surface-2);
   color: var(--md-text-muted);
   border-radius: 999px;
-  padding: 4px 10px;
-  font-size: 0.8rem;
+  padding: 6px 13px;
+  font-size: 0.9rem;
   font-weight: 600;
 }
 

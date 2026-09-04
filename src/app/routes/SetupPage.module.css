@@ -20,6 +20,31 @@
   font-weight: 700;
 }
 
+.calculatedWater {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--md-outline);
+  color: var(--md-text-muted);
+}
+
+.calculatedWaterLabel {
+  font-size: 0.85rem;
+}
+
+.calculatedWaterValue {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--md-text);
+}
+
+.waterRatio {
+  font-size: 0.78rem;
+}
+
 .btnPrimary {
   border: none;
   padding: 14px 16px;

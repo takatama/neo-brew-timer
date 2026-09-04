@@ -4,7 +4,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useSessionStore } from "../../features/timer/store";
 import { useSettingsStore } from "../../features/settings/store";
 import type { BgmDayOfWeek } from "../../features/settings/types";
-import { neoBrewMethod, computeSteps } from "../../features/recipe";
+import { neoBrewMethod, computeSteps, getTotalWater } from "../../features/recipe";
 import type { FlavorProfile } from "../../features/recipe";
 import { CoffeeNews } from "../../features/timer/components/CoffeeNews";
 import { useCoffeeNews } from "../../features/timer/hooks/useCoffeeNews";
@@ -38,6 +38,7 @@ export function SetupPage() {
   }, []);
 
   const lang: SupportedLanguage = i18n.language === "ja" ? "ja" : "en";
+  const totalWater = getTotalWater(beans, neoBrewMethod.waterRatio);
   const steps = computeSteps(neoBrewMethod, beans, flavor);
   const stepLabels: string[] = t("stepLabels", { returnObjects: true }) as string[];
   const equipment = getEquipmentItems(lang);
@@ -66,6 +67,11 @@ export function SetupPage() {
           >
             ＋
           </button>
+        </div>
+        <div className={styles.calculatedWater}>
+          <span className={styles.calculatedWaterLabel}>{t("setup.water")}</span>
+          <span className={styles.calculatedWaterValue}>{totalWater}g</span>
+          <span className={styles.waterRatio}>1:{neoBrewMethod.waterRatio}</span>
         </div>
       </section>
 
