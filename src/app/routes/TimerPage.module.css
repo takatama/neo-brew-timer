@@ -17,7 +17,8 @@
 
 .chipValue {
   font-size: 1.05rem;
-  color: var(--md-text);
+  font-weight: 400;
+  color: var(--md-text-muted);
 }
 
 .textLink {

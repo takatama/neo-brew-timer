@@ -52,21 +52,23 @@ export function SetupPage() {
       <section className="card">
         <div className={styles.stepperRow}>
           <span className={styles.beansLabel}>{t("setup.beans")}</span>
-          <button
-            className={styles.btnIcon}
-            onClick={() => setBeans(Math.max(1, beans - 1))}
-            aria-label="decrease"
-          >
-            −
-          </button>
-          <div className={styles.beansValue}>{beans}g</div>
-          <button
-            className={styles.btnIcon}
-            onClick={() => setBeans(beans + 1)}
-            aria-label="increase"
-          >
-            ＋
-          </button>
+          <div className={styles.stepperControls}>
+            <button
+              className={styles.btnIcon}
+              onClick={() => setBeans(Math.max(1, beans - 1))}
+              aria-label="decrease"
+            >
+              −
+            </button>
+            <div className={styles.beansValue}>{beans}g</div>
+            <button
+              className={styles.btnIcon}
+              onClick={() => setBeans(beans + 1)}
+              aria-label="increase"
+            >
+              ＋
+            </button>
+          </div>
         </div>
         <div className={styles.calculatedWater}>
           <span className={styles.calculatedWaterLabel}>{t("setup.water")}</span>
