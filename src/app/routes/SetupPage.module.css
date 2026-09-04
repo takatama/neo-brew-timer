@@ -5,6 +5,12 @@
   gap: 18px;
 }
 
+.beansLabel {
+  color: var(--md-text-muted);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
 .btnIcon {
   width: 44px;
   height: 44px;
@@ -25,9 +31,7 @@
   align-items: baseline;
   justify-content: center;
   gap: 8px;
-  margin-top: 14px;
-  padding-top: 12px;
-  border-top: 1px solid var(--md-outline);
+  margin-top: 12px;
   color: var(--md-text-muted);
 }
 

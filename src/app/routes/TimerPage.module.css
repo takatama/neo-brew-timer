@@ -15,6 +15,11 @@
   font-weight: 600;
 }
 
+.chipValue {
+  font-size: 1.05rem;
+  color: var(--md-text);
+}
+
 .textLink {
   margin-top: 8px;
   background: none;

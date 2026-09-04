@@ -50,8 +50,8 @@ export function SetupPage() {
   return (
     <main className="content">
       <section className="card">
-        <div className="card-title">{t("setup.beans")}</div>
         <div className={styles.stepperRow}>
+          <span className={styles.beansLabel}>{t("setup.beans")}</span>
           <button
             className={styles.btnIcon}
             onClick={() => setBeans(Math.max(1, beans - 1))}
