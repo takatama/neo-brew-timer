@@ -33,7 +33,7 @@ describe("timer cards", () => {
     expect(screen.queryByText("Next")).not.toBeInTheDocument();
   });
 
-  it("hides the step-one target while its animation is visible", () => {
+  it("hides the step-one target only during the startup preview", () => {
     const { container, rerender } = render(
       <StepCard
         step={firstStep}
@@ -42,13 +42,17 @@ describe("timer cards", () => {
         remainingSeconds={30}
         progress={0}
         isImminent={false}
+        isStartupPreview
         nextStepPreview={<div>animation</div>}
         steps={[firstStep]}
         currentTime={0}
       />,
     );
 
-    expect(container).not.toHaveTextContent("30g");
+    const target = container.querySelector<HTMLElement>("[class*='stepSub']");
+    expect(target).toHaveTextContent("30g");
+    expect(target).toHaveAttribute("aria-hidden", "true");
+    expect(target?.className).toContain("stepSubHidden");
 
     rerender(
       <StepCard
@@ -58,11 +62,14 @@ describe("timer cards", () => {
         remainingSeconds={30}
         progress={0}
         isImminent={false}
+        nextStepPreview={<div>next animation</div>}
         steps={[firstStep]}
         currentTime={0}
       />,
     );
 
     expect(container).toHaveTextContent("30g");
+    expect(target).not.toHaveAttribute("aria-hidden");
+    expect(target?.className).not.toContain("stepSubHidden");
   });
 });

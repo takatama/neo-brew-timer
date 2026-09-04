@@ -12,6 +12,7 @@ interface Props {
   remainingSeconds: number;
   progress: number;
   isImminent: boolean;
+  isStartupPreview?: boolean;
   nextStepPreview?: ReactNode;
   steps: ComputedStep[];
   currentTime: number;
@@ -119,6 +120,7 @@ export function StepCard({
   remainingSeconds,
   progress,
   isImminent,
+  isStartupPreview = false,
   nextStepPreview,
   steps,
   currentTime,
@@ -142,11 +144,12 @@ export function StepCard({
           <div className={styles.stepVerb}>
             <VerbText step={step} stepIndex={stepIndex} />
           </div>
-          {!(stepIndex === 0 && nextStepPreview) && (
-            <div className={styles.stepSub}>
-              <InstructionText step={step} stepIndex={stepIndex} />
-            </div>
-          )}
+          <div
+            className={`${styles.stepSub}${isStartupPreview ? ` ${styles.stepSubHidden}` : ""}`}
+            aria-hidden={isStartupPreview || undefined}
+          >
+            <InstructionText step={step} stepIndex={stepIndex} />
+          </div>
         </div>
         {nextStepPreview && (
           <div className={styles.nextStep}>{nextStepPreview}</div>

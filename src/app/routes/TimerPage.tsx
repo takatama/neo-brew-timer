@@ -65,6 +65,7 @@ export function TimerPage() {
           remainingSeconds={remainingToNext}
           progress={progress}
           isImminent={isImminent}
+          isStartupPreview={overlayStep?.index === 0}
           nextStepPreview={
             overlayStep && animation && steps[overlayStep.index] ? (
               <NextStepPreview
