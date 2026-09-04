@@ -65,12 +65,18 @@ export function TimerPage() {
           remainingSeconds={remainingToNext}
           progress={progress}
           isImminent={isImminent}
+          hideTargetAmount={
+            timer.status === "idle" &&
+            timer.currentStepIndex === 0 &&
+            timer.currentTime === 0
+          }
           nextStepPreview={
             overlayStep && animation && steps[overlayStep.index] ? (
               <NextStepPreview
                 step={steps[overlayStep.index]}
                 prevCumulative={overlayStep.prevCumulative}
                 visible={true}
+                isFirstStep={overlayStep.index === 0}
               />
             ) : undefined
           }
@@ -102,9 +108,11 @@ export function TimerPage() {
             )}
           </div>
         )}
-        <button className={`${styles.btn} ${styles.outline}`} onClick={handleResetTimer}>
-          {t("timer.reset")}
-        </button>
+        {!isFinishStep && (
+          <button className={`${styles.btn} ${styles.outline}`} onClick={handleResetTimer}>
+            {t("timer.reset")}
+          </button>
+        )}
       </section>
 
       <ConfirmDialog
