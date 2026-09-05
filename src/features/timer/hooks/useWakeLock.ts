@@ -2,59 +2,65 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 export function useWakeLock() {
   const wakeLockRef = useRef<WakeLockSentinel | null>(null);
+  const pendingRef = useRef<Promise<void> | null>(null);
   const [isActive, setIsActive] = useState(false);
   const isActiveRef = useRef(false);
 
-  const request = useCallback(async () => {
+  const acquire = useCallback((): Promise<void> => {
+    if (!("wakeLock" in navigator) || wakeLockRef.current) return Promise.resolve();
+    if (pendingRef.current) return pendingRef.current;
+    const pending = (async () => {
+      try {
+        const lock = await navigator.wakeLock.request("screen");
+        // The user may have stopped or left the page while the request was pending.
+        if (!isActiveRef.current) {
+          await lock.release();
+          return;
+        }
+        wakeLockRef.current = lock;
+        lock.addEventListener("release", () => {
+          // An older lock must not clear a newer one.
+          if (wakeLockRef.current === lock) wakeLockRef.current = null;
+        });
+      } catch {
+        // Unsupported or denied requests must not interrupt brewing.
+      }
+    })();
+    pendingRef.current = pending;
+    void pending.then(() => {
+      if (pendingRef.current === pending) pendingRef.current = null;
+    });
+    return pending;
+  }, []);
+
+  const request = useCallback(() => {
     isActiveRef.current = true;
     setIsActive(true);
-    if (!("wakeLock" in navigator)) return;
-    try {
-      if (!wakeLockRef.current) {
-        wakeLockRef.current = await navigator.wakeLock.request("screen");
-        wakeLockRef.current.addEventListener("release", () => {
-          wakeLockRef.current = null;
-        });
-      }
-    } catch {
-      // ignore
-    }
+    return acquire();
+  }, [acquire]);
+
+  const releaseLock = useCallback(() => {
+    isActiveRef.current = false;
+    const lock = wakeLockRef.current;
+    wakeLockRef.current = null;
+    if (lock) void lock.release().catch(() => {});
   }, []);
 
   const release = useCallback(() => {
-    isActiveRef.current = false;
-    if (wakeLockRef.current) {
-      wakeLockRef.current.release().catch(() => {});
-      wakeLockRef.current = null;
-    }
+    releaseLock();
     setIsActive(false);
-  }, []);
+  }, [releaseLock]);
 
   useEffect(() => {
-    const handleVisibility = async () => {
-      if (document.visibilityState === "visible" && isActiveRef.current) {
-        if (!("wakeLock" in navigator)) return;
-        try {
-          if (!wakeLockRef.current) {
-            wakeLockRef.current = await navigator.wakeLock.request("screen");
-            wakeLockRef.current.addEventListener("release", () => {
-              wakeLockRef.current = null;
-            });
-          }
-        } catch {
-          // ignore
-        }
-      }
+    const handleVisibility = () => {
+      if (document.visibilityState === "visible" && isActiveRef.current) void acquire();
     };
     document.addEventListener("visibilitychange", handleVisibility);
     return () => {
       document.removeEventListener("visibilitychange", handleVisibility);
-      if (wakeLockRef.current) {
-        wakeLockRef.current.release().catch(() => {});
-        wakeLockRef.current = null;
-      }
+      releaseLock();
     };
-  }, []);
+  }, [acquire, releaseLock]);
 
   return { isActive, request, release };
 }

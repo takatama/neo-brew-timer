@@ -70,6 +70,7 @@ export default defineConfig({
     emptyOutDir: true,
   },
   test: {
+    include: ['src/**/*.test.{ts,tsx}', 'scripts/**/*.test.ts'],
     globals: true,
     environment: 'jsdom',
     setupFiles: './src/test-setup.ts',

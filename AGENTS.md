@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-COCO Timer is a brewing timer for the Hario Switch "New Hybrid Method".
+Neo Brew Timer is a brewing timer for Tetsu Kasuya's Neo Brew recipe.
 See `SPEC.md` for full UI/UX specification.
 
 ## Tech Stack
@@ -13,8 +13,8 @@ See `SPEC.md` for full UI/UX specification.
 - **i18n:** react-i18next with JSON translation files (`src/shared/i18n/{ja,en}.json`)
 - **Animation:** lottie-web (direct `loadAnimation`/`destroy` control — do NOT use lottie-react)
 - **Styling:** CSS Modules (`.module.css`) + global design tokens (`tokens.css`)
-- **Build:** Vite 7, `public/` as publicDir, vite-plugin-pwa for offline support
-- **Test:** Vitest + Testing Library
+- **Build:** Vite 8, `public/` as publicDir, vite-plugin-pwa for offline support
+- **Test:** Vitest + Testing Library; three Playwright smoke journeys
 - **Deploy:** Cloudflare Pages (static SPA; default fallback to `/` when no top-level `404.html`)
 
 ## Project Structure
@@ -115,10 +115,18 @@ npm run dev          # Dev server
 npm run build        # Production build → dist/
 npm run test         # Vitest (run once)
 npm run test:watch   # Vitest (watch mode)
+npm run typecheck    # TypeScript checks
+npm run test:e2e     # Three Chromium journeys (build + preview managed automatically)
 npm run deploy       # Deploy to Cloudflare Pages
 ```
 
 ## Testing
+
+- Keep E2E thin: `e2e/timer.spec.ts` covers only setup-to-finish, pause/resume/reset, and startup cancel/retry.
+- Use Vitest for recipe combinations, exact notification timing, and pending-operation races. Do not duplicate those matrices in Playwright.
+- E2E uses browser clock control and user-visible locators; avoid fixed real-time sleeps, CSS selectors, and screenshot baselines.
+- External services are isolated in E2E; physical audio, vibration, wake lock, and background behavior require device checks.
+- See README for browser installation and Linux cloud setup. Run typecheck, Vitest, and E2E after timer integration changes; report any unrun checks.
 
 - `src/features/recipe/waterCalc.test.ts` — Water calculation logic (pure functions)
 - `src/features/settings/store.test.ts` — Settings store (Zustand)
