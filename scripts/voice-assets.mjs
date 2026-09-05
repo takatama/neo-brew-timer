@@ -20,7 +20,7 @@ export const messages = {
     done: "Done",
   },
   ja: {
-    first: "さあ、はじめましょう",
+    first: "はじめましょう",
     next: "次のステップです",
     done: "できました",
   },

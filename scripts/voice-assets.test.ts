@@ -19,7 +19,7 @@ describe("voice asset definitions", () => {
     expect(messages).toEqual({
       en: { first: "Let's brew", next: "Next step", done: "Done" },
       ja: {
-        first: "さあ、はじめましょう",
+        first: "はじめましょう",
         next: "次のステップです",
         done: "できました",
       },
