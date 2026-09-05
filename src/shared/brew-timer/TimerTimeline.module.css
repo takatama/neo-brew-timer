@@ -14,13 +14,13 @@
 
 .track::before,
 .elapsedLine {
-  content: "";
   position: absolute;
   top: 50%;
   left: 0;
   height: 3px;
   border-radius: 999px;
   transform: translateY(-50%);
+  content: "";
 }
 
 .track::before {
@@ -45,24 +45,24 @@
   z-index: 2;
   width: 9px;
   height: 9px;
-  border: 2px solid var(--md-secondary);
   background: var(--md-surface);
+  border: 2px solid var(--md-secondary);
 }
 
 .currentStep {
   z-index: 4;
   width: 9px;
   height: 9px;
-  border: 2px solid var(--md-accent);
   background: var(--md-accent);
+  border: 2px solid var(--md-accent);
   box-shadow:
     0 0 0 3px var(--md-surface),
     0 0 0 5px var(--md-accent);
 }
 
 .passedStep {
-  border-color: var(--md-accent);
   background: var(--md-accent);
+  border-color: var(--md-accent);
 }
 
 .currentTime {
