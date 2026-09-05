@@ -4,46 +4,49 @@ import { useSettingsStore } from "../../settings/store";
 export const VOICE_NOTIFICATION_EVENT = "coco:voice-notification";
 export const VOICE_NOTIFICATION_END_EVENT = "coco:voice-notification-end";
 
-function loadAudioPair(
+type VoiceMessage = "first" | "next" | "done";
+
+function loadAudio(
   language: string,
   voice: string,
-): [HTMLAudioElement, HTMLAudioElement] {
-  const nextStep = new Audio(`/assets/audio/${language}-${voice}-next-step.wav`);
-  const finish = new Audio(`/assets/audio/${language}-${voice}-finish.wav`);
-  nextStep.load();
-  finish.load();
-  return [nextStep, finish];
+): Record<VoiceMessage, HTMLAudioElement> {
+  const suffixes: Record<VoiceMessage, string> = {
+    first: "first-step",
+    next: "next-step",
+    done: "finish",
+  };
+  return Object.fromEntries(
+    Object.entries(suffixes).map(([type, suffix]) => {
+      const audio = new Audio(`/assets/audio/${language}-${voice}-${suffix}.wav`);
+      audio.load();
+      return [type, audio];
+    }),
+  ) as Record<VoiceMessage, HTMLAudioElement>;
 }
 
 export function useNotification() {
-  const nextStepAudioRef = useRef<HTMLAudioElement | null>(null);
-  const finishAudioRef = useRef<HTMLAudioElement | null>(null);
+  const audioRef = useRef<Record<VoiceMessage, HTMLAudioElement> | null>(null);
 
   useEffect(() => {
     const { language, voice } = useSettingsStore.getState();
-    [nextStepAudioRef.current, finishAudioRef.current] = loadAudioPair(language, voice);
+    audioRef.current = loadAudio(language, voice);
 
     const unsubscribe = useSettingsStore.subscribe((state, prev) => {
       if (state.language !== prev.language || state.voice !== prev.voice) {
-        nextStepAudioRef.current?.pause();
-        finishAudioRef.current?.pause();
-        [nextStepAudioRef.current, finishAudioRef.current] = loadAudioPair(
-          state.language,
-          state.voice,
-        );
+        Object.values(audioRef.current ?? {}).forEach((audio) => audio.pause());
+        audioRef.current = loadAudio(state.language, state.voice);
       }
     });
 
     return () => {
       unsubscribe();
-      nextStepAudioRef.current?.pause();
-      finishAudioRef.current?.pause();
+      Object.values(audioRef.current ?? {}).forEach((audio) => audio.pause());
     };
   }, []);
 
-  const playSound = useCallback((isFinish: boolean) => {
+  const playVoiceMessage = useCallback((type: VoiceMessage) => {
     if (!useSettingsStore.getState().isSoundEnabled()) return;
-    const audio = isFinish ? finishAudioRef.current : nextStepAudioRef.current;
+    const audio = audioRef.current?.[type];
     if (!audio) return;
 
     let isStarted = false;
@@ -88,6 +91,16 @@ export function useNotification() {
       });
   }, []);
 
+  const playSound = useCallback(
+    (isFinish: boolean) => playVoiceMessage(isFinish ? "done" : "next"),
+    [playVoiceMessage],
+  );
+
+  const playFirstSound = useCallback(
+    () => playVoiceMessage("first"),
+    [playVoiceMessage],
+  );
+
   const vibrate = useCallback((type: "pre-step" | "step-change") => {
     if (!useSettingsStore.getState().isVibrateEnabled()) return;
     if (!navigator.vibrate) return;
@@ -98,5 +111,5 @@ export function useNotification() {
     }
   }, []);
 
-  return { playSound, vibrate };
+  return { playSound, playFirstSound, vibrate };
 }
