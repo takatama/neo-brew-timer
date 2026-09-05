@@ -17,3 +17,7 @@
   color: var(--md-text);
   white-space: nowrap;
 }
+
+.animationText :global(.pour-number) {
+  font-size: 1.75rem;
+}
