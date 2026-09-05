@@ -11,7 +11,7 @@ interface Props {
 
 export function BrewTimeline({ steps, currentStepIndex, currentTime }: Props) {
   const { t } = useTranslation();
-  const totalTime = steps.at(-1)?.timeSec ?? 0;
+  const totalTime = steps[steps.length - 1]?.timeSec ?? 0;
   const currentTimeRatio = totalTime
     ? Math.min(1, Math.max(0, currentTime / totalTime))
     : 0;

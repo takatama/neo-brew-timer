@@ -76,6 +76,46 @@ Vite runs at:
 http://localhost:5173/
 ```
 
+## Tests
+
+```bash
+npm run typecheck
+npm test
+```
+
+The browser smoke suite intentionally contains only three journeys: setup to
+completion, pause/resume/reset, and cancel/retry during startup. Keep detailed
+recipe calculations, notification timing, and asynchronous edge cases in Vitest.
+
+```bash
+# One-time browser setup (also repeat after upgrading Playwright)
+npx playwright install chromium
+npm run test:e2e
+```
+
+For a Linux cloud environment, install dependencies during environment setup:
+
+```bash
+npm ci
+npx playwright install --with-deps chromium
+```
+
+Then run the same `npm run typecheck`, `npm test`, and `npm run test:e2e`
+commands. The cloud instructions are provided for setup; this suite was verified
+locally on Windows, not in a cloud environment.
+
+Playwright builds the app and starts its own preview at `127.0.0.1:4179`; leave
+that port free. It runs one Chromium project at a phone-sized viewport, advances
+browser time, disables audio/BGM, supplies empty news, and blocks other external
+requests. Assertions use visible text and button roles rather than CSS classes
+or screenshot baselines. Failed runs keep screenshots and traces in
+`test-results/` (ignored by Git); inspect a trace with
+`npx playwright show-trace <path-to-trace.zip>`.
+
+This is not phone hardware emulation. Real sound, vibration, screen wake lock,
+background/resume behavior, offline updates, and other browsers still need
+separate checks. Do not expand the E2E matrix for every setting or recipe value.
+
 ## Build
 
 ```bash

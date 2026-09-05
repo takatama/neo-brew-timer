@@ -1,4 +1,4 @@
-import type { AudioTrack } from "../../../types";
+import type { AudioTrack } from "../../types";
 
 const AUDIO_BASE_URL =
   "https://pub-dafc6a76fed548fc9d46bd2db7bc61b5.r2.dev/audio/holiday/sun/";
