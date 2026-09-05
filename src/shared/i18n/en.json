@@ -65,7 +65,7 @@
     "currentStep": "Current Step",
     "nextStep": "Next",
     "firstStep": "First",
-    "remaining": "Remaining",
+    "remaining": "<time>{{time}}</time> left",
     "play": "Play",
     "pause": "Pause",
     "reset": "Reset",

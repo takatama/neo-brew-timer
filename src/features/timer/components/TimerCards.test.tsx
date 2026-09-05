@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import type { ComputedStep } from "../../recipe/types";
-import "../../../shared/i18n/config";
+import i18n from "../../../shared/i18n/config";
 import { Countdown } from "./Countdown";
 import { NextStepPreview } from "./NextStepPreview";
 import { StepCard } from "./StepCard";
@@ -20,11 +20,26 @@ const firstStep: ComputedStep = {
 };
 
 describe("timer cards", () => {
-  it("shows a subtle remaining-time label before the countdown", () => {
-    render(<Countdown remainingSeconds={30} progress={0} isImminent={false} />);
+  afterEach(async () => {
+    await i18n.changeLanguage("en");
+  });
 
-    expect(screen.getByText("Remaining")).toBeInTheDocument();
-    expect(screen.getByText("0:30")).toBeInTheDocument();
+  it("shows the English remaining-time label after the countdown", async () => {
+    await i18n.changeLanguage("en");
+    const { container } = render(
+      <Countdown remainingSeconds={30} progress={0} isImminent={false} />,
+    );
+
+    expect(container.firstElementChild).toHaveTextContent(/^0:30 left$/);
+  });
+
+  it("shows the Japanese remaining-time label before the countdown", async () => {
+    await i18n.changeLanguage("ja");
+    const { container } = render(
+      <Countdown remainingSeconds={4} progress={0} isImminent={false} />,
+    );
+
+    expect(container.firstElementChild).toHaveTextContent(/^あと 0:04$/);
   });
 
   it("uses the first-step heading for the startup animation", () => {
