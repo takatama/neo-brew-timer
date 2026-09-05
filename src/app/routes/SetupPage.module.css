@@ -87,9 +87,9 @@
 
 .stepItem {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  column-gap: 8px;
+  column-gap: 12px;
   font-size: 0.95rem;
   padding: 10px 12px;
   border-bottom: 1px solid var(--md-outline);
@@ -99,13 +99,20 @@
   border-bottom: none;
 }
 
-.stepItem span:first-child {
+.stepNumber {
   color: var(--md-text-muted);
+  font-size: 0.78rem;
+  font-weight: 600;
 }
 
-.stepItem span:last-child {
+.stepInstruction {
+  color: var(--md-text);
+}
+
+.stepDuration {
   font-weight: 600;
   color: var(--md-text);
+  white-space: nowrap;
 }
 
 /* Details */
