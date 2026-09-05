@@ -37,13 +37,26 @@ Where:
 
 Normal app development does not require Google Cloud: generated WAV files are
 committed under `public/assets/audio/` and are played as offline static assets.
-To regenerate all 12 language, voice, and message combinations, enable the
-Google Cloud Text-to-Speech API, provide standard Application Default
-Credentials, and run:
+To regenerate all 12 language, voice, and message combinations, install the
+Google Cloud CLI and use a Google Cloud project with billing enabled. Cloud
+Text-to-Speech may incur charges depending on usage.
 
 ```bash
+# Replace YOUR_PROJECT_ID with the actual Google Cloud project ID.
+gcloud config set project YOUR_PROJECT_ID
+gcloud services enable texttospeech.googleapis.com
 gcloud auth application-default login
+gcloud auth application-default set-quota-project YOUR_PROJECT_ID
 npm run generate:voices
+```
+
+If generation fails with a quota-project or `SERVICE_DISABLED` error, verify
+the selected project, billing status, and API status:
+
+```bash
+gcloud config get-value project
+gcloud billing projects describe YOUR_PROJECT_ID
+gcloud services list --enabled --filter=texttospeech.googleapis.com
 ```
 
 The generator keeps the WaveNet voice selection, localized messages, and SSML
