@@ -1,4 +1,4 @@
-import { useTranslation } from "react-i18next";
+import { Trans } from "react-i18next";
 import { formatTime } from "../../recipe/waterCalc";
 import styles from "./Countdown.module.css";
 
@@ -9,13 +9,16 @@ interface Props {
 }
 
 export function Countdown({ remainingSeconds, progress, isImminent }: Props) {
-  const { t } = useTranslation();
+  const formattedTime = formatTime(Math.max(0, Math.ceil(remainingSeconds)));
 
   return (
     <>
       <div className={styles.stepTime}>
-        <span className={styles.remainingLabel}>{t("timer.remaining")}</span>
-        <span>{formatTime(Math.max(0, Math.ceil(remainingSeconds)))}</span>
+        <Trans
+          i18nKey="timer.remaining"
+          values={{ time: formattedTime }}
+          components={{ time: <span className={styles.timeValue} /> }}
+        />
       </div>
       <div className={styles.progress}>
         <div
