@@ -40,7 +40,6 @@ export function SetupPage() {
   const lang: SupportedLanguage = i18n.language === "ja" ? "ja" : "en";
   const totalWater = getTotalWater(beans, neoBrewMethod.waterRatio);
   const steps = computeSteps(neoBrewMethod, beans, flavor);
-  const stepLabels: string[] = t("stepLabels", { returnObjects: true }) as string[];
   const equipment = getEquipmentItems(lang);
 
   const handleStart = () => {
@@ -102,10 +101,17 @@ export function SetupPage() {
                 .filter((step) => step.actionType !== "none")
                 .map((step, idx) => (
                   <div key={`${step.timeSec}-${step.actionType}`} className={styles.stepItem}>
-                    <span>
-                      Step {idx + 1}: {stepLabels[idx] ?? ""}
+                    <span className={styles.stepNumber}>STEP {idx + 1}</span>
+                    <span className={styles.stepInstruction}>
+                      {t(step.actionType === "bloom" ? "setup.stepBloom" : "setup.stepPourTo", {
+                        amount: step.cumulative,
+                      })}
                     </span>
-                    <span>{step.cumulative}g</span>
+                    <span className={styles.stepDuration}>
+                      {t("setup.stepDuration", {
+                        seconds: steps[idx + 1].timeSec - step.timeSec,
+                      })}
+                    </span>
                   </div>
                 ))}
             </div>
