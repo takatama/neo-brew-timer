@@ -14,7 +14,7 @@ export function Countdown({ remainingSeconds, progress, isImminent }: Props) {
 
   return (
     <>
-      <div className={styles.stepTime}>
+      <div className={styles.stepTime} role="timer" aria-live="polite">
         <Trans
           i18nKey="timer.remaining"
           values={{ time: formattedTime }}
