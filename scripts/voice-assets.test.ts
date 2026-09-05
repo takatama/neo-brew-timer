@@ -35,9 +35,12 @@ describe("voice asset definitions", () => {
         (target) => target.language === "en" && target.type === type,
       )?.ssml;
       expect(ssml).toContain('begin="0s"');
+      expect(ssml).toContain('begin="five.begin+1.0s"');
+      expect(ssml).toContain('begin="four.begin+1.0s"');
       expect(ssml).toContain('begin="three.begin+1.0s"');
       expect(ssml).toContain('begin="two.begin+1.0s"');
       expect(ssml).toContain('begin="one.begin+1.0s"');
+      expect(ssml).toMatch(/>5<.*>4<.*>3<.*>2<.*>1</s);
       expect(ssml).toContain(messages.en[type]);
     },
   );

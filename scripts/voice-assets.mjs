@@ -48,7 +48,13 @@ export function firstSsml(message) {
 export function countdownSsml(message) {
   return `<speak>
   <par>
-    <media xml:id="three" begin="0s">
+    <media xml:id="five" begin="0s">
+      <speak><prosody rate="x-fast">5</prosody></speak>
+    </media>
+    <media xml:id="four" begin="five.begin+1.0s">
+      <speak><prosody rate="x-fast">4</prosody></speak>
+    </media>
+    <media xml:id="three" begin="four.begin+1.0s">
       <speak><prosody rate="x-fast">3</prosody></speak>
     </media>
     <media xml:id="two" begin="three.begin+1.0s">
