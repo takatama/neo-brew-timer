@@ -1,6 +1,7 @@
 import { Trans, useTranslation } from "react-i18next";
 import type { ReactNode } from "react";
 import type { ComputedStep } from "../../recipe/types";
+import { BrewStepCardFrame } from "../../../shared/brew-timer";
 import { Countdown } from "./Countdown";
 import { BrewTimeline } from "./BrewTimeline";
 import styles from "./StepCard.module.css";
@@ -125,22 +126,20 @@ export function StepCard({
   steps,
   currentTime,
 }: Props) {
+  const { t } = useTranslation();
   return (
-    <section className={`card ${styles.primaryCard}${isImminent ? ` ${styles.imminent}` : ""}`}>
-      <div className={styles.cardBody}>
-        <div className={styles.locationGroup}>
-          <div className={styles.stepMeta}>
-            STEP {stepIndex + 1} / {totalSteps}
-          </div>
-          <BrewTimeline
-            steps={steps}
-            currentStepIndex={stepIndex}
-            currentTime={currentTime}
-          />
-        </div>
-        <div
-          className={`${styles.instruction}${nextStepPreview ? ` ${styles.instructionWithPreview}` : ""}`}
-        >
+    <BrewStepCardFrame
+      ariaLabel={t("timer.currentStep")}
+      stepLabel={<>STEP {stepIndex + 1} / {totalSteps}</>}
+      timeline={(
+        <BrewTimeline
+          steps={steps}
+          currentStepIndex={stepIndex}
+          currentTime={currentTime}
+        />
+      )}
+      instruction={(
+        <>
           <div className={styles.stepVerb}>
             <VerbText step={step} stepIndex={stepIndex} />
           </div>
@@ -150,18 +149,17 @@ export function StepCard({
           >
             <InstructionText step={step} stepIndex={stepIndex} />
           </div>
-        </div>
-        {nextStepPreview && (
-          <div className={styles.nextStep}>{nextStepPreview}</div>
-        )}
-      </div>
-      <div className={styles.countdown}>
+        </>
+      )}
+      preview={nextStepPreview}
+      countdown={(
         <Countdown
           remainingSeconds={remainingSeconds}
           progress={progress}
           isImminent={isImminent}
         />
-      </div>
-    </section>
+      )}
+      isImminent={isImminent}
+    />
   );
 }

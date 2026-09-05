@@ -1,23 +1,4 @@
-/* ===== Design Tokens ===== */
-:root {
-  color-scheme: light;
-  --md-primary: #6d4c41;
-  --md-primary-contrast: #ffffff;
-  --md-secondary: #8d6e63;
-  --md-surface: #fffef8;
-  --md-surface-2: #f7f2ea;
-  --md-outline: #e2d8c8;
-  --md-text: #2b221c;
-  --md-text-muted: #6f6258;
-  --md-accent: #ffb74d;
-  --md-danger: #d32f2f;
-  --shadow-1: 0 2px 6px rgba(36, 25, 16, 0.12);
-  --shadow-2: 0 10px 24px rgba(36, 25, 16, 0.18);
-  --radius-lg: 18px;
-  --radius-md: 12px;
-  --radius-sm: 10px;
-  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
-}
+@import "../brew-timer/theme.css";
 
 * {
   box-sizing: border-box;
@@ -27,66 +8,6 @@ body {
   margin: 0;
   background: linear-gradient(180deg, #f8f4ec 0%, #fffdf8 60%, #f3efe7 100%);
   color: var(--md-text);
-}
-
-/* ===== Shared Primitives ===== */
-.card {
-  background: var(--md-surface);
-  border-radius: var(--radius-lg);
-  padding: 16px;
-  box-shadow: var(--shadow-1);
-  border: 1px solid var(--md-outline);
-}
-
-.card-title {
-  font-weight: 600;
-  margin-bottom: 10px;
-  color: var(--md-text-muted);
-  font-size: 0.9rem;
-  letter-spacing: 0.3px;
-}
-
-.hint {
-  font-size: 0.85rem;
-  color: var(--md-text-muted);
-  margin-top: 4px;
-}
-
-.choice-row {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.choice {
-  border: 1px solid var(--md-outline);
-  padding: 8px 12px;
-  border-radius: 999px;
-  cursor: pointer;
-  background: var(--md-surface-2);
-}
-
-.choice.active {
-  background: var(--md-primary);
-  color: var(--md-primary-contrast);
-  border-color: var(--md-primary);
-}
-
-.choice:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.pour-number {
-  font-size: 2rem;
-  font-weight: 700;
-}
-
-.pour-unit {
-  margin-left: 0.14em;
-  font-size: 1em;
-  font-weight: 700;
 }
 
 .content {

@@ -23,7 +23,7 @@ test.beforeEach(async ({ page, baseURL }) => {
   await page.clock.pauseAt(new Date("2026-01-01T12:01:00Z"));
 });
 
-const remaining = (page: Page) => page.getByText(/^\d+:\d{2} left$/);
+const remaining = (page: Page) => page.getByRole("timer");
 
 test("setup carries the chosen amount into a brew that reaches completion", async ({ page }) => {
   await page.getByRole("button", { name: "increase", exact: true }).click();
