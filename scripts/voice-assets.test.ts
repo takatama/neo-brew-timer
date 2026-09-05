@@ -28,7 +28,7 @@ describe("voice asset definitions", () => {
     expect(new Set(targets.map(({ filename }) => filename)).size).toBe(12);
   });
 
-  it.each(["next", "done"] as const)(
+  it.each(["first", "next", "done"] as const)(
     "uses fixed countdown start offsets for %s",
     (type) => {
       const ssml = targets.find(
@@ -41,16 +41,16 @@ describe("voice asset definitions", () => {
       expect(ssml).toContain('begin="two.begin+1.0s"');
       expect(ssml).toContain('begin="one.begin+1.0s"');
       expect(ssml).toMatch(/>5<.*>4<.*>3<.*>2<.*>1</s);
-      expect(ssml).toContain(messages.en[type]);
+      expect(ssml).toContain(messages.en[type].replace("'", "&apos;"));
     },
   );
 
-  it("does not put a countdown in first-step SSML", () => {
+  it("uses the five-second countdown for the first-step prompt", () => {
     const first = targets.find(
       (target) => target.language === "ja" && target.type === "first",
     );
     expect(first?.ssml).toContain(messages.ja.first);
-    expect(first?.ssml).not.toContain("<par>");
-    expect(first?.ssml).not.toContain(">3<");
+    expect(first?.ssml).toContain("<par>");
+    expect(first?.ssml).toMatch(/>5<.*>4<.*>3<.*>2<.*>1</s);
   });
 });

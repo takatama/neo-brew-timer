@@ -41,10 +41,6 @@ function escapeXml(value) {
     .replaceAll("'", "&apos;");
 }
 
-export function firstSsml(message) {
-  return `<speak><prosody rate="medium">${escapeXml(message)}</prosody></speak>`;
-}
-
 export function countdownSsml(message) {
   return `<speak>
   <par>
@@ -78,10 +74,7 @@ export function createVoiceAssetTargets() {
         gender,
         type,
         voice: voices[language][gender],
-        ssml:
-          type === "first"
-            ? firstSsml(messages[language][type])
-            : countdownSsml(messages[language][type]),
+        ssml: countdownSsml(messages[language][type]),
         filename: `${language}-${gender}-${assetSuffixes[type]}.wav`,
       })),
     ),
