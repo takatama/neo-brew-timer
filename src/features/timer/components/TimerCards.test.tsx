@@ -2,6 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import type { ComputedStep } from "../../recipe/types";
 import "../../../shared/i18n/config";
+import { Countdown } from "./Countdown";
 import { NextStepPreview } from "./NextStepPreview";
 import { StepCard } from "./StepCard";
 
@@ -19,6 +20,13 @@ const firstStep: ComputedStep = {
 };
 
 describe("timer cards", () => {
+  it("shows a subtle remaining-time label before the countdown", () => {
+    render(<Countdown remainingSeconds={30} progress={0} isImminent={false} />);
+
+    expect(screen.getByText("Remaining")).toBeInTheDocument();
+    expect(screen.getByText("0:30")).toBeInTheDocument();
+  });
+
   it("uses the first-step heading for the startup animation", () => {
     render(
       <NextStepPreview
