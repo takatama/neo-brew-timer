@@ -11,7 +11,7 @@ export function useTimerOrchestrator() {
   const [searchParams, setSearchParams] = useSearchParams();
   const { beans, flavor } = useSessionStore();
   const { debugSpeed, animation } = useSettingsStore();
-  const { playSound, vibrate } = useNotification();
+  const { playSound, playFirstSound, vibrate } = useNotification();
   const wakeLock = useWakeLock();
 
   const steps = useMemo(
@@ -76,7 +76,8 @@ export function useTimerOrchestrator() {
   const isImminent = remainingToNext > 0 && remainingToNext <= 5;
 
   const startWithAnimation = useCallback(() => {
-    notifyPreStep(false);
+    vibrate("pre-step");
+    playFirstSound();
     setOverlayStep({ index: 0, prevCumulative: 0 });
     timer.setOverlayStep(0);
     wakeLock.request();
@@ -85,7 +86,7 @@ export function useTimerOrchestrator() {
       setOverlayStep(null);
       timer.start();
     }, 5000);
-  }, [notifyPreStep, timer, wakeLock]);
+  }, [playFirstSound, timer, vibrate, wakeLock]);
 
   const handlePlayPause = useCallback(() => {
     // Cancel pending startup countdown first, if any
@@ -104,11 +105,14 @@ export function useTimerOrchestrator() {
       if (timer.currentTime === 0 && animation) {
         startWithAnimation();
       } else {
+        if (timer.currentTime === 0) {
+          playFirstSound();
+        }
         timer.start();
         wakeLock.request();
       }
     }
-  }, [timer, animation, wakeLock, startWithAnimation]);
+  }, [timer, animation, wakeLock, startWithAnimation, playFirstSound]);
 
   const handleReset = useCallback(() => {
     if (startDelayRef.current) {
@@ -130,6 +134,7 @@ export function useTimerOrchestrator() {
       if (animation) {
         startWithAnimation();
       } else {
+        playFirstSound();
         timer.start();
         wakeLock.request();
       }

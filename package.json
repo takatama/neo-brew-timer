@@ -9,6 +9,7 @@
 		"deploy": "wrangler pages deploy dist",
 		"test": "vitest run",
 		"test:watch": "vitest",
+		"generate:voices": "node scripts/generate-voice-assets.mjs",
 		"generate:icons": "node scripts/generate-pwa-icons.mjs",
 		"prebuild": "npm run generate:icons"
 	},

@@ -31,7 +31,24 @@ Where:
 
 - `lang`: `ja` or `en`
 - `voice`: `male` or `female`
-- `type`: `next-step` or `finish`
+- `type`: `first-step`, `next-step`, or `finish`
+
+### Regenerating voice assets
+
+Normal app development does not require Google Cloud: generated WAV files are
+committed under `public/assets/audio/` and are played as offline static assets.
+To regenerate all 12 language, voice, and message combinations, enable the
+Google Cloud Text-to-Speech API, provide standard Application Default
+Credentials, and run:
+
+```bash
+gcloud auth application-default login
+npm run generate:voices
+```
+
+The generator keeps the WaveNet voice selection, localized messages, and SSML
+countdown timing in `scripts/voice-assets.mjs`. It cannot generate files in
+environments such as Codex Cloud where Google Cloud credentials are absent.
 
 ## Development (Vite)
 
