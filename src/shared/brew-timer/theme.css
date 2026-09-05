@@ -1,0 +1,78 @@
+:root {
+  color-scheme: light;
+  --md-primary: #6d4c41;
+  --md-primary-contrast: #ffffff;
+  --md-secondary: #8d6e63;
+  --md-surface: #fffef8;
+  --md-surface-2: #f7f2ea;
+  --md-outline: #e2d8c8;
+  --md-text: #2b221c;
+  --md-text-muted: #6f6258;
+  --md-accent: #ffb74d;
+  --md-danger: #d32f2f;
+  --shadow-1: 0 2px 6px rgba(36, 25, 16, 0.12);
+  --shadow-2: 0 10px 24px rgba(36, 25, 16, 0.18);
+  --radius-lg: 18px;
+  --radius-md: 12px;
+  --radius-sm: 10px;
+  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+}
+
+.card {
+  padding: 16px;
+  background: var(--md-surface);
+  border: 1px solid var(--md-outline);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-1);
+}
+
+.card-title {
+  margin-bottom: 10px;
+  color: var(--md-text-muted);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.hint {
+  margin-top: 4px;
+  color: var(--md-text-muted);
+  font-size: 0.85rem;
+}
+
+.choice-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.choice {
+  padding: 8px 12px;
+  cursor: pointer;
+  background: var(--md-surface-2);
+  border: 1px solid var(--md-outline);
+  border-radius: 999px;
+}
+
+.choice.active {
+  color: var(--md-primary-contrast);
+  background: var(--md-primary);
+  border-color: var(--md-primary);
+}
+
+.choice:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.pour-number {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.pour-unit {
+  margin-left: 0.14em;
+  font-size: 1em;
+  font-weight: 700;
+}
