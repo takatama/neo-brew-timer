@@ -1,13 +1,13 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 import { useTimer } from "./useTimer";
-import type { ComputedStep } from "../../recipe/types";
+import type { TimerStep } from "../../../shared/brew-timer";
 
-const makeSteps = (): ComputedStep[] => [
-  { timeSec: 0, actionType: "pour", waterAmountType: "equalPour", cumulative: 30, increment: 30 },
-  { timeSec: 30, actionType: "pour", waterAmountType: "equalPour", cumulative: 60, increment: 30 },
-  { timeSec: 45, actionType: "pour", waterAmountType: "equalPour", cumulative: 90, increment: 30 },
-  { timeSec: 210, actionType: "none", waterAmountType: "none", cumulative: 300, increment: 0 },
+const makeSteps = (): TimerStep[] => [
+  { timeSec: 0, isFinish: false },
+  { timeSec: 30, isFinish: false },
+  { timeSec: 45, isFinish: false },
+  { timeSec: 210, isFinish: true },
 ];
 
 describe("useTimer", () => {
@@ -125,7 +125,10 @@ describe("useTimer", () => {
       vi.advanceTimersByTime(100);
     });
 
-    expect(onPreNotify).toHaveBeenCalledWith(1, false);
+    expect(onPreNotify).toHaveBeenCalledWith({
+      nextStepIndex: 1,
+      isFinish: false,
+    });
 
     vi.restoreAllMocks();
   });
