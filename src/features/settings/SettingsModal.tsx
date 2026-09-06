@@ -1,6 +1,9 @@
 import { useTranslation } from "react-i18next";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useSettingsStore } from "./store";
-import type { Language, Voice } from "./types";
+import type { Voice } from "./types";
+import { useDisplayLanguage } from "../../shared/i18n/DisplayLanguage";
+import { replacePathLanguage, type DisplayLanguage } from "../../shared/i18n/routing";
 import styles from "./SettingsModal.module.css";
 
 interface Props {
@@ -73,15 +76,21 @@ function SwitchRow({
 }
 
 export function SettingsModal({ open, onClose }: Props) {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const displayLanguage = useDisplayLanguage();
   const settings = useSettingsStore();
 
   const soundEnabled = settings.isSoundEnabled();
   const vibrateEnabled = settings.isVibrateEnabled();
 
-  const handleLanguageChange = (lang: Language) => {
+  const handleLanguageChange = (lang: DisplayLanguage) => {
     settings.setLanguage(lang);
-    i18n.changeLanguage(lang);
+    navigate(
+      replacePathLanguage(location.pathname, lang, location.search, location.hash),
+      { replace: true },
+    );
   };
 
   if (!open) return null;
@@ -105,7 +114,7 @@ export function SettingsModal({ open, onClose }: Props) {
           </h4>
           <SegmentedControl
             ariaLabel={t("settings.language")}
-            value={settings.language}
+            value={displayLanguage}
             onChange={handleLanguageChange}
             options={[
               { value: "ja", label: "日本語" },

@@ -9,12 +9,14 @@ import {
   type PreNotifyEvent,
 } from "../../../shared/brew-timer";
 import { useNotification } from "./useNotification";
+import { useDisplayLanguage } from "../../../shared/i18n/DisplayLanguage";
 
 export function useTimerOrchestrator() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const displayLanguage = useDisplayLanguage();
   const { beans, flavor } = useSessionStore();
   const { debugSpeed, animation } = useSettingsStore();
-  const { playSound, playFirstSound, vibrate } = useNotification();
+  const { playSound, playFirstSound, vibrate } = useNotification(displayLanguage);
   const wakeLock = useWakeLock();
 
   const steps = useMemo(

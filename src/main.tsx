@@ -1,22 +1,25 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import i18n from "./shared/i18n/config";
+import { choosePreferredLanguage, getUrlLanguage } from "./shared/i18n/routing";
 import { App } from "./app/App";
 import "./shared/styles/tokens.css";
 
-// Sync i18n language with persisted settings before render
+let savedLanguage: unknown;
 try {
   const stored = localStorage.getItem("coco-timer-settings");
   if (stored) {
     const parsed = JSON.parse(stored);
-    const lang = parsed.state?.language;
-    if (lang === "ja" || lang === "en") {
-      i18n.changeLanguage(lang);
-    }
+    savedLanguage = parsed.state?.language;
   }
 } catch {
-  // ignore
+  // Use the browser language when saved settings cannot be read.
 }
+
+const initialLanguage = getUrlLanguage(window.location.pathname)
+  ?? choosePreferredLanguage(savedLanguage, navigator.language);
+
+await i18n.changeLanguage(initialLanguage);
 
 const root = document.getElementById("root");
 if (root) {

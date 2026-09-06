@@ -1,17 +1,20 @@
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useSessionStore } from "../../features/timer/store";
+import { useDisplayLanguage } from "../../shared/i18n/DisplayLanguage";
+import { localizedPath } from "../../shared/i18n/routing";
 import styles from "./IntroPage.module.css";
 const heroImage = "/assets/images/goran-ivos-1JsjRW6Sbwg-unsplash.jpg";
 
 export function IntroPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const displayLanguage = useDisplayLanguage();
   const setIntroSeen = useSessionStore((s) => s.setIntroSeen);
 
   const handleStart = () => {
     setIntroSeen(true);
-    navigate("/setup");
+    navigate(localizedPath(displayLanguage, "setup"));
   };
 
   return (
