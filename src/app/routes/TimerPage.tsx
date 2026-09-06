@@ -8,11 +8,14 @@ import { FinishCard } from "../../features/timer/components/FinishCard";
 import { NextStepPreview } from "../../features/timer/components/NextStepPreview";
 import { useCoffeeNews } from "../../features/timer/hooks/useCoffeeNews";
 import { ConfirmDialog } from "../../shared/components/ConfirmDialog";
+import { useDisplayLanguage } from "../../shared/i18n/DisplayLanguage";
+import { localizedPath } from "../../shared/i18n/routing";
 import styles from "./TimerPage.module.css";
 
 export function TimerPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const displayLanguage = useDisplayLanguage();
 
   const {
     steps,
@@ -32,8 +35,8 @@ export function TimerPage() {
 
   const isFinishStep = currentStep?.actionType === "none";
   const brewStepCount = steps.filter((step) => step.actionType !== "none").length;
-  const { debugEnabled, debugSpeed, setDebugSpeed, language } = useSettingsStore();
-  const { news, loading: newsLoading } = useCoffeeNews(language);
+  const { debugEnabled, debugSpeed, setDebugSpeed } = useSettingsStore();
+  const { news, loading: newsLoading } = useCoffeeNews(displayLanguage);
   const [resetDialogOpen, setResetDialogOpen] = useState(false);
 
   const handleResetTimer = () => {
@@ -56,7 +59,7 @@ export function TimerPage() {
             {t("timer.waterChipLabel")} <span className={styles.chipValue}>{totalWater}g</span>
           </span>
         </div>
-        <button className={styles.textLink} onClick={() => navigate("/setup")}>
+        <button className={styles.textLink} onClick={() => navigate(localizedPath(displayLanguage, "setup"))}>
           {t("timer.editParams")}
         </button>
       </section>

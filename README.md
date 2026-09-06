@@ -6,11 +6,14 @@ Neo Brew Timer is a React SPA, step-driven brewing timer designed for hands-busy
 
 ## Pages
 
-- `/intro` – first-time intro (image, description, YouTube)
-- `/setup` – beans selection and step water preview
-- `/timer` – main timer UI
+- `/{lang}/intro` – first-time intro (image, description, YouTube)
+- `/{lang}/setup` – beans selection and step water preview
+- `/{lang}/timer` – main timer UI
 
-`/` automatically routes first-time users to Intro and returning users to Setup.
+`lang` is `ja` or `en`. `/` automatically chooses the saved language (or the
+browser language when there is no saved choice) and routes first-time users to
+Intro and returning users to Setup. The old `/intro`, `/setup`, and `/timer`
+URLs are redirected to their language-prefixed equivalents.
 
 ## Settings
 

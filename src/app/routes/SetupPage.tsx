@@ -10,17 +10,20 @@ import { CoffeeNews } from "../../features/timer/components/CoffeeNews";
 import { useCoffeeNews } from "../../features/timer/hooks/useCoffeeNews";
 import styles from "./SetupPage.module.css";
 import { getEquipmentItems, type SupportedLanguage } from "../../shared/affiliate/amazon";
+import { useDisplayLanguage } from "../../shared/i18n/DisplayLanguage";
+import { localizedPath } from "../../shared/i18n/routing";
 const heroImage = "/assets/images/goran-ivos-1JsjRW6Sbwg-unsplash.jpg";
 
 const validFlavors: FlavorProfile[] = ["sweet", "neutral", "sour"];
 
 export function SetupPage() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const navigate = useNavigate();
+  const displayLanguage = useDisplayLanguage();
   const [searchParams] = useSearchParams();
   const { beans, flavor, setBeans, setFlavor } = useSessionStore();
-  const { debugEnabled, language, debugBgmDayOfWeek, setDebugBgmDayOfWeek } = useSettingsStore();
-  const { news, loading: newsLoading } = useCoffeeNews(language, debugEnabled);
+  const { debugEnabled, debugBgmDayOfWeek, setDebugBgmDayOfWeek } = useSettingsStore();
+  const { news, loading: newsLoading } = useCoffeeNews(displayLanguage, debugEnabled);
   const [detailsOpen, setDetailsOpen] = useState(false);
 
   // Apply URL parameters on mount (e.g. ?beans=25&flavor=sweet)
@@ -37,13 +40,13 @@ export function SetupPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const lang: SupportedLanguage = i18n.language === "ja" ? "ja" : "en";
+  const lang: SupportedLanguage = displayLanguage;
   const totalWater = getTotalWater(beans, neoBrewMethod.waterRatio);
   const steps = computeSteps(neoBrewMethod, beans, flavor);
   const equipment = getEquipmentItems(lang);
 
   const handleStart = () => {
-    navigate("/timer?autostart=1");
+    navigate(localizedPath(displayLanguage, "timer", "?autostart=1"));
   };
 
   return (

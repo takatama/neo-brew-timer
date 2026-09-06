@@ -19,6 +19,7 @@ test.beforeEach(async ({ page, baseURL }) => {
   // Control browser time instead of waiting through a real brew or changing app speed.
   await page.clock.install({ time: new Date("2026-01-01T12:00:00Z") });
   await page.goto("/setup");
+  await expect(page).toHaveURL(/\/en\/setup$/);
   await expect(page.getByRole("button", { name: "Start Timer", exact: true })).toBeVisible();
   await page.clock.pauseAt(new Date("2026-01-01T12:01:00Z"));
 });
@@ -28,12 +29,20 @@ const remaining = (page: Page) => page.getByRole("timer");
 test("setup carries the chosen amount into a brew that reaches completion", async ({ page }) => {
   await page.getByRole("button", { name: "increase", exact: true }).click();
   await page.getByRole("button", { name: "Start Timer", exact: true }).click();
-  await expect(page).toHaveURL(/\/timer$/);
+  await expect(page).toHaveURL(/\/en\/timer$/);
   await expect(page.getByText("Beans 21g", { exact: true })).toBeVisible();
   await expect(page.getByText("Water 315g", { exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: "Pause", exact: true })).toBeVisible();
 
   await page.clock.runFor(6_000);
+  const timeBeforeLanguageChange = (await remaining(page).innerText()).match(/\d+:\d{2}/)?.[0];
+  await page.getByRole("button", { name: "Settings", exact: true }).click();
+  await page.getByRole("radio", { name: "日本語", exact: true }).click();
+  await expect(page).toHaveURL(/\/ja\/timer$/);
+  expect((await remaining(page).innerText()).match(/\d+:\d{2}/)?.[0]).toBe(timeBeforeLanguageChange);
+  await page.getByRole("radio", { name: "English", exact: true }).click();
+  await expect(page).toHaveURL(/\/en\/timer$/);
+  await page.getByRole("button", { name: "Close", exact: true }).click();
   const before = await remaining(page).innerText();
   await page.clock.runFor(2_000);
   await expect(remaining(page)).not.toHaveText(before);

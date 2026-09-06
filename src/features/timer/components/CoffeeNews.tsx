@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import type { NewsItem } from "../hooks/useCoffeeNews";
 import styles from "./CoffeeNews.module.css";
 import { getNewsAdLinks, type SupportedLanguage } from "../../../shared/affiliate/amazon";
+import { useDisplayLanguage } from "../../../shared/i18n/DisplayLanguage";
 
 interface Props {
   news: NewsItem[];
@@ -46,10 +47,11 @@ function nextAdCycle(): number {
 }
 
 export function CoffeeNews({ news, loading }: Props) {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
+  const displayLanguage = useDisplayLanguage();
   const [ad, setAd] = useState<AdItem | null>(null);
 
-  const language: SupportedLanguage = i18n.language === "ja" ? "ja" : "en";
+  const language: SupportedLanguage = displayLanguage;
 
   const adCycleSeed = useMemo(() => {
     if (loading || news.length === 0) {
