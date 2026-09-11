@@ -10,7 +10,6 @@ const PRE_NOTIFY_SECONDS = 5;
 interface TimerCallbacks {
   onPreNotify?: (nextStepIndex: number, isFinish: boolean) => void;
   onStepCrossed?: () => void;
-  onOverlayExpired?: (stepIndex: number) => void;
 }
 
 export function useTimer(
@@ -27,7 +26,6 @@ export function useTimer(
     elapsedMs: 0,
     lastAnnouncedStep: -1,
     lastFinishAnnounced: false,
-    overlayStepIndex: null as number | null,
   });
 
   const callbacksRef = useRef(callbacks);
@@ -92,9 +90,6 @@ export function useTimer(
       ) {
         s.lastAnnouncedStep = curIdx + 1;
         const isFinish = nextStep.actionType === "none";
-        if (!isFinish) {
-          s.overlayStepIndex = curIdx + 1;
-        }
         callbacksRef.current.onPreNotify?.(curIdx + 1, isFinish);
       }
     } else {
@@ -108,16 +103,6 @@ export function useTimer(
       ) {
         s.lastFinishAnnounced = true;
         callbacksRef.current.onPreNotify?.(-1, true);
-      }
-    }
-
-    // Check overlay expiration
-    if (s.overlayStepIndex !== null) {
-      const overlayStep = computedSteps[s.overlayStepIndex];
-      if (overlayStep && curTime >= overlayStep.timeSec) {
-        const idx = s.overlayStepIndex;
-        s.overlayStepIndex = null;
-        callbacksRef.current.onOverlayExpired?.(idx);
       }
     }
 
@@ -139,9 +124,11 @@ export function useTimer(
   }, [tick, stopInterval]);
 
   const pause = useCallback(() => {
+    if (intervalRef.current !== null) tick();
+    const complete = stateRef.current.elapsedMs >= (stepsRef.current[stepsRef.current.length - 1]?.timeSec ?? 0) * 1000;
     stopInterval();
-    setStatus("paused");
-  }, [stopInterval]);
+    setStatus(complete ? "finished" : "paused");
+  }, [stopInterval, tick]);
 
   const reset = useCallback(() => {
     stopInterval();
@@ -149,15 +136,10 @@ export function useTimer(
       elapsedMs: 0,
       lastAnnouncedStep: -1,
       lastFinishAnnounced: false,
-      overlayStepIndex: null,
     };
     setElapsedMs(0);
     setStatus("idle");
   }, [stopInterval]);
-
-  const setOverlayStep = useCallback((index: number | null) => {
-    stateRef.current.overlayStepIndex = index;
-  }, []);
 
   useEffect(() => {
     return () => stopInterval();
@@ -171,6 +153,5 @@ export function useTimer(
     start,
     pause,
     reset,
-    setOverlayStep,
   };
 }

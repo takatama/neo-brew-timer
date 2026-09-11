@@ -86,3 +86,13 @@
     grid-template-columns: 1fr;
   }
 }
+
+.summary { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.summary .chip { border: 0; background: transparent; padding: 0; font-size: .8rem; }
+.summary .textLink { margin: 0; min-height: 44px; padding: 8px; font-size: .8rem; }
+.controls { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); }
+.btn { min-height: 52px; }
+
+.controls { position: sticky; bottom: 0; z-index: 5; background: #f8f5ef; padding-block: 8px max(8px, env(safe-area-inset-bottom)); }
+.controls > button:only-child { grid-column: 1 / -1; }
+@media (max-height: 700px) { .summary { margin-block: -10px; } }

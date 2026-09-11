@@ -223,3 +223,19 @@
   font-size: 0.78rem;
   line-height: 1.45;
 }
+
+.heading { padding: 14px 2px 10px; }
+.heading p { font-size: .7rem; font-weight: 700; letter-spacing: .15em; color: var(--md-primary); margin: 0 0 12px; }
+.heading h1 { font-size: clamp(1.5rem, 6vw, 1.85rem); letter-spacing: -.035em; line-height: 1.35; margin: 0 0 10px; }
+.heading span { color: var(--md-text-muted); font-size: .9rem; }
+.preparation { padding: 4px 6px; }
+.preparation h2 { font-size: .9rem; margin: 0 0 8px; }
+.preparation p { font-size: .9rem; line-height: 1.7; margin: 0 0 10px; color: var(--md-text-muted); }
+.preparation span { font-size: .8rem; font-weight: 600; }
+.startHint { margin: -6px 0 2px; text-align: center; color: var(--md-text-muted); font-size: .75rem; }
+.detailsSummary { min-height: 44px; }
+.stepperRow { grid-template-columns: auto 1fr; gap: 12px; }
+.stepperRow::after { display: none; }
+.stepperControls { justify-content: center; gap: 16px; }
+.beansValue { min-width: 3ch; font-variant-numeric: tabular-nums; }
+.btnPrimary { min-height: 56px; }

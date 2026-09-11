@@ -26,6 +26,10 @@ function loadAudio(
 
 export function useNotification() {
   const audioRef = useRef<Record<VoiceMessage, HTMLAudioElement> | null>(null);
+  const stop = useCallback(() => {
+    Object.values(audioRef.current ?? {}).forEach((audio) => audio.pause());
+    navigator.vibrate?.(0);
+  }, []);
 
   useEffect(() => {
     const { language, voice } = useSettingsStore.getState();
@@ -111,5 +115,5 @@ export function useNotification() {
     }
   }, []);
 
-  return { playSound, playFirstSound, vibrate };
+  return { playSound, playFirstSound, vibrate, stop };
 }

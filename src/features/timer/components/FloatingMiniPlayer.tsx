@@ -3,6 +3,7 @@ import { MiniAudioPlayer } from "./MiniAudioPlayer";
 import styles from "./FloatingMiniPlayer.module.css";
 
 interface FloatingMiniPlayerProps {
+  inline?: boolean;
   track: AudioTrack;
   onNextTrack: (trigger: "manual" | "ended") => void;
   onTrackPlaybackStarted: () => void;
@@ -10,11 +11,12 @@ interface FloatingMiniPlayerProps {
 
 export function FloatingMiniPlayer({
   track,
+  inline = false,
   onNextTrack,
   onTrackPlaybackStarted,
 }: FloatingMiniPlayerProps) {
   return (
-    <div className={styles.shell}>
+    <div className={`${styles.shell} ${inline ? styles.inline : ""}`}>
       <MiniAudioPlayer
         className={styles.player}
         track={track}

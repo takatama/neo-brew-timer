@@ -19,7 +19,7 @@ export function SetupPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { beans, flavor, setBeans, setFlavor } = useSessionStore();
-  const { debugEnabled, language, debugBgmDayOfWeek, setDebugBgmDayOfWeek } = useSettingsStore();
+  const { debugEnabled, language, startDelay, debugBgmDayOfWeek, setDebugBgmDayOfWeek } = useSettingsStore();
   const { news, loading: newsLoading } = useCoffeeNews(language, debugEnabled);
   const [detailsOpen, setDetailsOpen] = useState(false);
 
@@ -27,7 +27,7 @@ export function SetupPage() {
   useEffect(() => {
     const beansParam = searchParams.get("beans");
     if (beansParam) {
-      const n = parseInt(beansParam, 10);
+      const n = Number(beansParam);
       if (!isNaN(n) && n > 0) setBeans(n);
     }
     const flavorParam = searchParams.get("flavor");
@@ -48,6 +48,7 @@ export function SetupPage() {
 
   return (
     <main className="content">
+      <header className={styles.heading}><p>NEO BREW · 1:15</p><h1>{t("setup.heading")}</h1><span>{t("setup.subtitle")}</span></header>
       <section className="card">
         <div className={styles.stepperRow}>
           <span className={styles.beansLabel}>{t("setup.beans")}</span>
@@ -55,7 +56,8 @@ export function SetupPage() {
             <button
               className={styles.btnIcon}
               onClick={() => setBeans(Math.max(1, beans - 1))}
-              aria-label="decrease"
+              aria-label={t("setup.decrease")}
+              disabled={beans <= 1}
             >
               −
             </button>
@@ -63,7 +65,8 @@ export function SetupPage() {
             <button
               className={styles.btnIcon}
               onClick={() => setBeans(beans + 1)}
-              aria-label="increase"
+              aria-label={t("setup.increase")}
+              disabled={beans >= 100}
             >
               ＋
             </button>
@@ -76,10 +79,16 @@ export function SetupPage() {
         </div>
       </section>
 
+      <section className={styles.preparation}>
+        <h2>{t("setup.preparation")}</h2><p>{t("setup.prepHint")}</p>
+        <p>{t("setup.scaleHint")}</p>
+        <span>{t("setup.overview")}</span>
+      </section>
       <button className={styles.btnPrimary} onClick={handleStart}>
         {t("setup.start")}
       </button>
 
+      <p className={styles.startHint}>{t(startDelay ? "setup.startHint" : "setup.startImmediately")}</p>
       <details className="card" open={detailsOpen} onToggle={(e) => setDetailsOpen((e.target as HTMLDetailsElement).open)}>
         <summary className={styles.detailsSummary}>
           <span>{t("setup.details")}</span>
@@ -87,7 +96,7 @@ export function SetupPage() {
             {detailsOpen ? t("setup.closeAction") : t("setup.detailsAction")}
           </span>
         </summary>
-        <div className={styles.detailsBody}>
+        {detailsOpen && <div className={styles.detailsBody}>
           <img
             className={styles.detailsImage}
             src={heroImage}
@@ -125,12 +134,12 @@ export function SetupPage() {
               allowFullScreen
             />
           </div>
-        </div>
+        </div>}
       </details>
 
       <section className={`card ${styles.equipmentCard}`} aria-labelledby="label-equipment">
         <div className={styles.equipmentHeader}>
-          <h2 className={`card-title ${styles.equipmentTitle}`}>{t("setup.equipment")}</h2>
+          <h2 id="label-equipment" className={`card-title ${styles.equipmentTitle}`}>{t("setup.equipment")}</h2>
         </div>
         <ul className={styles.equipmentList}>
           {equipment.map((item) => (

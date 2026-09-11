@@ -10,8 +10,8 @@ import { useNotification } from "./useNotification";
 export function useTimerOrchestrator() {
   const [searchParams, setSearchParams] = useSearchParams();
   const { beans, flavor } = useSessionStore();
-  const { debugSpeed, animation } = useSettingsStore();
-  const { playSound, playFirstSound, vibrate } = useNotification();
+  const { debugSpeed, startDelay } = useSettingsStore();
+  const { playSound, playFirstSound, vibrate, stop } = useNotification();
   const wakeLock = useWakeLock();
 
   const steps = useMemo(
@@ -20,45 +20,34 @@ export function useTimerOrchestrator() {
   );
   const totalWater = getTotalWater(beans, neoBrewMethod.waterRatio);
 
-  const [overlayStep, setOverlayStep] = useState<{
-    index: number;
-    prevCumulative: number;
-  } | null>(null);
-
   const startDelayRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [startupSeconds, setStartupSeconds] = useState<number | null>(null);
+  const startupDeadlineRef = useRef(0);
 
-  const notifyPreStep = useCallback(
-    (isFinish: boolean) => {
+  useEffect(() => {
+    if (startupSeconds === null) return;
+    const id = setInterval(() => {
+      if (startDelayRef.current === null) return;
+      setStartupSeconds(Math.max(0, Math.ceil((startupDeadlineRef.current - performance.now()) / 1000)));
+    }, 100);
+    return () => clearInterval(id);
+  }, [startupSeconds === null]);
+
+  const onPreNotify = useCallback(
+    (_nextStepIndex: number, isFinish: boolean) => {
       vibrate("pre-step");
       playSound(isFinish);
     },
     [vibrate, playSound],
   );
 
-  const onPreNotify = useCallback(
-    (nextStepIndex: number, isFinish: boolean) => {
-      notifyPreStep(isFinish);
-      if (!isFinish && nextStepIndex >= 0 && animation) {
-        const prevCumulative =
-          nextStepIndex > 0 ? steps[nextStepIndex - 1].cumulative : 0;
-        setOverlayStep({ index: nextStepIndex, prevCumulative });
-      }
-    },
-    [notifyPreStep, animation, steps],
-  );
-
   const onStepCrossed = useCallback(() => {
     vibrate("step-change");
   }, [vibrate]);
 
-  const onOverlayExpired = useCallback(() => {
-    setOverlayStep(null);
-  }, []);
-
   const timer = useTimer(steps, debugSpeed, {
     onPreNotify,
     onStepCrossed,
-    onOverlayExpired,
   });
 
   const currentStep = steps[timer.currentStepIndex];
@@ -75,54 +64,61 @@ export function useTimerOrchestrator() {
   const progress = Math.min(1, elapsed / stepDuration);
   const isImminent = remainingToNext > 0 && remainingToNext <= 5;
 
-  const startWithAnimation = useCallback(() => {
+  const startBrew = useCallback(() => {
+    if (startDelayRef.current !== null) return;
+    if (!startDelay) {
+      timer.start();
+      vibrate("step-change");
+      wakeLock.request();
+      return;
+    }
+    startupDeadlineRef.current = performance.now() + 5000;
+    setStartupSeconds(5);
     vibrate("pre-step");
     playFirstSound();
-    setOverlayStep({ index: 0, prevCumulative: 0 });
-    timer.setOverlayStep(0);
     wakeLock.request();
     startDelayRef.current = setTimeout(() => {
       startDelayRef.current = null;
-      setOverlayStep(null);
+      setStartupSeconds(null);
       timer.start();
     }, 5000);
-  }, [playFirstSound, timer, vibrate, wakeLock]);
+  }, [startDelay, playFirstSound, timer, vibrate, wakeLock]);
 
   const handlePlayPause = useCallback(() => {
     // Cancel pending startup countdown first, if any
     if (startDelayRef.current) {
       clearTimeout(startDelayRef.current);
       startDelayRef.current = null;
-      setOverlayStep(null);
+      setStartupSeconds(null);
+      stop();
       wakeLock.release();
       return;
     }
 
     if (timer.status === "running") {
       timer.pause();
+      stop();
       wakeLock.release();
-    } else {
-      if (timer.currentTime === 0 && animation) {
-        startWithAnimation();
+    } else if (timer.status !== "finished") {
+      if (timer.status === "idle") {
+        startBrew();
       } else {
-        if (timer.currentTime === 0) {
-          playFirstSound();
-        }
         timer.start();
         wakeLock.request();
       }
     }
-  }, [timer, animation, wakeLock, startWithAnimation, playFirstSound]);
+  }, [timer, wakeLock, startBrew, stop]);
 
   const handleReset = useCallback(() => {
     if (startDelayRef.current) {
       clearTimeout(startDelayRef.current);
       startDelayRef.current = null;
     }
-    setOverlayStep(null);
+    setStartupSeconds(null);
+    stop();
     timer.reset();
     wakeLock.release();
-  }, [timer, wakeLock]);
+  }, [timer, wakeLock, stop]);
 
   // Auto-start if query param is set
   useEffect(() => {
@@ -131,13 +127,7 @@ export function useTimerOrchestrator() {
       newParams.delete("autostart");
       setSearchParams(newParams, { replace: true });
 
-      if (animation) {
-        startWithAnimation();
-      } else {
-        playFirstSound();
-        timer.start();
-        wakeLock.request();
-      }
+      startBrew();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -145,7 +135,6 @@ export function useTimerOrchestrator() {
   // Release wake lock on finish
   useEffect(() => {
     if (timer.status === "finished") {
-      setOverlayStep(null);
       wakeLock.release();
     }
   }, [timer.status, wakeLock]);
@@ -155,6 +144,7 @@ export function useTimerOrchestrator() {
     return () => {
       if (startDelayRef.current) {
         clearTimeout(startDelayRef.current);
+        startDelayRef.current = null;
       }
     };
   }, []);
@@ -169,12 +159,11 @@ export function useTimerOrchestrator() {
     totalWater,
     currentStep,
     timer,
-    overlayStep,
     remainingToNext,
     progress,
     isImminent,
     isRunningOrStarting,
-    animation,
+    startupSeconds,
     wakeLock,
     handlePlayPause,
     handleReset,

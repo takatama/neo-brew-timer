@@ -41,7 +41,7 @@ export function Header() {
         <button
           className={styles.iconBtn}
           onClick={() => setSettingsOpen(true)}
-          aria-label="Settings"
+          aria-label={t("settings.title")}
         >
           <SettingsIcon />
         </button>

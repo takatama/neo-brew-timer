@@ -20,11 +20,16 @@ export function useCoffeeNews(language: Language, enabled = true) {
 
   useEffect(() => {
     if (!enabled) return;
+    const controller = new AbortController();
+    let active = true;
     setLoading(true);
-    fetch(`https://daily-brew.takatama.workers.dev/news?lang=${language}`)
-      .then((r) => r.json())
+    fetch(`https://daily-brew.takatama.workers.dev/news?lang=${language}`, { signal: controller.signal })
+      .then((r) => { if (!r.ok) throw new Error("News unavailable"); return r.json(); })
       .then((data) => {
-        const items: NewsItem[] = (data.items ?? []).map((item: NewsItem) => ({
+        if (!active) return;
+        const items: NewsItem[] = (Array.isArray(data.items) ? data.items : []).filter((item: NewsItem) =>
+          typeof item.short_title === "string" && typeof item.source === "string" && typeof item.url === "string" && /^https?:\/\//.test(item.url)
+        ).map((item: NewsItem) => ({
           id: item.id,
           short_title: decodeHtml(item.short_title),
           url: item.url,
@@ -34,8 +39,9 @@ export function useCoffeeNews(language: Language, enabled = true) {
         setLoading(false);
       })
       .catch(() => {
-        setLoading(false);
+        if (active) { setNews([]); setLoading(false); }
       });
+    return () => { active = false; controller.abort(); };
   }, [language, enabled]);
 
   return { news, loading };

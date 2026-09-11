@@ -9,7 +9,7 @@ export interface Settings {
   voice: Voice;
   debugEnabled: boolean;
   debugSpeed: number;
-  animation: boolean;
+  startDelay: boolean;
   bgmEnabled: boolean;
   debugBgmDayOfWeek: BgmDayOfWeek;
 }

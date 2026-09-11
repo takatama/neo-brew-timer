@@ -1,20 +1,19 @@
 import { useEffect, useMemo, useState } from "react";
-import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { Header } from "../shared/components/Header";
 import { IntroPage } from "./routes/IntroPage";
 import { SetupPage } from "./routes/SetupPage";
 import { TimerPage } from "./routes/TimerPage";
-import { useSessionStore } from "../features/timer/store";
 import { useSettingsStore } from "../features/settings/store";
 import { getActiveBgmDayOfWeek, getActiveBgmTracks } from "../features/timer/data/bgm";
 import { getSavedBgmTrackIndex, setSavedBgmTrackIndex } from "../features/timer/data/bgm/playbackProgress";
 import { FloatingMiniPlayer } from "../features/timer/components/FloatingMiniPlayer";
 import { ErrorBoundary } from "../shared/components/ErrorBoundary";
+import { OfflineNotice } from "../shared/components/OfflineNotice";
 import styles from "./App.module.css";
 
 function RootRedirect() {
-  const introSeen = useSessionStore((s) => s.introSeen);
-  return <Navigate to={introSeen ? "/setup" : "/intro"} replace />;
+  return <Navigate to="/setup" replace />;
 }
 
 function AppShell() {
@@ -75,8 +74,9 @@ function AppShell() {
   };
 
   return (
-    <div className={`${styles.app} ${shouldShowMiniPlayer ? styles.withMiniPlayer : ""}`}>
+    <div className={`${styles.app} ${shouldShowMiniPlayer && !isTimerPage ? styles.withMiniPlayer : ""}`}>
       <Header />
+      <OfflineNotice visible={isSetupPage} />
       <ErrorBoundary>
         <Routes>
           <Route path="/" element={<RootRedirect />} />
@@ -88,6 +88,7 @@ function AppShell() {
       </ErrorBoundary>
       {shouldShowMiniPlayer && currentTrack && (
         <FloatingMiniPlayer
+          inline={isTimerPage}
           track={currentTrack}
           onNextTrack={handleNextTrack}
           onTrackPlaybackStarted={handleTrackPlaybackStarted}
@@ -97,10 +98,6 @@ function AppShell() {
   );
 }
 
-export function App() {
-  return (
-    <BrowserRouter>
-      <AppShell />
-    </BrowserRouter>
-  );
-}
+const router = createBrowserRouter([{ path: "*", element: <AppShell /> }]);
+
+export function App() { return <RouterProvider router={router} />; }

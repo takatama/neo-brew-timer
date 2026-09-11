@@ -161,3 +161,9 @@
   padding: 0 14px;
   font-weight: 600;
 }
+
+.modal { margin: 0; width: 100%; max-width: none; height: 100%; max-height: none; border: 0; }
+.modal:not([open]) { display: none; }
+.modal::backdrop { background: transparent; }
+
+.actions { position: sticky; bottom: -14px; background: var(--md-surface); padding-block: 10px; border-top: 1px solid var(--md-outline); }

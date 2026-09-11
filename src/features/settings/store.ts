@@ -40,7 +40,7 @@ export interface SettingsStore extends Settings {
   setVoice: (voice: Voice) => void;
   setDebugEnabled: (enabled: boolean) => void;
   setDebugSpeed: (speed: number) => void;
-  setAnimation: (enabled: boolean) => void;
+  setStartDelay: (enabled: boolean) => void;
   setBgmEnabled: (enabled: boolean) => void;
   setDebugBgmDayOfWeek: (dayOfWeek: BgmDayOfWeek) => void;
   isSoundEnabled: () => boolean;
@@ -55,8 +55,8 @@ export const useSettingsStore = create<SettingsStore>()(
       voice: "male" as Voice,
       debugEnabled: false,
       debugSpeed: 1,
-      animation: true,
-      bgmEnabled: true,
+      startDelay: true,
+      bgmEnabled: false,
       debugBgmDayOfWeek: getDefaultDebugBgmDayOfWeek(),
 
       setLanguage: (language) => set({ language }),
@@ -89,7 +89,7 @@ export const useSettingsStore = create<SettingsStore>()(
         set({
           debugSpeed: debugSpeed === 5 ? 5 : 1,
         }),
-      setAnimation: (animation) => set({ animation }),
+      setStartDelay: (startDelay) => set({ startDelay }),
       setBgmEnabled: (bgmEnabled) => set({ bgmEnabled }),
       setDebugBgmDayOfWeek: (debugBgmDayOfWeek) => set({
         debugBgmDayOfWeek: normalizeDebugBgmDayOfWeek(debugBgmDayOfWeek),
@@ -106,15 +106,18 @@ export const useSettingsStore = create<SettingsStore>()(
     }),
     {
       name: "coco-timer-settings",
-      version: 5,
+      version: 6,
       migrate: (persistedState: unknown) => {
         const state = (persistedState ?? {}) as Partial<Settings>;
         const debugSpeed = state.debugSpeed === 5 ? 5 : 1;
         return {
-          ...state,
+          language: state.language ?? getDefaultLanguage(),
+          notifyMode: normalizeNotifyMode(state.notifyMode),
+          voice: state.voice ?? "male",
+          startDelay: state.startDelay ?? true,
           debugSpeed,
           debugEnabled: state.debugEnabled ?? debugSpeed > 1,
-          bgmEnabled: state.bgmEnabled ?? true,
+          bgmEnabled: state.bgmEnabled ?? false,
           debugBgmDayOfWeek: state.debugBgmDayOfWeek == null
             ? getDefaultDebugBgmDayOfWeek()
             : normalizeDebugBgmDayOfWeek(state.debugBgmDayOfWeek),
@@ -126,7 +129,7 @@ export const useSettingsStore = create<SettingsStore>()(
         voice: state.voice,
         debugEnabled: state.debugEnabled,
         debugSpeed: state.debugSpeed,
-        animation: state.animation,
+        startDelay: state.startDelay,
         bgmEnabled: state.bgmEnabled,
         debugBgmDayOfWeek: normalizeDebugBgmDayOfWeek(state.debugBgmDayOfWeek),
       }),

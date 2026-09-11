@@ -10,7 +10,8 @@
 
 .timeValue {
   color: var(--md-text);
-  font-size: 1.75rem;
+  font-size: 2.6rem;
+  font-variant-numeric: tabular-nums;
   font-weight: 600;
 }
 
@@ -25,6 +26,8 @@
 .progressFill {
   height: 100%;
   width: 0%;
-  background: var(--md-accent);
+  background: var(--md-primary);
   transition: width 0.2s linear;
 }
+
+@media (max-height: 700px) { .timeValue { font-size: 2rem; } .stepTime { margin-bottom: 4px; } }

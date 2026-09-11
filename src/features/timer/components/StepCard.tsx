@@ -1,167 +1,42 @@
-import { Trans, useTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import type { ReactNode } from "react";
 import type { ComputedStep } from "../../recipe/types";
+import type { TimerStatus } from "../hooks/useTimer";
+import { formatTime } from "../../recipe/waterCalc";
 import { Countdown } from "./Countdown";
 import { BrewTimeline } from "./BrewTimeline";
 import styles from "./StepCard.module.css";
-
 interface Props {
-  step: ComputedStep;
-  stepIndex: number;
-  totalSteps: number;
-  remainingSeconds: number;
-  progress: number;
-  isImminent: boolean;
-  hideTargetAmount?: boolean;
-  nextStepPreview?: ReactNode;
-  steps: ComputedStep[];
-  currentTime: number;
+  step: ComputedStep; stepIndex: number; totalSteps: number;
+  remainingSeconds: number; progress: number; isImminent: boolean;
+  nextStepPreview?: ReactNode; steps: ComputedStep[]; currentTime: number;
+  status: TimerStatus; startupSeconds: number | null;
 }
-
-function VerbText({
-  step,
-  stepIndex,
-}: {
-  step: ComputedStep;
-  stepIndex: number;
-}) {
+export function StepCard({ step, stepIndex, totalSteps, remainingSeconds,
+  progress, isImminent, nextStepPreview, steps, currentTime, status, startupSeconds }: Props) {
   const { t } = useTranslation();
-
-  const withNote = (label: string, note: string) => (
-    <>
-      {label}
-      <span className={styles.verbNote}>({note})</span>
-    </>
-  );
-
-  switch (step.actionType) {
-    case "bloom":
-      return <>{t("timer.bloom")}</>;
-    case "pour":
-      return <>{t(stepIndex === 9 ? "timer.brew" : "timer.pour")}</>;
-    case "switch_close_pour":
-      return withNote(t("timer.close"), t("timer.up"));
-    case "switch_open_pour":
-    case "pour_cool":
-      return withNote(t("timer.open"), t("timer.down"));
-    case "switch_open":
-      return withNote(t("timer.open"), t("timer.down"));
-    case "drawdown":
-      return <>{t("timer.drawdown")}</>;
-    case "none":
-      return <>{t("timer.finish")}</>;
-    default:
-      return <>{t("timer.wait")}</>;
-  }
-}
-
-function InstructionText({
-  step,
-  stepIndex,
-}: {
-  step: ComputedStep;
-  stepIndex: number;
-}) {
-  const { t } = useTranslation();
-
-  if (step.actionType === "none") {
-    return <>{t("timer.enjoyCoffee")}</>;
-  }
-  if (step.actionType === "drawdown") {
-    return <>{t("timer.waitForDrawdown")}</>;
-  }
-  if (step.actionType === "switch_open") {
-    return <>{t("timer.openWaitNoPour")}</>;
-  }
-
-  const amount = step.cumulative;
-  if (step.actionType === "pour" && stepIndex >= 1 && stepIndex <= 8) {
-    return (
-      <Trans
-        i18nKey="timer.toAmount"
-        values={{ amount }}
-        components={{ num: <span className="pour-number" />, unit: <span className="pour-unit" /> }}
-      />
-    );
-  }
-
-  if (
-    step.actionType === "pour" ||
-    step.actionType === "bloom" ||
-    step.actionType === "switch_close_pour" ||
-    step.actionType === "switch_open_pour"
-  ) {
-    return (
-      <Trans
-        i18nKey="timer.pourToAmount"
-        values={{ amount }}
-        components={{ num: <span className="pour-number" />, unit: <span className="pour-unit" /> }}
-      />
-    );
-  }
-
-  if (step.actionType === "pour_cool") {
-    return (
-      <Trans
-        i18nKey="timer.pourCoolTo"
-        values={{ amount }}
-        components={{ num: <span className="pour-number" />, unit: <span className="pour-unit" /> }}
-      />
-    );
-  }
-
-  return null;
-}
-
-export function StepCard({
-  step,
-  stepIndex,
-  totalSteps,
-  remainingSeconds,
-  progress,
-  isImminent,
-  hideTargetAmount = false,
-  nextStepPreview,
-  steps,
-  currentTime,
-}: Props) {
+  const preparing = status === "idle";
+  const lastPour = stepIndex === totalSteps - 1;
+  const stateLabel = startupSeconds !== null ? t("timer.starting", { seconds: startupSeconds }) : t("timer.state_" + status);
   return (
-    <section className={`card ${styles.primaryCard}${isImminent ? ` ${styles.imminent}` : ""}`}>
-      <div className={styles.cardBody}>
-        <div className={styles.locationGroup}>
-          <div className={styles.stepMeta}>
-            STEP {stepIndex + 1} / {totalSteps}
-          </div>
-          <BrewTimeline
-            steps={steps}
-            currentStepIndex={stepIndex}
-            currentTime={currentTime}
-          />
-        </div>
-        <div
-          className={`${styles.instruction}${nextStepPreview ? ` ${styles.instructionWithPreview}` : ""}`}
-        >
-          <div className={styles.stepVerb}>
-            <VerbText step={step} stepIndex={stepIndex} />
-          </div>
-          <div
-            className={`${styles.stepSub}${hideTargetAmount ? ` ${styles.stepSubHidden}` : ""}`}
-            aria-hidden={hideTargetAmount || undefined}
-          >
-            <InstructionText step={step} stepIndex={stepIndex} />
-          </div>
-        </div>
-        {nextStepPreview && (
-          <div className={styles.nextStep}>{nextStepPreview}</div>
-        )}
+    <section className={"card " + styles.primaryCard + (isImminent && status === "running" ? " " + styles.imminent : "")}>
+      <div className={styles.meta}>
+        <span>{t("timer.pourCount", { current: stepIndex + 1, total: totalSteps })}</span>
+        <span className={styles.status} role="status">{stateLabel}</span>
+      </div>
+      <div className={styles.instruction} aria-live="polite" aria-atomic="true">
+        <h1 className={styles.stepVerb}>{preparing ? t("timer.getReady") : t(stepIndex === 0 ? "timer.bloom" : lastPour ? "timer.lastPour" : "timer.pour")}</h1>
+        <div className={styles.target} aria-label={t("timer.targetAccessible", { amount: step.cumulative })}>{step.cumulative}<span>g</span></div>
       </div>
       <div className={styles.countdown}>
-        <Countdown
-          remainingSeconds={remainingSeconds}
-          progress={progress}
-          isImminent={isImminent}
-        />
+        <span className={styles.targetLabel}>{t(lastPour ? "timer.untilFinish" : "timer.untilNext")}</span>
+        <Countdown remainingSeconds={remainingSeconds} progress={progress} isImminent={isImminent} />
       </div>
+      <div className={styles.nextStep}>{nextStepPreview}</div>
+      <div className={styles.overall}>
+        <span>{t("timer.elapsed")}</span><span>{formatTime(currentTime)} / {formatTime(steps[steps.length - 1]?.timeSec ?? 0)}</span>
+      </div>
+      <div className={styles.timeline}><BrewTimeline steps={steps} currentStepIndex={stepIndex} currentTime={currentTime} /></div>
     </section>
   );
 }
