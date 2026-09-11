@@ -14,13 +14,13 @@
 
 .track::before,
 .elapsedLine {
-  content: "";
   position: absolute;
   top: 50%;
   left: 0;
   height: 3px;
   border-radius: 999px;
   transform: translateY(-50%);
+  content: "";
 }
 
 .track::before {
@@ -47,6 +47,7 @@
   height: 9px;
   border: 2px solid var(--md-outline);
   background: var(--md-surface);
+
 }
 
 .currentStep {

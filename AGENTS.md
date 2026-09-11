@@ -21,7 +21,7 @@ See `SPEC.md` for full UI/UX specification.
 ```
 src/
 ├── app/
-│   ├── App.tsx                    # BrowserRouter + Routes + ErrorBoundary
+│   ├── App.tsx                    # Data router + localized routes + ErrorBoundary
 │   ├── App.module.css
 │   └── routes/
 │       ├── IntroPage.tsx / .module.css
@@ -35,13 +35,14 @@ src/
 │   └── timer/
 │       ├── store.ts               # Session store (beans, flavor, introSeen)
 │       ├── hooks/
-│       │   ├── useTimer.ts        # Tick loop, elapsed time, step detection
-│       │   ├── useTimerOrchestrator.ts  # Overlay, play/pause/reset, wake lock coordination
+│       │   ├── useTimer.ts        # Shared timer adapter
+│       │   ├── useTimerOrchestrator.ts  # Recipe, notifications, URL, and controller integration
 │       │   ├── useWakeLock.ts
 │       │   └── useNotification.ts
 │       └── components/            # StepCard, Countdown, NextStepPreview, Timeline
 │           └── *.tsx / *.module.css
 └── shared/
+    ├── brew-timer/                # Reusable timer, controller, card, progress, theme
     ├── components/                # Header, ErrorBoundary
     ├── i18n/                      # config.ts, ja.json, en.json
     └── styles/
@@ -56,15 +57,15 @@ public/                            # Vite publicDir — served as-is at /
 
 ### Styling
 
-- **Design tokens** (CSS variables, reset, shared primitives like `.card`, `.choice`, `.hint`) are in `src/shared/styles/tokens.css` — imported once in `main.tsx`.
+- **Design tokens** (CSS variables, reset, shared primitives like `.card`, `.choice`, `.hint`) are in `src/shared/brew-timer/theme.css`, imported by `src/shared/styles/tokens.css` — imported once in `main.tsx`.
 - **Component styles** use CSS Modules (`.module.css` co-located with each component).
 - Use `import styles from "./Component.module.css"` and `className={styles.foo}`.
 - Shared primitives (`card`, `card-title`, `choice`, `choice-row`, `hint`, `content`, `pour-amount`) are global classes from `tokens.css`.
 
 ### Timer Architecture
 
-- `useTimer` hook owns the tick loop and elapsed time as the single source of truth.
-- `useTimerOrchestrator` composes `useTimer` + `useWakeLock` + `useNotification` and manages the optional startup countdown, and play/pause/reset handlers.
+- `useBrewTimer` hook owns the tick loop and elapsed time as the single source of truth.
+- `useTimerOrchestrator` adapts the recipe, route language, and notifications to `useBrewTimerController`. The shared controller manages the optional startup countdown, play/pause/reset, and wake lock.
 - Current step index is derived from elapsed time (not stored separately).
 - All notifications (sound and vibration) fire at exactly **5 seconds** before step transition via a single `onPreNotify` callback. There is no separate sound timing.
 
@@ -73,7 +74,7 @@ public/                            # Vite publicDir — served as-is at /
 - When the timer starts with `startDelay` enabled (default: true), there is a 5-second countdown before the timer actually begins ticking.
 - With `startDelay` off, start immediately without playing countdown audio.
 - During this countdown, `timer.status` is still `"idle"`, not `"running"`.
-- `handlePlayPause` must check `startDelayRef` first (before `timer.status`) to allow canceling the countdown.
+- The shared controller must check `isStartingRef` first (before `timer.status`) to allow canceling the countdown.
 
 ### Static Assets
 
@@ -93,7 +94,7 @@ public/                            # Vite publicDir — served as-is at /
 - All user-facing strings are in `src/shared/i18n/{ja,en}.json`.
 - Use `useTranslation()` hook in components.
 - For strings with embedded markup (e.g., pour amounts), use `<Trans>` component with `components` prop.
-- When language changes, call both `settings.setLanguage(lang)` and `i18n.changeLanguage(lang)`.
+- The URL (`/ja/` or `/en/`) determines display language through `DisplayLanguageProvider`. Settings saves the preference and replaces the URL language without restarting a brew.
 
 ### Type Safety
 
@@ -122,7 +123,7 @@ npm run deploy       # Deploy to Cloudflare Pages
 
 - `src/features/recipe/waterCalc.test.ts` — Water calculation logic (pure functions)
 - `src/features/settings/store.test.ts` — Settings store (Zustand)
-- `src/features/timer/hooks/useTimer.test.ts` — Timer hook (status transitions, step crossing, pre-notify)
+- `src/shared/brew-timer/useBrewTimer.test.ts` — Timer hook (status transitions, step crossing, pre-notify)
 - Settings store tests require a localStorage mock (see test file for pattern)
 
 ## PR Language

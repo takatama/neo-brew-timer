@@ -4,6 +4,7 @@ import { act, renderHook } from "@testing-library/react";
 import { beforeEach, afterEach, describe, it, expect, vi } from "vitest";
 import { useTimerOrchestrator } from "./useTimerOrchestrator";
 import { useSettingsStore } from "../../settings/store";
+vi.mock("../../../shared/i18n/DisplayLanguage", () => ({ useDisplayLanguage: () => "en" }));
 const notification = vi.hoisted(() => ({ playSound: vi.fn(), playFirstSound: vi.fn(), vibrate: vi.fn(), stop: vi.fn() }));
 vi.mock("./useNotification", () => ({ useNotification: () => notification }));
 function wrapper({ children }: { children: ReactNode }) { return <StrictMode><MemoryRouter initialEntries={["/timer?autostart=1"]}>{children}</MemoryRouter></StrictMode>; }

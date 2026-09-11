@@ -15,19 +15,4 @@
   font-weight: 600;
 }
 
-.progress {
-  height: 6px;
-  background: #eadfce;
-  border-radius: 999px;
-  overflow: hidden;
-  margin-top: 6px;
-}
-
-.progressFill {
-  height: 100%;
-  width: 0%;
-  background: var(--md-primary);
-  transition: width 0.2s linear;
-}
-
 @media (max-height: 700px) { .timeValue { font-size: 2rem; } .stepTime { margin-bottom: 4px; } }

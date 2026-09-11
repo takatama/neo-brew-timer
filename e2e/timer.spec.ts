@@ -23,18 +23,26 @@ test.beforeEach(async ({ page, baseURL }) => {
   await page.clock.pauseAt(new Date("2026-01-01T12:01:00Z"));
 });
 
-const remaining = (page: Page) => page.getByText(/^\d+:\d{2} left$/);
+const remaining = (page: Page) => page.getByRole("timer");
 
 test("setup carries the chosen amount into a brew that reaches completion", async ({ page }) => {
   await page.getByRole("button", { name: "Increase beans by 1g", exact: true }).click();
   await page.getByRole("button", { name: "Brew coffee", exact: true }).click();
-  await expect(page).toHaveURL(/\/timer$/);
+  await expect(page).toHaveURL(/\/en\/timer$/);
   await expect(page.getByText("Beans 21g", { exact: true })).toBeVisible();
   await expect(page.getByText("Water 315g", { exact: true })).toBeVisible();
   await expect(page.getByText("63g", { exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: "Cancel start", exact: true })).toBeVisible();
 
   await page.clock.runFor(6_000);
+  const timeBeforeLanguageChange = (await remaining(page).innerText()).match(/\d+:\d{2}/)?.[0];
+  await page.getByRole("button", { name: "Settings", exact: true }).click();
+  await page.getByRole("radio", { name: "日本語", exact: true }).click();
+  await expect(page).toHaveURL(/\/ja\/timer$/);
+  expect((await remaining(page).innerText()).match(/\d+:\d{2}/)?.[0]).toBe(timeBeforeLanguageChange);
+  await page.getByRole("radio", { name: "English", exact: true }).click();
+  await expect(page).toHaveURL(/\/en\/timer$/);
+  await page.getByRole("button", { name: "Close", exact: true }).click();
   const before = await remaining(page).innerText();
   await page.clock.runFor(2_000);
   await expect(remaining(page)).not.toHaveText(before);

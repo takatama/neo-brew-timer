@@ -8,11 +8,14 @@ import { FinishCard } from "../../features/timer/components/FinishCard";
 import { NextStepPreview } from "../../features/timer/components/NextStepPreview";
 import { useCoffeeNews } from "../../features/timer/hooks/useCoffeeNews";
 import { ConfirmDialog } from "../../shared/components/ConfirmDialog";
+import { useDisplayLanguage } from "../../shared/i18n/DisplayLanguage";
+import { localizedPath } from "../../shared/i18n/routing";
 import styles from "./TimerPage.module.css";
 
 export function TimerPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const displayLanguage = useDisplayLanguage();
 
   const {
     steps,
@@ -31,10 +34,10 @@ export function TimerPage() {
 
   const isFinishStep = currentStep?.actionType === "none";
   const brewStepCount = steps.filter((step) => step.actionType !== "none").length;
-  const { debugEnabled, debugSpeed, setDebugSpeed, language } = useSettingsStore();
-  const { news, loading: newsLoading } = useCoffeeNews(language, Boolean(isFinishStep));
+  const { debugEnabled, debugSpeed, setDebugSpeed } = useSettingsStore();
+  const { news, loading: newsLoading } = useCoffeeNews(displayLanguage, Boolean(isFinishStep));
   const hasProgress = isRunningOrStarting || timer.status === "paused";
-  const blocker = useBlocker(hasProgress);
+  const blocker = useBlocker(({ currentLocation, nextLocation }) => hasProgress && currentLocation.pathname.split("/").pop() !== nextLocation.pathname.split("/").pop());
   useEffect(() => {
     if (!hasProgress) return;
     const warn = (event: BeforeUnloadEvent) => { event.preventDefault(); };
@@ -63,7 +66,7 @@ export function TimerPage() {
             {t("timer.waterChipLabel")} <span className={styles.chipValue}>{totalWater}g</span>
           </span>
         </div>
-        <button className={styles.textLink} onClick={() => navigate("/setup")}>
+        <button className={styles.textLink} onClick={() => navigate(localizedPath(displayLanguage, "setup"))}>
           {t("timer.editParams")}
         </button>
       </section>
@@ -94,7 +97,7 @@ export function TimerPage() {
       )}
 
       <section className={styles.controls}>
-        {isFinishStep && <button className={`${styles.btn} ${styles.primary}`} onClick={() => navigate("/setup")}>{t("timer.brewAgain")}</button>}
+        {isFinishStep && <button className={`${styles.btn} ${styles.primary}`} onClick={() => navigate(localizedPath(displayLanguage, "setup"))}>{t("timer.brewAgain")}</button>}
         {!isFinishStep && (
           <div className={styles.primaryControlRow}>
             <button className={`${styles.btn} ${styles.primary}`} onClick={handlePlayPause}>

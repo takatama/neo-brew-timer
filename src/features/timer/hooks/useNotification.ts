@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useRef } from "react";
 import { useSettingsStore } from "../../settings/store";
+import type { Voice } from "../../settings/types";
+import type { DisplayLanguage } from "../../../shared/i18n/routing";
 
 export const VOICE_NOTIFICATION_EVENT = "coco:voice-notification";
 export const VOICE_NOTIFICATION_END_EVENT = "coco:voice-notification-end";
@@ -24,34 +26,41 @@ function loadAudio(
   ) as Record<VoiceMessage, HTMLAudioElement>;
 }
 
-export function useNotification() {
-  const audioRef = useRef<Record<VoiceMessage, HTMLAudioElement> | null>(null);
+export function useNotification(language: DisplayLanguage) {
+  const voice = useSettingsStore((state) => state.voice);
+  const audioSetsRef = useRef(new Map<string, Record<VoiceMessage, HTMLAudioElement>>());
+
   const stop = useCallback(() => {
-    Object.values(audioRef.current ?? {}).forEach((audio) => audio.pause());
+    audioSetsRef.current.forEach(set => Object.values(set).forEach(audio => audio.pause()));
     navigator.vibrate?.(0);
   }, []);
 
+  const getAudioSet = useCallback((nextLanguage: DisplayLanguage, nextVoice: Voice) => {
+    const key = `${nextLanguage}:${nextVoice}`;
+    const existing = audioSetsRef.current.get(key);
+    if (existing) return existing;
+
+    const loaded = loadAudio(nextLanguage, nextVoice);
+    audioSetsRef.current.set(key, loaded);
+    return loaded;
+  }, []);
+
   useEffect(() => {
-    const { language, voice } = useSettingsStore.getState();
-    audioRef.current = loadAudio(language, voice);
+    getAudioSet(language, voice);
+  }, [getAudioSet, language, voice]);
 
-    const unsubscribe = useSettingsStore.subscribe((state, prev) => {
-      if (state.language !== prev.language || state.voice !== prev.voice) {
-        Object.values(audioRef.current ?? {}).forEach((audio) => audio.pause());
-        audioRef.current = loadAudio(state.language, state.voice);
-      }
-    });
-
+  useEffect(() => {
     return () => {
-      unsubscribe();
-      Object.values(audioRef.current ?? {}).forEach((audio) => audio.pause());
+      audioSetsRef.current.forEach((audioSet) => {
+        Object.values(audioSet).forEach((audio) => audio.pause());
+      });
+      audioSetsRef.current.clear();
     };
   }, []);
 
   const playVoiceMessage = useCallback((type: VoiceMessage) => {
     if (!useSettingsStore.getState().isSoundEnabled()) return;
-    const audio = audioRef.current?.[type];
-    if (!audio) return;
+    const audio = getAudioSet(language, voice)[type];
 
     let isStarted = false;
     let isCompleted = false;
@@ -93,7 +102,7 @@ export function useNotification() {
       .catch(() => {
         handleCompleted();
       });
-  }, []);
+  }, [getAudioSet, language, voice]);
 
   const playSound = useCallback(
     (isFinish: boolean) => playVoiceMessage(isFinish ? "done" : "next"),
