@@ -50,9 +50,7 @@ export function computeSteps(
         break;
       case "equalPour":
         equalPourIndex += 1;
-        increment = equalPourIndex === equalPourCount
-          ? total - cumulative
-          : calcEqualPour(total, equalPourCount);
+        increment = Math.round(total * equalPourIndex / equalPourCount) - cumulative;
         break;
       case "none":
         increment = 0;

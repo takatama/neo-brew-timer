@@ -34,8 +34,8 @@ describe("useSettingsStore", () => {
       voice: "male",
       debugEnabled: false,
       debugSpeed: 1,
-      animation: true,
-      bgmEnabled: true,
+      startDelay: true,
+      bgmEnabled: false,
       debugBgmDayOfWeek: "mon",
     });
   });
@@ -46,8 +46,8 @@ describe("useSettingsStore", () => {
     expect(state.voice).toBe("male");
     expect(state.debugEnabled).toBe(false);
     expect(state.debugSpeed).toBe(1);
-    expect(state.animation).toBe(true);
-    expect(state.bgmEnabled).toBe(true);
+    expect(state.startDelay).toBe(true);
+    expect(state.bgmEnabled).toBe(false);
     expect(["sun", "mon", "tue", "wed", "thu", "fri", "sat"]).toContain(state.debugBgmDayOfWeek);
   });
 
@@ -119,9 +119,9 @@ describe("useSettingsStore", () => {
     expect(useSettingsStore.getState().debugSpeed).toBe(1);
   });
 
-  it("setAnimation updates animation", () => {
-    useSettingsStore.getState().setAnimation(false);
-    expect(useSettingsStore.getState().animation).toBe(false);
+  it("setStartDelay updates startDelay", () => {
+    useSettingsStore.getState().setStartDelay(false);
+    expect(useSettingsStore.getState().startDelay).toBe(false);
   });
 
   it("setBgmEnabled updates BGM toggle", () => {
@@ -145,5 +145,24 @@ describe("useSettingsStore", () => {
       .setDebugBgmDayOfWeek("invalid");
 
     expect(useSettingsStore.getState().debugBgmDayOfWeek).toBe("mon");
+  });
+});
+
+describe("preparation delay persistence", () => {
+  it("stores and restores the chosen preparation delay", async () => {
+    useSettingsStore.getState().setStartDelay(false);
+    const saved = localStorageMock.getItem("coco-timer-settings");
+    expect(JSON.parse(saved!).state.startDelay).toBe(false);
+    useSettingsStore.setState({ startDelay: true });
+    localStorageMock.setItem("coco-timer-settings", saved!);
+    await useSettingsStore.persist.rehydrate();
+    expect(useSettingsStore.getState().startDelay).toBe(false);
+  });
+  it("defaults to waiting and drops the removed animation setting for existing installs", async () => {
+    localStorageMock.setItem("coco-timer-settings", JSON.stringify({version: 5, state: {language: "ja", animation: false}}));
+    await useSettingsStore.persist.rehydrate();
+    expect(useSettingsStore.getState().startDelay).toBe(true);
+    expect(useSettingsStore.getState().language).toBe("ja");
+    expect(JSON.parse(localStorageMock.getItem("coco-timer-settings")!).state).not.toHaveProperty("animation");
   });
 });

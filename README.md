@@ -6,14 +6,15 @@ Neo Brew Timer is a React SPA, step-driven brewing timer designed for hands-busy
 
 ## Pages
 
-- `/{lang}/intro` – first-time intro (image, description, YouTube)
-- `/{lang}/setup` – beans selection and step water preview
-- `/{lang}/timer` – main timer UI
+- `/{ja|en}/intro` – optional recipe introduction (also available from setup details)
+- `/{ja|en}/setup` – beans, total water and start; recipe, instructions and equipment are in the optional Recipe & guide disclosure
+- `/{ja|en}/timer` – main timer UI
 
-`lang` is `ja` or `en`. `/` automatically chooses the saved language (or the
-browser language when there is no saved choice) and routes first-time users to
-Intro and returning users to Setup. The old `/intro`, `/setup`, and `/timer`
-URLs are redirected to their language-prefixed equivalents.
+`/` opens Setup directly in the saved or browser language. Unprefixed links redirect to the matching language URL. Changing language preserves an active brew. The chosen bean amount is remembered on this device.
+A five-second preparation delay is on by default and can be disabled in Settings.
+With the delay off, brewing starts immediately without countdown audio. During
+brewing, large cumulative scale targets stay visible alongside the next pour.
+Pause, resume, reset and leaving an active brew have explicit state feedback.
 
 ## Settings
 
@@ -22,6 +23,8 @@ Accessible from the header on every screen:
 - Language (JA/EN)
 - Notifications (sound / vibrate / none)
 - Voice (male / female)
+- Five-second preparation delay (on by default)
+- Optional BGM (off by default)
 - Debug speed (x5)
 
 Audio files live in:
@@ -146,3 +149,13 @@ public/     # publicDir (assets)
 
 - The timer keeps the screen awake during playback and releases the wake lock after completion.
 - JSON-LD for the recipe is embedded in the root `index.html` for SEO.
+
+## Offline use and updates
+
+After an online visit, wait for the offline-ready message on Setup. The timer,
+voice assets and icons are cached; news, YouTube and streamed music need
+a connection. App updates wait until you choose Update app on Setup, so they do
+not reload the page mid-brew. Closing the browser does not save an active brew.
+
+See SPEC.md for the current experience, accessibility decisions and limitations.
+There is no lint command configured; use typecheck, Vitest and the browser suite.

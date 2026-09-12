@@ -1,60 +1,14 @@
-.primaryCard {
-  position: relative;
-  border: 2px solid var(--md-primary);
-  box-shadow: var(--shadow-2);
-}
-
-.imminent {
-  border-color: #f2b45b;
-  box-shadow:
-    0 0 0 3px rgba(242, 180, 91, 0.25),
-    var(--shadow-2);
-}
-
-.cardBody {
-  display: block;
-}
-
-.locationGroup {
-  margin-bottom: 14px;
-}
-
-.stepMeta {
-  margin-bottom: 3px;
-  color: var(--md-text-muted);
-  font-size: 0.75rem;
-  letter-spacing: 0.4px;
-}
-
-.instruction {
-  min-width: 0;
-  margin-inline: 16px;
-}
-
-.instructionWithPreview {
-  padding-right: 112px;
-}
-
-.preview {
-  position: absolute;
-  right: 48px;
-  bottom: 30px;
-}
-
-.countdown {
-  margin-inline: 0;
-}
-
-@media (max-width: 480px) {
-  .instruction {
-    margin-inline: 12px;
-  }
-
-  .instructionWithPreview {
-    padding-right: 100px;
-  }
-
-  .preview {
-    right: 44px;
-  }
+.primaryCard { border: 1px solid var(--md-primary); padding: 22px; overflow: hidden; }
+.imminent { border-color: #987025; }
+.meta { display: flex; justify-content: space-between; align-items: center; gap: 12px; color: var(--md-text-muted); font-size: .8rem; font-variant-numeric: tabular-nums; }
+.instruction { text-align: center; padding: 28px 0 30px; }
+.countdown { border-top: 1px solid var(--md-outline); padding-top: 12px; }
+.nextStep { margin-top: 16px; border-radius: 12px; padding: 12px 14px; background: var(--md-surface-2); }
+.imminent .nextStep { background: #f7e8cb; }
+@media (max-width: 360px) { .primaryCard { padding: 16px; } }
+@media (max-height: 700px) {
+  .primaryCard { padding: 14px 16px; }
+  .instruction { padding: 16px 0 20px; }
+  .countdown { padding-top: 6px; }
+  .nextStep { margin-top: 8px; padding: 6px 12px; }
 }

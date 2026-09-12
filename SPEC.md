@@ -1,147 +1,81 @@
-# Neo Brew Timer Specification (HIG + Material Design)
+# Neo Brew Timer experience specification
 
-## 1. Purpose / Goals
+## Purpose
 
-- Provide a step-driven brewing timer optimized for Tetsu Kasuya's Neo Brew multi-pour drip recipe.
-- Minimize thinking during brewing with clear, single-focus guidance.
-- Offer multimodal guidance (visual, vibration, voice) for hands-busy contexts.
-- Show an animation preview 5 seconds before each step.
+Support a person pouring coffee while looking between a phone and a weight-only
+scale. The screen must answer: what do I do now, what should the scale read,
+and what happens next? The app cannot measure pouring or detect drawdown.
 
-## 2. Product Name & Subtitle
+## Recipe
 
-- Neo Brew Timer
-- A timer for the Neo Brew multi-pour drip recipe
+Keep the established Neo Brew schedule: ten pours at a 1:15 ratio, starting at
+0:00, 0:30, then every 15 seconds through 2:30; estimated finish at 3:30.
+Water targets are cumulative. Never ask the user to zero the scale between pours.
+Round cumulative targets rather than repeating a rounded increment: individual
+pours differ by at most 1g, stay positive, and sum to the intended total.
 
-## 3. Target Users / Context
+## Preparation
 
-- People brewing Neo Brew or other multi-step drip recipes.
-- Users in kitchens who cannot stare at the screen continuously.
-- Users who need reliable step timing and non-visual cues.
+- Open directly on preparation, including the first visit.
+- Keep everyday setup focused on beans, total water, ratio and Start. Do not assume a cup count.
+- Remember beans locally; accept whole grams from 1 through 100. This is an input
+  bound, not a claim that all drippers can hold the largest batch.
+- Keep the product introduction, preparation advice, countdown explanation,
+  full recipe, pour schedule, video and equipment behind Recipe & guide.
+  It starts collapsed on every visit and remains available without a first-run gate.
+  Do not load the embedded video before the disclosure is opened.
+- The legacy intro URL remains available, but is no longer a required first step.
 
-## 4. Design Principles
+## Brewing
 
-### HIG
+- Use a fixed hierarchy: pour count and state; current action; a large cumulative
+  scale target; time to the next pour; the next target.
+  Use short phase names, not repeated task instructions. Explain cumulative
+  weights and zeroing in the optional guide; keep that meaning in accessible labels.
+- Keep the current and next target visible and stationary. Never animate numbers
+  through intermediate weights, hide the current target, or move it for a preview.
+- Offer a five-second preparation delay, on by default and remembered in Settings.
+  When disabled, start immediately without countdown audio.
+  Explicitly show the countdown and offer Cancel start.
+- Show Brewing or Paused. Offer Pause while running and Resume when paused.
+- Show elapsed / total time; keep the graphical timeline visible at every viewport height.
+- Keep controls reachable at the bottom on short screens. All essential guidance
+  must also work without sound or vibration.
+- Next-step text is always present; no illustration or overlay state is needed.
+- Keep the existing five-second notification timing and screen wake-lock support.
+  Cancel voice and vibration when canceling startup, pausing or resetting.
+- Confirm reset and leaving an active/paused brew, including browser Back.
+  Request the browser's own warning for reload/closing; mobile browsers may omit it.
+- The last phase is labeled Final pour. Completion is a
+  time estimate, not a measurement of actual drawdown.
 
-- Clear hierarchy: show “what to do now” first.
-- Minimize interruption; keep guidance in-context.
-- Consistent feedback across sight/sound/haptics.
+## Completion and extras
 
-### Material Design
+- Clearly announce completion and offer Brew again.
+- Keep coffee news collapsed. Do not request it during normal brewing.
+- Music remains an optional feature, off by default for new settings.
+- External news and music are not required for offline brewing.
 
-- Consistent components (cards, buttons, dialogs).
-- Clear typography and spacing hierarchy.
-- Motion supports understanding; never distracts.
+## Accessibility and resilience
 
-## 5. Scope
+- Japanese and English include control labels and document language.
+- Targets use tabular numerals; current actions have polite announcements.
+- Use native modal dialogs for focus containment, Escape and focus restoration.
+- Segmented choices support arrow keys. Controls have at least 44px height.
+- Storage failures must not prevent choosing a bean amount or brewing.
+- Preserve the timer calculation and wake-lock race protections. Test startup
+  cancellation, unmount, pause/resume, rounding and notification timing separately
+  from the three browser journeys.
 
-### In Scope
+## Offline and updates
 
-- Single recipe: Neo Brew.
-- Setup (beans), timer, settings.
-- Intro screen shown only once.
+Cache the application, local voice files, icons for offline use.
+Show offline readiness on preparation after the service worker reports success.
+Wait for explicit update from preparation; never activate an app update in the
+middle of brewing. Initial installation needs a successful online visit.
 
-### Out of Scope
+## Known device constraints
 
-- Multiple recipes.
-- User accounts or sharing.
-
-## 6. Information Architecture
-
-- Intro (first-time only)
-- Setup (Beans + Recipe details)
-- Timer (Main brewing screen)
-- Settings (language/notification/voice/animation/debug)
-
-## 7. Core Screens
-
-### 7.0 Intro Screen (First-time only)
-
-- Image, recipe description, YouTube embed.
-- “Start” and “Skip” lead to Setup.
-
-### 7.1 Setup Screen
-
-**Primary focus**
-
-- Beans amount (+/−)
-- Water preview for 10 equal pours
-
-**Sections**
-
-- App Bar: Neo Brew Timer
-- Beans control
-- Start button
-- Step Water Card (below Start)
-- Recipe details (collapsible): image, description, YouTube
-
-### 7.2 Timer Screen
-
-**Primary focus**
-
-- Current action (verb) at the top of the card.
-
-**Sections**
-
-- App Bar: Neo Brew Timer + Settings
-- Summary Card: recipe name, beans, total water (reference)
-- Work Instruction Card: STEP X / N, verb, instruction, remaining time, progress bar
-- Animation Card: temporary, appears 5 seconds before next step
-- Controls: Play / Pause / Reset
-- Timeline: horizontal number-line (reference)
-
-### 7.3 Settings
-
-- Language (JA/EN)
-- Notifications: multi-select sound / vibrate (default: both ON)
-- Voice: male / female
-- Animation: show / hide (default: show)
-- Debug: x5 speed (listed last)
-- No warning/annotation for OS-level haptics settings.
-
-## 8. UI Components
-
-- Cards: Summary / Work Instruction / Animation / Timeline
-- Timeline: horizontal number-line with ticks and alternating labels
-- Lottie animations (card-based, not modal)
-
-## 9. Interaction & Feedback
-
-- 5 seconds before next step:
-  - Visual: animation card appears (when Animation is ON)
-  - Haptics: vibration (if enabled)
-  - Audio: countdown voice (if enabled)
-  - Animation card stays visible until step starts (0 seconds)
-- Notification defaults:
-  - Sound: ON
-  - Vibration: ON
-- Timer running:
-  - Screen wake lock enabled
-  - Status text shows “Screen will stay on”
-- Finish:
-  - Wake lock released
-  - Play button returns to “Play”
-
-## 10. Accessibility
-
-- Minimum 4.5:1 contrast.
-- Tap targets ≥ 44px.
-- Language switching supported (JA/EN).
-
-## 11. Non-functional Requirements
-
-- Offline capable (PWA-friendly).
-- Low-latency notifications.
-- Screen-on behavior during play.
-- Platform constraint: Web APIs do not reliably expose whether OS haptics are disabled; the app must not attempt to detect or conditionally annotate based on that OS setting.
-
-## 12. Audio Assets
-
-- Two prompt types per language/voice:
-  - “5,4,3,2,1, next step”
-  - “5,4,3,2,1, brew complete”
-- File location: public/assets/audio/{lang}-{voice}-{type}.wav
-
-## 13. Assets
-
-- Lottie: public/assets/lottie/\*.json
-- Images: public/assets/images/\*
+Real sound, haptics, wake lock, background suspension and operating-system process
+termination need physical phone checks. An interrupted or closed browser session
+is not recovered from storage. The user must keep the brewing screen open.

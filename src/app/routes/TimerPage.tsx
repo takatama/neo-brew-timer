@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useBlocker, useNavigate } from "react-router-dom";
 import { useTimerOrchestrator } from "../../features/timer/hooks/useTimerOrchestrator";
 import { useSettingsStore } from "../../features/settings/store";
 import { StepCard } from "../../features/timer/components/StepCard";
@@ -23,12 +23,11 @@ export function TimerPage() {
     totalWater,
     currentStep,
     timer,
-    overlayStep,
     remainingToNext,
     progress,
     isImminent,
     isRunningOrStarting,
-    animation,
+    startupSeconds,
     handlePlayPause,
     handleReset,
   } = useTimerOrchestrator();
@@ -36,7 +35,15 @@ export function TimerPage() {
   const isFinishStep = currentStep?.actionType === "none";
   const brewStepCount = steps.filter((step) => step.actionType !== "none").length;
   const { debugEnabled, debugSpeed, setDebugSpeed } = useSettingsStore();
-  const { news, loading: newsLoading } = useCoffeeNews(displayLanguage);
+  const { news, loading: newsLoading } = useCoffeeNews(displayLanguage, Boolean(isFinishStep));
+  const hasProgress = isRunningOrStarting || timer.status === "paused";
+  const blocker = useBlocker(({ currentLocation, nextLocation }) => hasProgress && currentLocation.pathname.split("/").pop() !== nextLocation.pathname.split("/").pop());
+  useEffect(() => {
+    if (!hasProgress) return;
+    const warn = (event: BeforeUnloadEvent) => { event.preventDefault(); };
+    window.addEventListener("beforeunload", warn);
+    return () => window.removeEventListener("beforeunload", warn);
+  }, [hasProgress]);
   const [resetDialogOpen, setResetDialogOpen] = useState(false);
 
   const handleResetTimer = () => {
@@ -50,7 +57,7 @@ export function TimerPage() {
 
   return (
     <main className="content">
-      <section className="card">
+      <section className={styles.summary}>
         <div className={styles.chipRow}>
           <span className={styles.chip}>
             {t("timer.beansChipLabel")} <span className={styles.chipValue}>{beans}g</span>
@@ -72,21 +79,11 @@ export function TimerPage() {
           remainingSeconds={remainingToNext}
           progress={progress}
           isImminent={isImminent}
-          hideTargetAmount={
-            timer.status === "idle" &&
-            timer.currentStepIndex === 0 &&
-            timer.currentTime === 0
-          }
-          nextStepPreview={
-            overlayStep && animation && steps[overlayStep.index] ? (
-              <NextStepPreview
-                step={steps[overlayStep.index]}
-                prevCumulative={overlayStep.prevCumulative}
-                visible={true}
-                isFirstStep={overlayStep.index === 0}
-              />
-            ) : undefined
-          }
+          status={timer.status}
+          startupSeconds={startupSeconds}
+          nextStepPreview={steps[timer.currentStepIndex + 1] && (
+            <NextStepPreview step={steps[timer.currentStepIndex + 1]} />
+          )}
           steps={steps}
           currentTime={timer.currentTime}
         />
@@ -100,10 +97,11 @@ export function TimerPage() {
       )}
 
       <section className={styles.controls}>
+        {isFinishStep && <button className={`${styles.btn} ${styles.primary}`} onClick={() => navigate(localizedPath(displayLanguage, "setup"))}>{t("timer.brewAgain")}</button>}
         {!isFinishStep && (
           <div className={styles.primaryControlRow}>
             <button className={`${styles.btn} ${styles.primary}`} onClick={handlePlayPause}>
-              {isRunningOrStarting ? t("timer.pause") : t("timer.play")}
+              {startupSeconds !== null ? t("timer.cancelStart") : isRunningOrStarting ? t("timer.pause") : t(timer.status === "paused" ? "timer.resume" : "timer.play")}
             </button>
             {debugEnabled && (
               <button
@@ -122,6 +120,15 @@ export function TimerPage() {
         )}
       </section>
 
+      <ConfirmDialog
+        open={blocker.state === "blocked"}
+        title={t("timer.leaveTitle")}
+        message={t("timer.leaveConfirm")}
+        confirmLabel={t("timer.leaveAction")}
+        cancelLabel={t("timer.resetCancelAction")}
+        onConfirm={() => { handleReset(); blocker.proceed?.(); }}
+        onCancel={() => blocker.reset?.()}
+      />
       <ConfirmDialog
         open={resetDialogOpen}
         title={t("timer.reset")}

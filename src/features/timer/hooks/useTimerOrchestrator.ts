@@ -15,8 +15,8 @@ export function useTimerOrchestrator() {
   const [searchParams, setSearchParams] = useSearchParams();
   const displayLanguage = useDisplayLanguage();
   const { beans, flavor } = useSessionStore();
-  const { debugSpeed, animation } = useSettingsStore();
-  const { playSound, playFirstSound, vibrate } = useNotification(displayLanguage);
+  const { debugSpeed, startDelay } = useSettingsStore();
+  const { playSound, playFirstSound, vibrate, stop } = useNotification(displayLanguage);
   const wakeLock = useWakeLock();
 
   const steps = useMemo(
@@ -42,8 +42,8 @@ export function useTimerOrchestrator() {
 
   const onStart = useCallback(() => {
     vibrate("pre-step");
-    playFirstSound();
-  }, [playFirstSound, vibrate]);
+    if (startDelay) playFirstSound();
+  }, [playFirstSound, vibrate, startDelay]);
 
   const onStepCrossed = useCallback(() => {
     vibrate("step-change");
@@ -52,7 +52,7 @@ export function useTimerOrchestrator() {
   const controller = useBrewTimerController({
     steps: timerSteps,
     speedMultiplier: debugSpeed,
-    startDelayMs: animation ? 5000 : 0,
+    startDelayMs: startDelay ? 5000 : 0,
     wakeLock,
     onStart,
     onPreNotify,
@@ -62,15 +62,6 @@ export function useTimerOrchestrator() {
 
   const currentStep = steps[timer.currentStepIndex];
   const nextStep = steps[timer.currentStepIndex + 1];
-  const overlayStep = controller.previewStepIndex === null
-    ? null
-    : {
-        index: controller.previewStepIndex,
-        prevCumulative: controller.previewStepIndex > 0
-          ? steps[controller.previewStepIndex - 1]?.cumulative ?? 0
-          : 0,
-      };
-
   const remainingToNext = nextStep
     ? Math.max(0, nextStep.timeSec - timer.currentTime)
     : Math.max(0, timer.finalTime - timer.currentTime);
@@ -95,7 +86,7 @@ export function useTimerOrchestrator() {
     newParams.delete("autostart");
     setSearchParams(newParams, { replace: true });
     controller.start();
-  }, [controller.start, setSearchParams]);
+  }, [controller.start]);
 
   return {
     steps,
@@ -104,14 +95,13 @@ export function useTimerOrchestrator() {
     totalWater,
     currentStep,
     timer,
-    overlayStep,
     remainingToNext,
     progress,
     isImminent,
     isRunningOrStarting: controller.isRunningOrStarting,
-    animation,
+    startupSeconds: controller.startupSeconds,
     wakeLock,
-    handlePlayPause: controller.toggle,
-    handleReset: controller.reset,
+    handlePlayPause: () => { controller.toggle(); if (controller.isRunningOrStarting) stop(); },
+    handleReset: () => { stop(); controller.reset(); },
   };
 }

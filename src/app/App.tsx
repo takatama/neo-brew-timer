@@ -1,15 +1,15 @@
 import { useEffect, useMemo, useState } from "react";
-import { BrowserRouter, Navigate, useLocation } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, Navigate, useLocation } from "react-router-dom";
 import { Header } from "../shared/components/Header";
 import { IntroPage } from "./routes/IntroPage";
 import { SetupPage } from "./routes/SetupPage";
 import { TimerPage } from "./routes/TimerPage";
-import { useSessionStore } from "../features/timer/store";
 import { useSettingsStore } from "../features/settings/store";
 import { getActiveBgmDayOfWeek, getActiveBgmTracks } from "../features/timer/data/bgm";
 import { getSavedBgmTrackIndex, setSavedBgmTrackIndex } from "../features/timer/data/bgm/playbackProgress";
 import { FloatingMiniPlayer } from "../features/timer/components/FloatingMiniPlayer";
 import { ErrorBoundary } from "../shared/components/ErrorBoundary";
+import { OfflineNotice } from "../shared/components/OfflineNotice";
 import { DisplayLanguageProvider } from "../shared/i18n/DisplayLanguage";
 import {
   choosePreferredLanguage,
@@ -75,8 +75,9 @@ function AppShell({ page }: { page: AppPage }) {
   };
 
   return (
-    <div className={`${styles.app} ${shouldShowMiniPlayer ? styles.withMiniPlayer : ""}`}>
+    <div className={`${styles.app} ${shouldShowMiniPlayer && !isTimerPage ? styles.withMiniPlayer : ""}`}>
       <Header />
+      <OfflineNotice visible={isSetupPage} />
       <ErrorBoundary>
         {page === "intro" && <IntroPage />}
         {page === "setup" && <SetupPage />}
@@ -84,6 +85,7 @@ function AppShell({ page }: { page: AppPage }) {
       </ErrorBoundary>
       {shouldShowMiniPlayer && currentTrack && (
         <FloatingMiniPlayer
+          inline={isTimerPage}
           track={currentTrack}
           onNextTrack={handleNextTrack}
           onTrackPlaybackStarted={handleTrackPlaybackStarted}
@@ -95,7 +97,7 @@ function AppShell({ page }: { page: AppPage }) {
 
 function RoutedApp() {
   const location = useLocation();
-  const introSeen = useSessionStore((state) => state.introSeen);
+  const introSeen = true;
   const savedLanguage = useSettingsStore((state) => state.language);
   const preferredLanguage = choosePreferredLanguage(
     savedLanguage,
@@ -120,10 +122,5 @@ function RoutedApp() {
   );
 }
 
-export function App() {
-  return (
-    <BrowserRouter>
-      <RoutedApp />
-    </BrowserRouter>
-  );
-}
+const router = createBrowserRouter([{ path: "*", element: <RoutedApp /> }]);
+export function App() { return <RouterProvider router={router} />; }

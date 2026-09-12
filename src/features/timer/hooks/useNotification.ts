@@ -30,6 +30,11 @@ export function useNotification(language: DisplayLanguage) {
   const voice = useSettingsStore((state) => state.voice);
   const audioSetsRef = useRef(new Map<string, Record<VoiceMessage, HTMLAudioElement>>());
 
+  const stop = useCallback(() => {
+    audioSetsRef.current.forEach(set => Object.values(set).forEach(audio => audio.pause()));
+    navigator.vibrate?.(0);
+  }, []);
+
   const getAudioSet = useCallback((nextLanguage: DisplayLanguage, nextVoice: Voice) => {
     const key = `${nextLanguage}:${nextVoice}`;
     const existing = audioSetsRef.current.get(key);
@@ -119,5 +124,5 @@ export function useNotification(language: DisplayLanguage) {
     }
   }, []);
 
-  return { playSound, playFirstSound, vibrate };
+  return { playSound, playFirstSound, vibrate, stop };
 }

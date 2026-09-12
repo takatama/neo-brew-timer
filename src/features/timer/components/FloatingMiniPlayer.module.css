@@ -13,3 +13,5 @@
 .player {
   pointer-events: auto;
 }
+
+.inline { position: static; transform: none; max-width: none; padding-inline: 16px; }

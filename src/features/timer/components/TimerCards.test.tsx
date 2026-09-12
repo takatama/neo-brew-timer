@@ -1,15 +1,10 @@
 import { render, screen } from "@testing-library/react";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 import type { ComputedStep } from "../../recipe/types";
 import i18n from "../../../shared/i18n/config";
 import { Countdown } from "./Countdown";
 import { NextStepPreview } from "./NextStepPreview";
 import { StepCard } from "./StepCard";
-
-vi.mock("../../../shared/components/LottiePlayer", () => ({
-  buildLottieQueue: () => ["pour"],
-  LottiePlayer: () => <div data-testid="lottie-player" />,
-}));
 
 const firstStep: ComputedStep = {
   timeSec: 0,
@@ -42,57 +37,24 @@ describe("timer cards", () => {
     expect(container.firstElementChild).toHaveTextContent(/^あと 0:04$/);
   });
 
-  it("uses the first-step heading for the startup animation", () => {
-    render(
-      <NextStepPreview
-        step={firstStep}
-        prevCumulative={0}
-        visible
-        isFirstStep
-      />,
-    );
 
-    expect(screen.getByText("First")).toBeInTheDocument();
-    expect(screen.queryByText("Next")).not.toBeInTheDocument();
+  it("shows the actual next target immediately, without counting up from zero", () => {
+    render(<NextStepPreview step={firstStep} />);
+    expect(screen.getByText("30g")).toBeInTheDocument();
+    expect(screen.queryByText("0g")).not.toBeInTheDocument();
   });
 
-  it("preserves the hidden initial target's layout until the timer starts", () => {
-    const { container, rerender } = render(
-      <StepCard
-        step={firstStep}
-        stepIndex={0}
-        totalSteps={1}
-        remainingSeconds={30}
-        progress={0}
-        isImminent={false}
-        hideTargetAmount
-        nextStepPreview={<div>animation</div>}
-        steps={[firstStep]}
-        currentTime={0}
-      />,
-    );
-
-    const target = container.querySelector<HTMLElement>("[class*='stepSub']");
-    expect(target).toHaveTextContent("30g");
-    expect(target).toHaveAttribute("aria-hidden", "true");
-    expect(target?.className).toContain("stepSubHidden");
-
-    rerender(
-      <StepCard
-        step={firstStep}
-        stepIndex={0}
-        totalSteps={1}
-        remainingSeconds={30}
-        progress={0}
-        isImminent={false}
-        nextStepPreview={<div>next animation</div>}
-        steps={[firstStep]}
-        currentTime={0}
-      />,
-    );
-
-    expect(container).toHaveTextContent("30g");
-    expect(target).not.toHaveAttribute("aria-hidden");
-    expect(target?.className).not.toContain("stepSubHidden");
+  it("keeps the first target visible while clearly separating preparation and brewing", () => {
+    const props = { step: firstStep, stepIndex: 0, totalSteps: 10, remainingSeconds: 30,
+      progress: 0, isImminent: false, steps: [firstStep], currentTime: 0 };
+    const { rerender } = render(<StepCard {...props} status="idle" startupSeconds={5} />);
+    expect(screen.getByRole("heading", { name: "First pour" })).toBeVisible();
+    expect(screen.getByRole("status")).toHaveTextContent("Starting in 5s");
+    expect(screen.getByText("30")).toBeVisible();
+    rerender(<StepCard {...props} status="running" startupSeconds={null} />);
+    expect(screen.getByRole("heading", { name: "Bloom" })).toBeVisible();
+    expect(screen.getByText("30")).toBeVisible();
+    rerender(<StepCard {...props} status="paused" startupSeconds={null} />);
+    expect(screen.getByRole("status")).toHaveTextContent("Paused");
   });
 });

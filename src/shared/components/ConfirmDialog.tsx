@@ -1,4 +1,5 @@
-import { useEffect } from "react";
+import { useId } from "react";
+import { useDialog } from "./useDialog";
 import styles from "./ConfirmDialog.module.css";
 
 interface Props {
@@ -20,35 +21,22 @@ export function ConfirmDialog({
   onConfirm,
   onCancel,
 }: Props) {
-  useEffect(() => {
-    if (!open) return;
-
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        onCancel();
-      }
-    };
-
-    window.addEventListener("keydown", onKeyDown);
-    return () => {
-      window.removeEventListener("keydown", onKeyDown);
-    };
-  }, [open, onCancel]);
+  const dialogRef = useDialog(open);
+  const titleId = useId();
+  const messageId = useId();
 
   if (!open) return null;
 
   return (
-    <div className={styles.modal} onClick={onCancel}>
+    <dialog aria-describedby={messageId} aria-labelledby={titleId} ref={dialogRef} className={styles.modal} onCancel={(event) => { event.preventDefault(); onCancel(); }} onClick={onCancel}>
       <div
         className={styles.card}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="confirm-dialog-title"
-        aria-describedby="confirm-dialog-message"
+        aria-labelledby={titleId}
+        aria-describedby={messageId}
         onClick={(event) => event.stopPropagation()}
       >
-        <h3 id="confirm-dialog-title" className={styles.title}>{title}</h3>
-        <p id="confirm-dialog-message" className={styles.message}>{message}</p>
+        <h3 id={titleId} className={styles.title}>{title}</h3>
+        <p id={messageId} className={styles.message}>{message}</p>
         <div className={styles.actions}>
           <button type="button" className={`${styles.btn} ${styles.outline}`} onClick={onCancel}>
             {cancelLabel}
@@ -58,6 +46,6 @@ export function ConfirmDialog({
           </button>
         </div>
       </div>
-    </div>
+    </dialog>
   );
 }

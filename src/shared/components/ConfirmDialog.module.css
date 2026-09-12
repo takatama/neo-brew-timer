@@ -60,3 +60,7 @@
   outline: 2px solid var(--md-primary);
   outline-offset: 2px;
 }
+
+.modal { margin: 0; width: 100%; max-width: none; height: 100%; max-height: none; border: 0; }
+.modal:not([open]) { display: none; }
+.modal::backdrop { background: transparent; }

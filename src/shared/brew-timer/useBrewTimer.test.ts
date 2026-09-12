@@ -75,3 +75,19 @@ describe("useBrewTimer", () => {
     vi.restoreAllMocks();
   });
 });
+
+it("captures elapsed time between ticks when pausing, including completion", () => {
+  vi.useFakeTimers();
+  const now = vi.spyOn(performance, "now").mockReturnValue(0);
+  try {
+    const { result } = renderHook(() => useBrewTimer(makeSteps(), 1));
+    act(() => result.current.start());
+    now.mockReturnValue(75);
+    act(() => result.current.pause());
+    expect(result.current.currentTime).toBeCloseTo(0.075);
+    act(() => result.current.start());
+    now.mockReturnValue(210000);
+    act(() => result.current.pause());
+    expect(result.current.status).toBe("finished");
+  } finally { now.mockRestore(); vi.useRealTimers(); }
+});

@@ -1,3 +1,4 @@
+import { useDialog } from "../../shared/components/useDialog";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSettingsStore } from "./store";
@@ -37,6 +38,15 @@ function SegmentedControl<T extends string>({
           type="button"
           role="radio"
           aria-checked={value === option.value}
+          tabIndex={value === option.value ? 0 : -1}
+          onKeyDown={(event) => {
+            if (!["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(event.key)) return;
+            event.preventDefault();
+            const direction = event.key === "ArrowLeft" || event.key === "ArrowUp" ? -1 : 1;
+            const next = (options.indexOf(option) + direction + options.length) % options.length;
+            onChange(options[next].value);
+            (event.currentTarget.parentElement?.children[next] as HTMLElement)?.focus();
+          }}
           className={styles.segmentButton}
           data-active={value === option.value}
           disabled={disabled}
@@ -81,6 +91,7 @@ export function SettingsModal({ open, onClose }: Props) {
   const location = useLocation();
   const displayLanguage = useDisplayLanguage();
   const settings = useSettingsStore();
+  const dialogRef = useDialog(open);
 
   const soundEnabled = settings.isSoundEnabled();
   const vibrateEnabled = settings.isVibrateEnabled();
@@ -96,11 +107,9 @@ export function SettingsModal({ open, onClose }: Props) {
   if (!open) return null;
 
   return (
-    <div className={styles.modal} onClick={onClose}>
+    <dialog aria-labelledby="settings-modal-title" ref={dialogRef} className={styles.modal} onCancel={(event) => { event.preventDefault(); onClose(); }} onClick={onClose}>
       <div
         className={styles.card}
-        role="dialog"
-        aria-modal="true"
         aria-labelledby="settings-modal-title"
         onClick={(event) => event.stopPropagation()}
       >
@@ -120,6 +129,16 @@ export function SettingsModal({ open, onClose }: Props) {
               { value: "ja", label: "日本語" },
               { value: "en", label: "English" },
             ]}
+          />
+        </section>
+
+        <section className={styles.section} aria-labelledby="settings-brewing-heading">
+          <h4 id="settings-brewing-heading" className={styles.sectionTitle}>{t("settings.brewing")}</h4>
+          <SwitchRow
+            id="settings-startDelay"
+            label={t("settings.startDelay")}
+            checked={settings.startDelay}
+            onChange={settings.setStartDelay}
           />
         </section>
 
@@ -169,12 +188,6 @@ export function SettingsModal({ open, onClose }: Props) {
             checked={settings.bgmEnabled}
             onChange={settings.setBgmEnabled}
           />
-          <SwitchRow
-            id="settings-animation"
-            label={t("settings.animation")}
-            checked={settings.animation}
-            onChange={settings.setAnimation}
-          />
         </section>
 
         <section className={styles.section} aria-labelledby="settings-developer-heading">
@@ -196,6 +209,6 @@ export function SettingsModal({ open, onClose }: Props) {
           </button>
         </div>
       </div>
-    </div>
+    </dialog>
   );
 }

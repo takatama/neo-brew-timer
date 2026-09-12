@@ -39,11 +39,13 @@ function pickAd(cycle: number, language: SupportedLanguage): AdItem | null {
 }
 
 function nextAdCycle(): number {
+  try {
   const raw = Number(localStorage.getItem(AD_CYCLE_KEY) ?? "0");
   const safe = Number.isFinite(raw) && raw > 0 ? raw : 0;
   const next = safe + 1;
   localStorage.setItem(AD_CYCLE_KEY, String(next));
   return next;
+  } catch { return 1; }
 }
 
 export function CoffeeNews({ news, loading }: Props) {

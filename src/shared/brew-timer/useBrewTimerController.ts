@@ -20,7 +20,16 @@ export function useBrewTimerController({
   onStepCrossed,
 }: BrewTimerControllerOptions) {
   const [isStarting, setIsStarting] = useState(false);
-  const [previewStepIndex, setPreviewStepIndex] = useState<number | null>(null);
+  const [startupSeconds, setStartupSeconds] = useState<number | null>(null);
+  const deadlineRef = useRef(0);
+  useEffect(() => {
+    if (!isStarting) return;
+    const id = setInterval(() => {
+      if (!isStartingRef.current) return;
+      setStartupSeconds(Math.max(0, Math.ceil((deadlineRef.current - performance.now()) / 1000)));
+    }, 100);
+    return () => clearInterval(id);
+  }, [isStarting]);
   const startDelayRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isStartingRef = useRef(false);
   const startNotifiedRef = useRef(false);
@@ -29,14 +38,11 @@ export function useBrewTimerController({
   optionsRef.current = { startDelayMs, wakeLock, onStart };
 
   const handlePreNotify = useCallback((event: PreNotifyEvent) => {
-    if (!event.isFinish && optionsRef.current.startDelayMs > 0) {
-      setPreviewStepIndex(event.nextStepIndex);
-    }
     onPreNotify?.(event);
   }, [onPreNotify]);
 
   const handleStepCrossed = useCallback((stepIndex: number) => {
-    setPreviewStepIndex(null);
+    setStartupSeconds(null);
     onStepCrossed?.(stepIndex);
   }, [onStepCrossed]);
 
@@ -54,7 +60,7 @@ export function useBrewTimerController({
     }
     isStartingRef.current = false;
     setIsStarting(false);
-    setPreviewStepIndex(null);
+    setStartupSeconds(null);
     if (resetNotification) startNotifiedRef.current = false;
   }, []);
 
@@ -78,13 +84,14 @@ export function useBrewTimerController({
     if (isFirstStart && currentOptions.startDelayMs > 0) {
       isStartingRef.current = true;
       setIsStarting(true);
-      setPreviewStepIndex(0);
+      deadlineRef.current = performance.now() + currentOptions.startDelayMs;
+      setStartupSeconds(Math.ceil(currentOptions.startDelayMs / 1000));
       void currentOptions.wakeLock.request();
       startDelayRef.current = setTimeout(() => {
         startDelayRef.current = null;
         isStartingRef.current = false;
         setIsStarting(false);
-        setPreviewStepIndex(null);
+        setStartupSeconds(null);
         timerRef.current.start();
       }, currentOptions.startDelayMs);
       return;
@@ -122,7 +129,7 @@ export function useBrewTimerController({
 
   useEffect(() => {
     if (timer.status === "finished") {
-      setPreviewStepIndex(null);
+      setStartupSeconds(null);
       optionsRef.current.wakeLock.release();
     }
   }, [timer.status]);
@@ -138,7 +145,7 @@ export function useBrewTimerController({
     timer,
     isStarting,
     isRunningOrStarting: timer.status === "running" || isStarting,
-    previewStepIndex,
+    startupSeconds,
     start,
     pauseOrCancel,
     toggle,

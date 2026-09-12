@@ -172,3 +172,16 @@ describe("formatTime", () => {
   });
 });
 
+
+describe("rounding across all supported bean amounts", () => {
+  it("keeps pours positive, balanced, and equal to the total", () => {
+    for (let beans = 1; beans <= 100; beans++) {
+      const pours = computeSteps(neoBrewMethod, beans, "neutral").slice(0, 10);
+      const amounts = pours.map(step => step.increment);
+      expect(Math.min(...amounts)).toBeGreaterThan(0);
+      expect(Math.max(...amounts) - Math.min(...amounts)).toBeLessThanOrEqual(1);
+      expect(amounts.reduce((sum, n) => sum + n, 0)).toBe(beans * 15);
+      expect(pours[9].cumulative).toBe(beans * 15);
+    }
+  });
+});

@@ -16,11 +16,13 @@ export function FinishCard({
 
   return (
     <section className={`card ${styles.finishCard}`}>
-      <div className={styles.stepVerb}>{t("timer.finish")}</div>
+      <div role="status">
+      <h1 className={styles.stepVerb}>{t("timer.finish")}</h1>
       <div className={styles.stepSub}>{t("timer.enjoyCoffee")}</div>
-      <div className={styles.extras}>
-        <CoffeeNews news={news} loading={newsLoading} />
       </div>
+      {(newsLoading || news.length > 0) && <details className={styles.extras}><summary>{t("news.title")}</summary>
+        <CoffeeNews news={news} loading={newsLoading} />
+      </details>}
     </section>
   );
 }

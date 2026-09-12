@@ -33,13 +33,13 @@ describe("useBrewTimerController", () => {
 
     act(() => result.current.start());
     expect(result.current.isStarting).toBe(true);
-    expect(result.current.previewStepIndex).toBe(0);
+    expect(result.current.startupSeconds).toBe(5);
 
     act(() => result.current.pauseOrCancel());
     act(() => vi.advanceTimersByTime(6000));
 
     expect(result.current.timer.status).toBe("idle");
-    expect(result.current.previewStepIndex).toBeNull();
+    expect(result.current.startupSeconds).toBeNull();
     expect(wakeLock.release).toHaveBeenCalled();
   });
 

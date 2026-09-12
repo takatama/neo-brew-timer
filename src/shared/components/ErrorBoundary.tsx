@@ -1,3 +1,4 @@
+import i18n from "../i18n/config";
 import { Component, type ReactNode } from "react";
 
 interface Props {
@@ -19,7 +20,7 @@ export class ErrorBoundary extends Component<Props, State> {
     if (this.state.hasError) {
       return (
         <div style={{ padding: 32, textAlign: "center" }}>
-          <h2>Something went wrong</h2>
+          <h2>{i18n.t("error.title")}</h2>
           <button
             onClick={() => {
               this.setState({ hasError: false });
@@ -36,7 +37,7 @@ export class ErrorBoundary extends Component<Props, State> {
               cursor: "pointer",
             }}
           >
-            Back to Home
+            {i18n.t("error.back")}
           </button>
         </div>
       );

@@ -11,7 +11,6 @@ See `SPEC.md` for full UI/UX specification.
 - **UI:** React 19, React Router (SPA)
 - **State:** Zustand (settings persisted to localStorage, session state in-memory)
 - **i18n:** react-i18next with JSON translation files (`src/shared/i18n/{ja,en}.json`)
-- **Animation:** lottie-web (direct `loadAnimation`/`destroy` control — do NOT use lottie-react)
 - **Styling:** CSS Modules (`.module.css`) + global design tokens (`tokens.css`)
 - **Build:** Vite 8, `public/` as publicDir, vite-plugin-pwa for offline support
 - **Test:** Vitest + Testing Library; three Playwright smoke journeys
@@ -22,7 +21,7 @@ See `SPEC.md` for full UI/UX specification.
 ```
 src/
 ├── app/
-│   ├── App.tsx                    # BrowserRouter + Routes + ErrorBoundary
+│   ├── App.tsx                    # Data router + localized routes + ErrorBoundary
 │   ├── App.module.css
 │   └── routes/
 │       ├── IntroPage.tsx / .module.css
@@ -36,63 +35,57 @@ src/
 │   └── timer/
 │       ├── store.ts               # Session store (beans, flavor, introSeen)
 │       ├── hooks/
-│       │   ├── useTimer.ts        # Tick loop, elapsed time, step detection
-│       │   ├── useTimerOrchestrator.ts  # Overlay, play/pause/reset, wake lock coordination
+│       │   ├── useTimer.ts        # Shared timer adapter
+│       │   ├── useTimerOrchestrator.ts  # Recipe, notifications, URL, and controller integration
 │       │   ├── useWakeLock.ts
 │       │   └── useNotification.ts
 │       └── components/            # StepCard, Countdown, NextStepPreview, Timeline
 │           └── *.tsx / *.module.css
 └── shared/
-    ├── components/                # Header, LottiePlayer, ErrorBoundary
+    ├── brew-timer/                # Reusable timer, controller, card, progress, theme
+    ├── components/                # Header, ErrorBoundary
     ├── i18n/                      # config.ts, ja.json, en.json
     └── styles/
         └── tokens.css             # Design tokens + shared primitives (card, choice, hint)
 public/                            # Vite publicDir — served as-is at /
 └── assets/
     ├── audio/                     # {lang}-{voice}-{type}.wav
-    ├── images/
-    └── lottie/                    # *.json
+    └── images/
 ```
 
 ## Key Conventions
 
 ### Styling
 
-- **Design tokens** (CSS variables, reset, shared primitives like `.card`, `.choice`, `.hint`) are in `src/shared/styles/tokens.css` — imported once in `main.tsx`.
+- **Design tokens** (CSS variables, reset, shared primitives like `.card`, `.choice`, `.hint`) are in `src/shared/brew-timer/theme.css`, imported by `src/shared/styles/tokens.css` — imported once in `main.tsx`.
 - **Component styles** use CSS Modules (`.module.css` co-located with each component).
 - Use `import styles from "./Component.module.css"` and `className={styles.foo}`.
 - Shared primitives (`card`, `card-title`, `choice`, `choice-row`, `hint`, `content`, `pour-amount`) are global classes from `tokens.css`.
 
 ### Timer Architecture
 
-- `useTimer` hook owns the tick loop and elapsed time as the single source of truth.
-- `useTimerOrchestrator` composes `useTimer` + `useWakeLock` + `useNotification` and manages overlay state, startup countdown, and play/pause/reset handlers.
+- `useBrewTimer` hook owns the tick loop and elapsed time as the single source of truth.
+- `useTimerOrchestrator` adapts the recipe, route language, and notifications to `useBrewTimerController`. The shared controller manages the optional startup countdown, play/pause/reset, and wake lock.
 - Current step index is derived from elapsed time (not stored separately).
-- All notifications (sound, vibrate, visual overlay) fire at exactly **5 seconds** before step transition via a single `onPreNotify` callback. There is no separate sound timing.
-- The overlay step index must be registered in both React state (`setOverlayStep`) AND the timer's internal state (`s.overlayStepIndex`) so that `onOverlayExpired` fires when the step boundary is crossed.
-
-### Lottie Animations
-
-- Use `lottie-web` directly (`lottie.loadAnimation` / `instance.destroy`), not wrapper libraries like `lottie-react`.
-- Queue-based playback: destroy previous instance before loading next.
-- Memoize `animationKeys` arrays with `useMemo` to prevent re-renders from restarting animations.
+- All notifications (sound and vibration) fire at exactly **5 seconds** before step transition via a single `onPreNotify` callback. There is no separate sound timing.
 
 ### Pause During Startup Countdown
 
-- When the timer starts with animation enabled, there is a 5-second countdown before the timer actually begins ticking.
+- When the timer starts with `startDelay` enabled (default: true), there is a 5-second countdown before the timer actually begins ticking.
+- With `startDelay` off, start immediately without playing countdown audio.
 - During this countdown, `timer.status` is still `"idle"`, not `"running"`.
-- `handlePlayPause` must check `startDelayRef` first (before `timer.status`) to allow canceling the countdown.
+- The shared controller must check `isStartingRef` first (before `timer.status`) to allow canceling the countdown.
 
 ### Static Assets
 
-- Audio, images, and Lottie JSON files live in `public/assets/` (Vite publicDir).
+- Audio and images live in `public/assets/` (Vite publicDir).
 - Reference them as URL strings (e.g., `/assets/audio/ja-male-next-step.wav`), not as ES module imports.
 
 ### State Management
 
 | Layer    | Tool                 | Persisted    | Examples                                           |
 | -------- | -------------------- | ------------ | -------------------------------------------------- |
-| Settings | Zustand + persist    | localStorage | language, notifyMode, voice, animation, debugSpeed |
+| Settings | Zustand + persist    | localStorage | language, notifyMode, voice, startDelay, debugSpeed |
 | Session  | Zustand (no persist) | No           | beans, flavor, introSeen                           |
 | Derived  | useMemo / computed   | No           | computedSteps, currentStepIndex, waterAmounts      |
 
@@ -101,7 +94,7 @@ public/                            # Vite publicDir — served as-is at /
 - All user-facing strings are in `src/shared/i18n/{ja,en}.json`.
 - Use `useTranslation()` hook in components.
 - For strings with embedded markup (e.g., pour amounts), use `<Trans>` component with `components` prop.
-- When language changes, call both `settings.setLanguage(lang)` and `i18n.changeLanguage(lang)`.
+- The URL (`/ja/` or `/en/`) determines display language through `DisplayLanguageProvider`. Settings saves the preference and replaces the URL language without restarting a brew.
 
 ### Type Safety
 
@@ -130,7 +123,7 @@ npm run deploy       # Deploy to Cloudflare Pages
 
 - `src/features/recipe/waterCalc.test.ts` — Water calculation logic (pure functions)
 - `src/features/settings/store.test.ts` — Settings store (Zustand)
-- `src/features/timer/hooks/useTimer.test.ts` — Timer hook (status transitions, step crossing, pre-notify)
+- `src/shared/brew-timer/useBrewTimer.test.ts` — Timer hook (status transitions, step crossing, pre-notify)
 - Settings store tests require a localStorage mock (see test file for pattern)
 
 ## PR Language

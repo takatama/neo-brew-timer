@@ -6,12 +6,12 @@ This folder contains the small, recipe-independent part of the coffee timer.
 
 - The app converts its recipe into `{ timeSec, isFinish }` steps.
 - `useBrewTimer` owns elapsed time, pause/resume/reset, step changes, and the five-second pre-notification.
-- `useBrewTimerController` owns the optional startup delay, preview step index, and wake-lock calls.
+- `useBrewTimerController` owns the optional startup delay, countdown seconds, and wake-lock calls.
 - The app supplies notification functions. It still owns audio files, vibration settings, language, URL handling, recipe calculations, and navigation.
 - `useWakeLock` is the browser boundary. Unsupported or denied wake locks never stop the timer.
 - `theme.css` provides common design values and basic card/choice styles. The app keeps its page layout and background.
 - `TimerProgress` renders the shared progress track. The app supplies the remaining-time wording.
-- `BrewStepCardFrame` places the step location, compact timeline, app-provided instruction, optional app-provided animation preview, and countdown in one main card.
+- `BrewStepCardFrame` places the step location, compact timeline, app-provided instruction, optional app-provided next-step preview, and countdown in one main card.
 - `TimerTimeline` draws steps from their actual times. It does not assume a recipe or fixed number of pours.
 
 ## Example
@@ -25,14 +25,14 @@ const timerSteps = recipeSteps.map((step) => ({
 const controller = useBrewTimerController({
   steps: timerSteps,
   speedMultiplier: debugSpeed,
-  startDelayMs: animation ? 5000 : 0,
+  startDelayMs: startDelay ? 5000 : 0,
   wakeLock,
-  onStart: playFirstSound,
+  onStart: () => { if (startDelay) playFirstSound(); },
   onPreNotify: ({ isFinish }) => playSound(isFinish),
 });
 ```
 
-The app builds its instruction and animation content, then passes those slots to `BrewStepCardFrame`. This keeps Switch directions, water wording, and Lottie selection outside the shared layout.
+The app builds its instruction and next-step content, then passes those slots to `BrewStepCardFrame`. This keeps recipe directions and water wording outside the shared layout.
 
 ## Design notes
 

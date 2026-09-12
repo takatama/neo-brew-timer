@@ -121,9 +121,12 @@ export function useBrewTimer(
   }, [stopInterval, tick]);
 
   const pause = useCallback(() => {
+    if (lastTickRef.current === null) return;
+    tick();
     stopInterval();
-    setStatus("paused");
-  }, [stopInterval]);
+    const final = stepsRef.current[stepsRef.current.length - 1]?.timeSec ?? 0;
+    setStatus(stateRef.current.elapsedMs >= final * 1000 ? "finished" : "paused");
+  }, [stopInterval, tick]);
 
   const reset = useCallback(() => {
     stopInterval();

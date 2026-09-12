@@ -15,7 +15,7 @@
   --radius-lg: 18px;
   --radius-md: 12px;
   --radius-sm: 10px;
-  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", "Noto Sans JP", sans-serif;
 }
 
 .card {
