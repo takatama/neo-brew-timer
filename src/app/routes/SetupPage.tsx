@@ -51,7 +51,7 @@ export function SetupPage() {
 
   return (
     <main className="content">
-      <header className={styles.heading}><p>NEO BREW · 1:15</p><h1>{t("setup.heading")}</h1><span>{t("setup.subtitle")}</span></header>
+      <header className={styles.heading}><h1>{t("setup.heading")}</h1></header>
       <section className="card">
         <div className={styles.stepperRow}>
           <span className={styles.beansLabel}>{t("setup.beans")}</span>
@@ -82,16 +82,10 @@ export function SetupPage() {
         </div>
       </section>
 
-      <section className={styles.preparation}>
-        <h2>{t("setup.preparation")}</h2><p>{t("setup.prepHint")}</p>
-        <p>{t("setup.scaleHint")}</p>
-        <span>{t("setup.overview")}</span>
-      </section>
       <button className={styles.btnPrimary} onClick={handleStart}>
         {t("setup.start")}
       </button>
 
-      <p className={styles.startHint}>{t(startDelay ? "setup.startHint" : "setup.startImmediately")}</p>
       <details className="card" open={detailsOpen} onToggle={(e) => setDetailsOpen((e.target as HTMLDetailsElement).open)}>
         <summary className={styles.detailsSummary}>
           <span>{t("setup.details")}</span>
@@ -100,6 +94,13 @@ export function SetupPage() {
           </span>
         </summary>
         {detailsOpen && <div className={styles.detailsBody}>
+          <p className={styles.detailsText}>{t("setup.toolDescription")}</p>
+          <section className={styles.preparation}>
+            <h2>{t("setup.preparation")}</h2><p>{t("setup.prepHint")}</p>
+            <p>{t("setup.scaleHint")}</p>
+            <p>{t(startDelay ? "setup.startHint" : "setup.startImmediately")}</p>
+            <span>{t("setup.overview")}</span>
+          </section>
           <img
             className={styles.detailsImage}
             src={heroImage}
@@ -137,28 +138,27 @@ export function SetupPage() {
               allowFullScreen
             />
           </div>
+          <section aria-labelledby="label-equipment">
+            <div className={styles.equipmentHeader}>
+              <h2 id="label-equipment" className={`card-title ${styles.equipmentTitle}`}>{t("setup.equipment")}</h2>
+            </div>
+            <ul className={styles.equipmentList}>
+              {equipment.map((item) => (
+                <li key={item.name}>
+                  <a
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer sponsored"
+                  >
+                    {item.name}
+                  </a>
+                </li>
+              ))}
+            </ul>
+            <p className={styles.affiliateDisclosure}>{t("setup.affiliate")}</p>
+          </section>
         </div>}
       </details>
-
-      <section className={`card ${styles.equipmentCard}`} aria-labelledby="label-equipment">
-        <div className={styles.equipmentHeader}>
-          <h2 id="label-equipment" className={`card-title ${styles.equipmentTitle}`}>{t("setup.equipment")}</h2>
-        </div>
-        <ul className={styles.equipmentList}>
-          {equipment.map((item) => (
-            <li key={item.name}>
-              <a
-                href={item.href}
-                target="_blank"
-                rel="noopener noreferrer sponsored"
-              >
-                {item.name}
-              </a>
-            </li>
-          ))}
-        </ul>
-        <p className={styles.affiliateDisclosure}>{t("setup.affiliate")}</p>
-      </section>
 
       {debugEnabled && (
         <>

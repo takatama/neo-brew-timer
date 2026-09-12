@@ -45,7 +45,7 @@
     "stepPourTo": "{{amount}}g まで注ぐ",
     "stepDuration": "{{seconds}} 秒",
     "start": "淹れる",
-    "details": "レシピ",
+    "details": "レシピ・使い方",
     "detailsAction": "見る",
     "closeAction": "閉じる",
     "equipment": "器具",
@@ -62,8 +62,7 @@
     "dayThu": "木",
     "dayFri": "金",
     "daySat": "土",
-    "heading": "一杯のレシピ",
-    "subtitle": "10回の注湯でつくる、Neo Brew。",
+    "heading": "抽出の準備",
     "preparation": "抽出の準備",
     "prepHint": "湯温 95〜96℃ · 超粗挽き",
     "startHint": "5秒のカウントダウン後にスタート",
@@ -71,7 +70,8 @@
     "increase": "豆を1g増やす",
     "decrease": "豆を1g減らす",
     "scaleHint": "表示のgは、注いだお湯の合計です。スケールの0g合わせは最初だけ。",
-    "startImmediately": "押すとすぐにスタート"
+    "startImmediately": "押すとすぐにスタート",
+    "toolDescription": "Neo Brewの注湯量とタイミングを確認できるタイマーです。豆量に合わせて湯量を計算します。"
   },
   "timer": {
     "currentStep": "今のステップ",
@@ -126,7 +126,7 @@
     "elapsed": "経過",
     "cancelStart": "取り消す",
     "resume": "再開",
-    "brewAgain": "もう一杯",
+    "brewAgain": "もう一度淹れる",
     "leaveConfirm": "この画面を離れると抽出は終了します。途中からは再開できません。",
     "leaveAction": "抽出を終了して移動",
     "leaveTitle": "抽出を終了しますか？",

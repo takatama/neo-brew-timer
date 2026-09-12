@@ -20,6 +20,8 @@ test.beforeEach(async ({ page, baseURL }) => {
   await page.clock.install({ time: new Date("2026-01-01T12:00:00Z") });
   await page.goto("/setup");
   await expect(page.getByRole("button", { name: "Brew coffee", exact: true })).toBeVisible();
+  await expect(page.getByText("Recipe & guide", { exact: true })).toBeVisible();
+  await expect(page.getByText("A timer for Neo Brew", { exact: false })).toHaveCount(0);
   await page.clock.pauseAt(new Date("2026-01-01T12:01:00Z"));
 });
 
@@ -49,7 +51,7 @@ test("setup carries the chosen amount into a brew that reaches completion", asyn
   await page.clock.fastForward("04:00");
   await expect(page.getByText("Enjoy your coffee", { exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: "Pause", exact: true })).toHaveCount(0);
-  await page.getByRole("button", { name: "Brew another cup", exact: true }).click();
+  await page.getByRole("button", { name: "Brew again", exact: true }).click();
   await expect(page.getByRole("button", { name: "Brew coffee", exact: true })).toBeVisible();
 });
 
@@ -81,9 +83,11 @@ test("pause holds time, resume advances it, and confirmed reset returns to idle"
 });
 
 test("canceling the startup countdown prevents a delayed start and allows retry", async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 568 });
   await page.getByRole("button", { name: "Brew coffee", exact: true }).click();
   await page.getByRole("button", { name: "Cancel start", exact: true }).click();
   await expect(page.getByRole("button", { name: "Brew coffee", exact: true })).toBeVisible();
+  await expect(page.getByRole("img", { name: "Timeline", exact: true })).toBeVisible();
   const idle = await remaining(page).innerText();
   await page.clock.runFor(8_000);
   await expect(remaining(page)).toHaveText(idle);

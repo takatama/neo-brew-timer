@@ -45,7 +45,7 @@
     "stepPourTo": "Pour to {{amount}}g",
     "stepDuration": "{{seconds}} sec",
     "start": "Brew coffee",
-    "details": "Recipe",
+    "details": "Recipe & guide",
     "detailsAction": "View",
     "closeAction": "Close",
     "equipment": "Equipment",
@@ -62,8 +62,7 @@
     "dayThu": "Thu",
     "dayFri": "Fri",
     "daySat": "Sat",
-    "heading": "Your brew",
-    "subtitle": "Neo Brew, in ten pours.",
+    "heading": "Brew setup",
     "preparation": "Preparation",
     "prepHint": "95–96°C water · Very coarse grind",
     "startHint": "Starts after a 5-second countdown",
@@ -71,7 +70,8 @@
     "increase": "Increase beans by 1g",
     "decrease": "Decrease beans by 1g",
     "scaleHint": "The weight shown is total water added. Zero your scale only before the first pour.",
-    "startImmediately": "Starts as soon as you tap"
+    "startImmediately": "Starts as soon as you tap",
+    "toolDescription": "A timer for Neo Brew pour amounts and timing. Water amounts adjust to your coffee dose."
   },
   "timer": {
     "currentStep": "Current Step",
@@ -126,7 +126,7 @@
     "elapsed": "Elapsed",
     "cancelStart": "Cancel start",
     "resume": "Resume",
-    "brewAgain": "Brew another cup",
+    "brewAgain": "Brew again",
     "leaveConfirm": "Leaving this screen ends the brew. You cannot resume it afterward.",
     "leaveAction": "End brew and leave",
     "leaveTitle": "End this brew?",

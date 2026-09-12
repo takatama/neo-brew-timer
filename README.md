@@ -7,7 +7,7 @@ Neo Brew Timer is a React SPA, step-driven brewing timer designed for hands-busy
 ## Pages
 
 - `/{ja|en}/intro` – optional recipe introduction (also available from setup details)
-- `/{ja|en}/setup` – beans selection and step water preview
+- `/{ja|en}/setup` – beans, total water and start; recipe, instructions and equipment are in the optional Recipe & guide disclosure
 - `/{ja|en}/timer` – main timer UI
 
 `/` opens Setup directly in the saved or browser language. Unprefixed links redirect to the matching language URL. Changing language preserves an active brew. The chosen bean amount is remembered on this device.

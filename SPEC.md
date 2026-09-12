@@ -17,12 +17,12 @@ pours differ by at most 1g, stay positive, and sum to the intended total.
 ## Preparation
 
 - Open directly on preparation, including the first visit.
-- Show a short product introduction, beans, total water and the 1:15 ratio.
+- Keep everyday setup focused on beans, total water, ratio and Start. Do not assume a cup count.
 - Remember beans locally; accept whole grams from 1 through 100. This is an input
   bound, not a claim that all drippers can hold the largest batch.
-- Before starting, explain hot water (95–96°C), very coarse grounds and zeroing
-  the scale. Explain the five-second preparation countdown beside Start.
-- Keep the full recipe, pour schedule and video behind an optional disclosure.
+- Keep the product introduction, preparation advice, countdown explanation,
+  full recipe, pour schedule, video and equipment behind Recipe & guide.
+  It starts collapsed on every visit and remains available without a first-run gate.
   Do not load the embedded video before the disclosure is opened.
 - The legacy intro URL remains available, but is no longer a required first step.
 
@@ -31,14 +31,14 @@ pours differ by at most 1g, stay positive, and sum to the intended total.
 - Use a fixed hierarchy: pour count and state; current action; a large cumulative
   scale target; time to the next pour; the next target.
   Use short phase names, not repeated task instructions. Explain cumulative
-  weights and zeroing once on preparation; keep that meaning in accessible labels.
+  weights and zeroing in the optional guide; keep that meaning in accessible labels.
 - Keep the current and next target visible and stationary. Never animate numbers
   through intermediate weights, hide the current target, or move it for a preview.
 - Offer a five-second preparation delay, on by default and remembered in Settings.
   When disabled, start immediately without countdown audio.
   Explicitly show the countdown and offer Cancel start.
 - Show Brewing or Paused. Offer Pause while running and Resume when paused.
-- Show elapsed / total time; include the graphical timeline when height allows.
+- Show elapsed / total time; keep the graphical timeline visible at every viewport height.
 - Keep controls reachable at the bottom on short screens. All essential guidance
   must also work without sound or vibration.
 - Next-step text is always present; no illustration or overlay state is needed.
@@ -51,7 +51,7 @@ pours differ by at most 1g, stay positive, and sum to the intended total.
 
 ## Completion and extras
 
-- Clearly announce completion and offer Brew another cup.
+- Clearly announce completion and offer Brew again.
 - Keep coffee news collapsed. Do not request it during normal brewing.
 - Music remains an optional feature, off by default for new settings.
 - External news and music are not required for offline brewing.
