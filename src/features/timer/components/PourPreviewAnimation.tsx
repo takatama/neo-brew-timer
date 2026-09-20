@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import styles from "./PourPreviewAnimation.module.css";
 
 export type PourAnimationMode = "none" | "handdrawn" | "calligraphy";
@@ -113,20 +113,21 @@ function HanddrawnPour({ progress }: { progress: number }) {
 }
 
 function CalligraphyPour({ progress }: { progress: number }) {
-  const draw = Math.min(1, progress / 0.55);
-  const stream = Math.min(1, Math.max(0, (progress - 0.25) / 0.45));
+  const draw = Math.min(1, progress / 0.58);
+  const stream = Math.min(1, Math.max(0, (progress - 0.28) / 0.42));
   return (
-    <svg className={styles.art} viewBox="0 0 100 100" focusable="false">
+    <svg className={styles.art} viewBox="0 0 150 100" focusable="false">
       <defs>
         <mask id="calligraphy-reveal">
-          <path className={styles.maskPath} pathLength="1" style={{ strokeDashoffset: 1 - draw }} d="M7 31 C24 13 48 13 62 26 C67 30 71 34 78 33 M10 34 C25 29 42 28 61 31 M62 26 C72 18 84 16 93 18 M43 60 C53 54 70 54 81 61 L73 85 H49 Z M38 85 H84" />
+          <path className={styles.maskPath} pathLength="1" style={{ strokeDashoffset: 1 - draw }} d="M9 48 C10 25 26 14 49 17 C67 18 78 29 78 45 C78 64 62 72 39 72 C20 72 10 63 9 48 M20 26 C4 25 1 62 20 64 M73 33 C89 29 98 23 111 19 C114 22 113 26 108 28 C98 34 89 41 77 46 M104 58 L137 58 L130 84 L112 84 Z M106 87 L139 87" />
         </mask>
       </defs>
       <g mask="url(#calligraphy-reveal)" className={styles.ink}>
-        <path d="M5 30 C23 10 49 11 64 24 C68 28 72 33 79 31 C85 29 89 22 96 19 L92 16 C83 15 72 19 62 27 C43 24 25 26 9 33 Z" />
-        <path d="M42 59 C52 52 71 52 83 60 L75 87 H47 Z M37 83 C51 87 70 88 86 83 L84 89 H39 Z" />
+        <path d="M8 48 C8 24 25 12 49 14 C69 15 81 28 81 46 C81 66 64 75 39 75 C18 75 7 65 8 48 Z M21 23 C7 18 -2 29 1 48 C3 65 11 72 24 66 L20 59 C13 61 10 54 10 44 C10 34 14 29 23 30 Z" />
+        <path d="M73 31 C91 28 99 20 113 16 C119 20 117 27 110 31 C98 37 90 44 77 49 L72 42 C85 37 94 30 104 24 C94 28 84 34 75 38 Z" />
+        <path d="M103 56 C114 51 130 51 140 57 L132 87 H110 Z M105 61 L136 61 L129 81 H113 Z M103 84 C114 88 130 89 141 84 L139 91 H105 Z" fillRule="evenodd" />
       </g>
-      <path className={styles.water} pathLength="1" style={{ strokeDashoffset: 1 - stream }} d="M79 33 C73 42 69 48 66 56" />
+      <path className={styles.water} pathLength="1" style={{ strokeDashoffset: 1 - stream }} d="M109 30 C113 38 117 46 120 55" />
     </svg>
   );
 }
@@ -143,7 +144,7 @@ export function PourPreviewAnimation({ mode, progress }: { mode: PourAnimationMo
   }, []);
   if (mode === "none" || reducedMotion) return null;
   return (
-    <div className={styles.animation} aria-hidden="true" data-testid={`pour-animation-${mode}`}>
+    <div className={styles.animation} aria-hidden="true" data-testid={`pour-animation-${mode}`} style={{ "--pour-scale": 1 + progress * 0.08 } as CSSProperties}>
       {mode === "handdrawn" ? <HanddrawnPour progress={progress} /> : <CalligraphyPour progress={progress} />}
     </div>
   );

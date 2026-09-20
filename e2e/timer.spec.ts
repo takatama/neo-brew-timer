@@ -93,6 +93,8 @@ test("canceling the startup countdown prevents a delayed start and allows retry"
   await page.getByRole("button", { name: "Brew coffee", exact: true }).click();
   await page.getByRole("button", { name: "Cancel start", exact: true }).click();
   await expect(page.getByRole("button", { name: "Brew coffee", exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Starting in" })).toBeVisible();
+  await expect(page.getByLabel("Starting in 5s")).toBeVisible();
   await expect(page.getByRole("img", { name: "Timeline", exact: true })).toBeVisible();
   const idle = await remaining(page).innerText();
   await page.clock.runFor(8_000);

@@ -38,15 +38,16 @@ export function TimerPage() {
   const isFinishStep = currentStep?.actionType === "none";
   const requestedAnimation = new URLSearchParams(location.search).get("pourAnimation");
   const animationMode: PourAnimationMode = requestedAnimation === "handdrawn" || requestedAnimation === "calligraphy" ? requestedAnimation : "none";
+  const { debugEnabled, debugSpeed, setDebugSpeed, startDelay } = useSettingsStore();
   const isStarting = startupSeconds !== null;
-  const previewStepIndex = isStarting ? timer.currentStepIndex : timer.currentStepIndex + 1;
+  const showsStartupPresentation = isStarting || (startDelay && timer.status === "idle" && timer.currentTime === 0);
+  const previewStepIndex = showsStartupPresentation ? timer.currentStepIndex : timer.currentStepIndex + 1;
   const previewStep = steps[previewStepIndex];
   const isPourStep = previewStep && ["bloom", "pour", "switch_close_pour", "switch_open_pour", "pour_cool"].includes(previewStep.actionType);
   const animationProgress = isPourStep && (isStarting || (timer.status === "running" && isImminent))
     ? (isStarting ? startupProgress : Math.min(1, Math.max(0, (5 - remainingToNext) / 5)))
     : null;
   const brewStepCount = steps.filter((step) => step.actionType !== "none").length;
-  const { debugEnabled, debugSpeed, setDebugSpeed } = useSettingsStore();
   const { news, loading: newsLoading } = useCoffeeNews(displayLanguage, Boolean(isFinishStep));
   const hasProgress = isRunningOrStarting || timer.status === "paused";
   const blocker = useBlocker(({ currentLocation, nextLocation }) => hasProgress && currentLocation.pathname.split("/").pop() !== nextLocation.pathname.split("/").pop());
@@ -92,7 +93,7 @@ export function TimerPage() {
           progress={progress}
           isImminent={isImminent}
           status={timer.status}
-          startupSeconds={startupSeconds}
+          startupSeconds={showsStartupPresentation ? (startupSeconds ?? 5) : null}
           nextStepPreview={previewStep && (
             <NextStepPreview
               key={previewStepIndex}

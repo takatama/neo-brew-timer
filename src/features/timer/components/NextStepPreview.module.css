@@ -1,4 +1,4 @@
-.preview { display: grid; grid-template-columns: auto minmax(0, 1fr) 82px; align-items: center; gap: 16px; min-height: 64px; padding-block: 0; }
+.preview { display: grid; grid-template-columns: auto minmax(52px, 1fr) minmax(118px, 45%); align-items: center; gap: 12px; min-height: 78px; padding-block: 0; overflow: hidden; }
 .label { color: var(--md-text-muted); font-size: .75rem; }
 .action { font-weight: 700; font-size: 1.4rem; font-variant-numeric: tabular-nums; }
-@media (max-width: 360px) { .preview { grid-template-columns: auto minmax(0, 1fr) 68px; gap: 10px; } }
+@media (max-width: 360px) { .preview { grid-template-columns: auto minmax(48px, 1fr) minmax(104px, 43%); gap: 8px; } }
