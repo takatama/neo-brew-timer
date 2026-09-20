@@ -29,7 +29,9 @@ export function IntroPage() {
       />
 
       <section className={styles.introduction} aria-labelledby="intro-heading">
-        <h1 id="intro-heading" className={styles.heading}>{t("intro.heading")}</h1>
+        <h1 id="intro-heading" className={styles.heading}>
+          {t("intro.headingFirst")}<wbr />{t("intro.headingSecond")}
+        </h1>
         <p className={styles.lead}>{t("intro.valueDescription")}</p>
         <p className={styles.recipeDescription}>{t("intro.recipeDescription")}</p>
       </section>

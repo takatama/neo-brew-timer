@@ -27,18 +27,19 @@
     "brewing": "抽出"
   },
   "intro": {
-    "heading": "10回の注湯を、迷わず。",
-    "valueDescription": "次に注ぐタイミングと目標湯量を、画面で案内します。音声ガイドも利用できます。",
-    "recipeDescription": "粕谷哲氏のドリップレシピ『Neo Brew』に沿って、抽出をサポートします。",
+    "headingFirst": "10回の注湯を、",
+    "headingSecond": "迷わず。",
+    "valueDescription": "注ぐタイミングと湯量を、画面と音声でお知らせします。",
+    "recipeDescription": "粕谷哲さんのレシピ「Neo Brew」に対応しています。",
     "preparation": "用意するもの",
     "preparationItems": {
       "dripper": "HARIO V60 ドリッパー Neo",
-      "tools": "スケール・ケトル",
-      "coffee": "浅煎りの豆／超粗挽き",
-      "temperature": "湯温95〜96℃"
+      "tools": "スケールとケトル",
+      "coffee": "浅煎りの豆（超粗挽き）",
+      "temperature": "95〜96℃のお湯"
     },
-    "calculation": "豆の量に合わせて湯量を計算します。",
-    "example": "例：豆20g → お湯300g、30gずつ10回",
+    "calculation": "豆の量に合わせて、湯量を自動で計算します。",
+    "example": "豆20gなら、お湯300gを30gずつ10回に分けて注ぎます。",
     "continue": "豆の量を設定する",
     "videoHeading": "淹れ方を動画で確認",
     "videoTitle": "Neo Brewの淹れ方",

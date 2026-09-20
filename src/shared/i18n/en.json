@@ -27,7 +27,8 @@
     "brewing": "Brewing"
   },
   "intro": {
-    "heading": "Ten pours, with no guesswork.",
+    "headingFirst": "Ten pours, ",
+    "headingSecond": "with no guesswork.",
     "valueDescription": "On-screen guidance shows when to pour next and the target water weight. Voice guidance is also available.",
     "recipeDescription": "This app supports your brew following Tetsu Kasuya's Neo Brew drip recipe.",
     "preparation": "What you'll need",
