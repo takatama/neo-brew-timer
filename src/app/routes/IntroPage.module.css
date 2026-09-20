@@ -5,7 +5,7 @@
 .heroImage {
   display: block;
   width: 100%;
-  aspect-ratio: 12 / 5;
+  height: clamp(112px, 32vw, 156px);
   object-fit: cover;
   object-position: center 64%;
   border: 1px solid var(--md-outline);
@@ -128,10 +128,6 @@
 }
 
 @media (max-width: 360px) {
-  .heroImage {
-    aspect-ratio: 5 / 2;
-  }
-
   .preparationList {
     grid-template-columns: 1fr;
   }
