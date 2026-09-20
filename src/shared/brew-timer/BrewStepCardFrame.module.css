@@ -3,12 +3,15 @@
 .meta { display: flex; justify-content: space-between; align-items: center; gap: 12px; color: var(--md-text-muted); font-size: .8rem; font-variant-numeric: tabular-nums; }
 .instruction { text-align: center; padding: 28px 0 30px; }
 .countdown { border-top: 1px solid var(--md-outline); padding-top: 12px; }
-.nextStep { margin-top: 16px; border-radius: 12px; padding: 12px 14px; background: var(--md-surface-2); }
+.nextStep { box-sizing: border-box; min-height: 102px; margin-top: 16px; border-radius: 12px; padding: 12px 14px; background: var(--md-surface-2); transition: min-height 220ms ease, margin-top 220ms ease; }
 .nextStepImminent { background: #f7e8cb; }
+.nextStepExpanded { min-height: 178px; margin-top: -60px; }
 @media (max-width: 360px) { .primaryCard { padding: 16px; } }
 @media (max-height: 700px) {
   .primaryCard { padding: 14px 16px; }
   .instruction { padding: 16px 0 20px; }
   .countdown { padding-top: 6px; }
-  .nextStep { margin-top: 8px; padding: 6px 12px; }
+  .nextStep { min-height: 90px; margin-top: 8px; padding: 6px 12px; }
+  .nextStepExpanded { min-height: 138px; margin-top: -40px; }
 }
+@media (prefers-reduced-motion: reduce) { .nextStep { transition: none; } }

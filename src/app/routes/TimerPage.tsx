@@ -44,8 +44,8 @@ export function TimerPage() {
   const previewStepIndex = showsStartupPresentation ? timer.currentStepIndex : timer.currentStepIndex + 1;
   const previewStep = steps[previewStepIndex];
   const isPourStep = previewStep && ["bloom", "pour", "switch_close_pour", "switch_open_pour", "pour_cool"].includes(previewStep.actionType);
-  const animationProgress = isPourStep && (isStarting || (timer.status === "running" && isImminent))
-    ? (isStarting ? startupProgress : Math.min(1, Math.max(0, (5 - remainingToNext) / 5)))
+  const animationProgress = isPourStep && (showsStartupPresentation || (timer.status === "running" && isImminent))
+    ? (isStarting ? startupProgress : showsStartupPresentation ? 0 : Math.min(1, Math.max(0, (5 - remainingToNext) / 5)))
     : null;
   const brewStepCount = steps.filter((step) => step.actionType !== "none").length;
   const { news, loading: newsLoading } = useCoffeeNews(displayLanguage, Boolean(isFinishStep));
@@ -100,6 +100,8 @@ export function TimerPage() {
               step={previewStep}
               animationMode={animationMode}
               animationProgress={animationProgress}
+              animationRunning={isStarting || timer.status === "running"}
+              expanded={showsStartupPresentation}
             />
           )}
           steps={steps}

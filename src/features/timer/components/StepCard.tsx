@@ -25,6 +25,7 @@ export function StepCard({ step, stepIndex, totalSteps, remainingSeconds,
       ariaLabel={t("timer.pourCount", { current: stepIndex + 1, total: totalSteps })}
       isImminent={isImminent && status === "running"}
       isPreviewImminent={starting || (isImminent && status === "running")}
+      isPreviewExpanded={starting}
       stepLabel={<>
         <span>{t("timer.pourCount", { current: stepIndex + 1, total: totalSteps })}</span>
         <span className={styles.status} role="status">{stateLabel}</span>
@@ -35,7 +36,7 @@ export function StepCard({ step, stepIndex, totalSteps, remainingSeconds,
           ? <div className={styles.target} aria-label={t("timer.starting", { seconds: startupSeconds })}>{startupSeconds}<span>{t("timer.secondsUnit")}</span></div>
           : <div className={styles.target} aria-label={t("timer.targetAccessible", { amount: step.cumulative })}>{step.cumulative}<span>g</span></div>}
       </div>}
-      countdown={<div className={starting ? styles.countdownHidden : undefined} aria-hidden={starting}>
+      countdown={<div className={`${styles.countdownContent} ${starting ? styles.countdownHidden : ""}`} aria-hidden={starting}>
         <span className={styles.targetLabel}>{t(lastPour ? "timer.untilFinish" : "timer.untilNext")}</span>
         <Countdown remainingSeconds={remainingSeconds} progress={progress} isImminent={isImminent} />
       </div>}
