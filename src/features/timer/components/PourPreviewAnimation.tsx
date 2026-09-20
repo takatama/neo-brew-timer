@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./PourPreviewAnimation.module.css";
 
 export type PourAnimationMode = "none" | "handdrawn";
@@ -156,7 +156,7 @@ export function PourPreviewAnimation({ mode, progress, running = true }: { mode:
   }, []);
   if (mode === "none" || reducedMotion) return null;
   return (
-    <div className={styles.animation} aria-hidden="true" data-testid={`pour-animation-${mode}`} data-running={running} style={{ "--pour-scale": 1 + progress * 0.08 } as CSSProperties}>
+    <div className={styles.animation} aria-hidden="true" data-testid={`pour-animation-${mode}`} data-running={running}>
       <HanddrawnPour progress={progress} running={running} />
     </div>
   );
