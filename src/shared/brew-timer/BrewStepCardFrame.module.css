@@ -4,7 +4,7 @@
 .instruction { text-align: center; padding: 28px 0 30px; }
 .countdown { border-top: 1px solid var(--md-outline); padding-top: 12px; }
 .nextStep { margin-top: 16px; border-radius: 12px; padding: 12px 14px; background: var(--md-surface-2); }
-.imminent .nextStep { background: #f7e8cb; }
+.nextStepImminent { background: #f7e8cb; }
 @media (max-width: 360px) { .primaryCard { padding: 16px; } }
 @media (max-height: 700px) {
   .primaryCard { padding: 14px 16px; }

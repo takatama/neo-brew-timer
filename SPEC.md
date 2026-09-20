@@ -14,34 +14,53 @@ Water targets are cumulative. Never ask the user to zero the scale between pours
 Round cumulative targets rather than repeating a rounded increment: individual
 pours differ by at most 1g, stay positive, and sum to the intended total.
 
-## Preparation
+## Introduction and preparation
 
-- Open directly on preparation, including the first visit.
+- On the first root visit, redirect to the localized introduction (`/{lang}/intro`).
+  Start and Skip both remember that the introduction has been seen and continue to
+  preparation. On later root visits, open preparation directly. Explicit localized
+  introduction, preparation and timer URLs remain available.
 - Keep everyday setup focused on beans, total water, ratio and Start. Do not assume a cup count.
 - Remember beans locally; accept whole grams from 1 through 100. This is an input
   bound, not a claim that all drippers can hold the largest batch.
-- Keep the product introduction, preparation advice, countdown explanation,
-  full recipe, pour schedule, video and equipment behind Recipe & guide.
-  It starts collapsed on every visit and remains available without a first-run gate.
-  Do not load the embedded video before the disclosure is opened.
-- The legacy intro URL remains available, but is no longer a required first step.
+- Keep the product introduction and video on the introduction page. Keep preparation
+  advice, countdown explanation, the full recipe, pour schedule and equipment in
+  Recipe & guide from preparation.
 
 ## Brewing
 
-- Use a fixed hierarchy: pour count and state; current action; a large cumulative
+- While brewing, use a fixed hierarchy: pour count and state; current action; a large cumulative
   scale target; time to the next pour; the next target.
   Use short phase names, not repeated task instructions. Explain cumulative
   weights and zeroing in the optional guide; keep that meaning in accessible labels.
-- Keep the current and next target visible and stationary. Never animate numbers
-  through intermediate weights, hide the current target, or move it for a preview.
+- While brewing, keep the current and next target visible and stationary. Never
+  animate numbers through intermediate weights or move a weight for a preview.
 - Offer a five-second preparation delay, on by default and remembered in Settings.
   When disabled, start immediately without countdown audio.
-  Explicitly show the countdown and offer Cancel start.
+  When enabled, the initial timer view and active startup delay use a dedicated
+  preparation presentation: show Starting in and a large 5-to-1 seconds value in
+  the center instead of the first scale target; show Waiting to start as the state;
+  hide the next-pour time and progress bar while preserving their layout height;
+  and show the recipe-calculated first scale target in the Next card. Elapsed brew
+  time remains 0:00. During the active delay, offer Cancel start.
+- At the instant brewing starts, replace 1 second directly with the first cumulative
+  target, restore the current action and next-pour timer, change the state to
+  Brewing, and update the Next card to the following target. Do not insert a zero,
+  START state, or wait for decorative animation to finish.
 - Show Brewing or Paused. Offer Pause while running and Resume when paused.
 - Show elapsed / total time; keep the graphical timeline visible at every viewport height.
 - Keep controls reachable at the bottom on short screens. All essential guidance
   must also work without sound or vibration.
-- Next-step text is always present; no illustration or overlay state is needed.
+- Next-step text and its target remain readable above a stable card layout. During
+  the startup delay and the five seconds before an upcoming pour, show the local
+  hand-drawn pour illustration in that card. It previews a future action rather
+  than signaling that pouring must wait until zero. Do not show it for waiting,
+  switch-only, completion, or other non-pour steps. End it and update its target
+  immediately when the step changes.
+- Decorative animation follows timer progress but never controls timer or recipe
+  transitions. Stop and release it when hidden, paused, canceled or reset; keep it
+  out of the accessibility tree; and suppress it for reduced motion. The countdown
+  and imminent background emphasis remain available without animation.
 - Keep the existing five-second notification timing and screen wake-lock support.
   Cancel voice and vibration when canceling startup, pausing or resetting.
 - Confirm reset and leaving an active/paused brew, including browser Back.

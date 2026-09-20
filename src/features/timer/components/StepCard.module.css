@@ -5,6 +5,7 @@
 .targetLabel { color: var(--md-text-muted); font-size: .8rem; }
 .target { font-size: clamp(4.5rem, 20vw, 6rem); font-weight: 750; letter-spacing: -.055em; line-height: 1.15; font-variant-numeric: tabular-nums; }
 .target span { font-size: 1.6rem; margin-left: 8px; letter-spacing: 0; font-weight: 500; }
+.countdownHidden { visibility: hidden; }
 .overall { margin: 18px 0 8px; }
 
 @media (max-height: 700px) {

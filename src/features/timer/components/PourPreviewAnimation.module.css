@@ -1,0 +1,4 @@
+.animation { width: 100%; height: 78px; overflow: hidden; align-self: stretch; display: grid; place-items: center; }
+.art { display: block; width: 142px; height: auto; transform: translateX(-8px) scale(var(--pour-scale, 1)); transform-origin: 58% 52%; }
+@media (prefers-reduced-motion: reduce) { .animation { visibility: hidden; } }
+@media (max-width: 360px) { .art { width: 126px; } }

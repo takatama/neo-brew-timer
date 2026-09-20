@@ -33,10 +33,16 @@ test("setup carries the chosen amount into a brew that reaches completion", asyn
   await expect(page).toHaveURL(/\/en\/timer$/);
   await expect(page.getByText("Beans 21g", { exact: true })).toBeVisible();
   await expect(page.getByText("Water 315g", { exact: true })).toBeVisible();
-  await expect(page.getByText("63g", { exact: true })).toBeVisible();
+  // During startup, Next previews the first pour rather than the second pour.
+  await expect(page.getByText("32g", { exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Starting in" })).toBeVisible();
+  await expect(page.getByLabel(/Starting in 5s/)).toBeVisible();
   await expect(page.getByRole("button", { name: "Cancel start", exact: true })).toBeVisible();
 
   await page.clock.runFor(6_000);
+  await expect(page.getByRole("heading", { name: "Bloom" })).toBeVisible();
+  await expect(page.getByLabel("Cumulative water target 32g")).toBeVisible();
+  await expect(page.getByText("63g", { exact: true })).toBeVisible();
   const timeBeforeLanguageChange = (await remaining(page).innerText()).match(/\d+:\d{2}/)?.[0];
   await page.getByRole("button", { name: "Settings", exact: true }).click();
   await page.getByRole("radio", { name: "日本語", exact: true }).click();
@@ -87,6 +93,8 @@ test("canceling the startup countdown prevents a delayed start and allows retry"
   await page.getByRole("button", { name: "Brew coffee", exact: true }).click();
   await page.getByRole("button", { name: "Cancel start", exact: true }).click();
   await expect(page.getByRole("button", { name: "Brew coffee", exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Starting in" })).toBeVisible();
+  await expect(page.getByLabel("Starting in 5s")).toBeVisible();
   await expect(page.getByRole("img", { name: "Timeline", exact: true })).toBeVisible();
   const idle = await remaining(page).innerText();
   await page.clock.runFor(8_000);

@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useBlocker, useNavigate } from "react-router-dom";
+import { useBlocker, useLocation, useNavigate } from "react-router-dom";
 import { useTimerOrchestrator } from "../../features/timer/hooks/useTimerOrchestrator";
 import { useSettingsStore } from "../../features/settings/store";
 import { StepCard } from "../../features/timer/components/StepCard";
 import { FinishCard } from "../../features/timer/components/FinishCard";
 import { NextStepPreview } from "../../features/timer/components/NextStepPreview";
+import type { PourAnimationMode } from "../../features/timer/components/PourPreviewAnimation";
 import { useCoffeeNews } from "../../features/timer/hooks/useCoffeeNews";
 import { ConfirmDialog } from "../../shared/components/ConfirmDialog";
 import { useDisplayLanguage } from "../../shared/i18n/DisplayLanguage";
@@ -15,6 +16,7 @@ import styles from "./TimerPage.module.css";
 export function TimerPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
   const displayLanguage = useDisplayLanguage();
 
   const {
@@ -28,13 +30,24 @@ export function TimerPage() {
     isImminent,
     isRunningOrStarting,
     startupSeconds,
+    startupProgress,
     handlePlayPause,
     handleReset,
   } = useTimerOrchestrator();
 
   const isFinishStep = currentStep?.actionType === "none";
+  const requestedAnimation = new URLSearchParams(location.search).get("pourAnimation");
+  const animationMode: PourAnimationMode = requestedAnimation === "none" ? "none" : "handdrawn";
+  const { debugEnabled, debugSpeed, setDebugSpeed, startDelay } = useSettingsStore();
+  const isStarting = startupSeconds !== null;
+  const showsStartupPresentation = isStarting || (startDelay && timer.status === "idle" && timer.currentTime === 0);
+  const previewStepIndex = showsStartupPresentation ? timer.currentStepIndex : timer.currentStepIndex + 1;
+  const previewStep = steps[previewStepIndex];
+  const isPourStep = previewStep && ["bloom", "pour", "switch_close_pour", "switch_open_pour", "pour_cool"].includes(previewStep.actionType);
+  const animationProgress = isPourStep && (isStarting || (timer.status === "running" && isImminent))
+    ? (isStarting ? startupProgress : Math.min(1, Math.max(0, (5 - remainingToNext) / 5)))
+    : null;
   const brewStepCount = steps.filter((step) => step.actionType !== "none").length;
-  const { debugEnabled, debugSpeed, setDebugSpeed } = useSettingsStore();
   const { news, loading: newsLoading } = useCoffeeNews(displayLanguage, Boolean(isFinishStep));
   const hasProgress = isRunningOrStarting || timer.status === "paused";
   const blocker = useBlocker(({ currentLocation, nextLocation }) => hasProgress && currentLocation.pathname.split("/").pop() !== nextLocation.pathname.split("/").pop());
@@ -80,9 +93,14 @@ export function TimerPage() {
           progress={progress}
           isImminent={isImminent}
           status={timer.status}
-          startupSeconds={startupSeconds}
-          nextStepPreview={steps[timer.currentStepIndex + 1] && (
-            <NextStepPreview step={steps[timer.currentStepIndex + 1]} />
+          startupSeconds={showsStartupPresentation ? (startupSeconds ?? 5) : null}
+          nextStepPreview={previewStep && (
+            <NextStepPreview
+              key={previewStepIndex}
+              step={previewStep}
+              animationMode={animationMode}
+              animationProgress={animationProgress}
+            />
           )}
           steps={steps}
           currentTime={timer.currentTime}
