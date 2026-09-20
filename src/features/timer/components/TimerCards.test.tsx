@@ -44,17 +44,27 @@ describe("timer cards", () => {
     expect(screen.queryByText("0g")).not.toBeInTheDocument();
   });
 
-  it("keeps the first target visible while clearly separating preparation and brewing", () => {
+  it("shows only the start countdown centrally and the first target in Next while starting", () => {
     const props = { step: firstStep, stepIndex: 0, totalSteps: 10, remainingSeconds: 30,
-      progress: 0, isImminent: false, steps: [firstStep], currentTime: 0 };
+      progress: 0, isImminent: false, steps: [firstStep], currentTime: 0,
+      nextStepPreview: <NextStepPreview step={firstStep} /> };
     const { rerender } = render(<StepCard {...props} status="idle" startupSeconds={5} />);
-    expect(screen.getByRole("heading", { name: "First pour" })).toBeVisible();
-    expect(screen.getByRole("status")).toHaveTextContent("Starting in 5s");
-    expect(screen.getByText("30")).toBeVisible();
+    expect(screen.getByRole("heading", { name: "Starting in" })).toBeVisible();
+    expect(screen.getByRole("status")).toHaveTextContent("Waiting to start");
+    expect(screen.getByLabelText("Starting in 5s")).toHaveTextContent("5sec");
+    expect(screen.getByText("30g")).toBeVisible();
+    expect(screen.getByText("Next pour in").parentElement).toHaveAttribute("aria-hidden", "true");
     rerender(<StepCard {...props} status="running" startupSeconds={null} />);
     expect(screen.getByRole("heading", { name: "Bloom" })).toBeVisible();
     expect(screen.getByText("30")).toBeVisible();
     rerender(<StepCard {...props} status="paused" startupSeconds={null} />);
     expect(screen.getByRole("status")).toHaveTextContent("Paused");
+  });
+
+  it("renders the selected decorative preview without exposing it to assistive technology", () => {
+    render(<NextStepPreview step={firstStep} animationMode="calligraphy" animationProgress={0.5} />);
+    const animation = screen.getByTestId("pour-animation-calligraphy");
+    expect(animation).toHaveAttribute("aria-hidden", "true");
+    expect(screen.getByText("30g")).toBeVisible();
   });
 });

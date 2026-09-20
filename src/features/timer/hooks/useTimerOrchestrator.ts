@@ -100,6 +100,7 @@ export function useTimerOrchestrator() {
     isImminent,
     isRunningOrStarting: controller.isRunningOrStarting,
     startupSeconds: controller.startupSeconds,
+    startupProgress: controller.startupProgress,
     wakeLock,
     handlePlayPause: () => { controller.toggle(); if (controller.isRunningOrStarting) stop(); },
     handleReset: () => { stop(); controller.reset(); },

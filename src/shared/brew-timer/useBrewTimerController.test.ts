@@ -34,6 +34,11 @@ describe("useBrewTimerController", () => {
     act(() => result.current.start());
     expect(result.current.isStarting).toBe(true);
     expect(result.current.startupSeconds).toBe(5);
+    expect(result.current.startupProgress).toBe(0);
+
+    act(() => vi.advanceTimersByTime(2500));
+    expect(result.current.startupSeconds).toBe(3);
+    expect(result.current.startupProgress).toBeCloseTo(0.5, 1);
 
     act(() => result.current.pauseOrCancel());
     act(() => vi.advanceTimersByTime(6000));

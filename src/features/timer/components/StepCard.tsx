@@ -17,24 +17,28 @@ export function StepCard({ step, stepIndex, totalSteps, remainingSeconds,
   progress, isImminent, nextStepPreview, steps, currentTime, status, startupSeconds }: Props) {
   const { t } = useTranslation();
   const preparing = status === "idle";
+  const starting = startupSeconds !== null;
   const lastPour = stepIndex === totalSteps - 1;
-  const stateLabel = startupSeconds !== null ? t("timer.starting", { seconds: startupSeconds }) : t("timer.state_" + status);
+  const stateLabel = starting ? t("timer.state_starting") : t("timer.state_" + status);
   return (
     <BrewStepCardFrame
       ariaLabel={t("timer.pourCount", { current: stepIndex + 1, total: totalSteps })}
       isImminent={isImminent && status === "running"}
+      isPreviewImminent={starting || (isImminent && status === "running")}
       stepLabel={<>
         <span>{t("timer.pourCount", { current: stepIndex + 1, total: totalSteps })}</span>
         <span className={styles.status} role="status">{stateLabel}</span>
       </>}
-      instruction={<div aria-live="polite" aria-atomic="true">
-        <h1 className={styles.stepVerb}>{preparing ? t("timer.getReady") : t(stepIndex === 0 ? "timer.bloom" : lastPour ? "timer.lastPour" : "timer.pour")}</h1>
-        <div className={styles.target} aria-label={t("timer.targetAccessible", { amount: step.cumulative })}>{step.cumulative}<span>g</span></div>
+      instruction={<div aria-live={starting ? "off" : "polite"} aria-atomic="true">
+        <h1 className={styles.stepVerb}>{starting ? t("timer.untilStart") : preparing ? t("timer.getReady") : t(stepIndex === 0 ? "timer.bloom" : lastPour ? "timer.lastPour" : "timer.pour")}</h1>
+        {starting
+          ? <div className={styles.target} aria-label={t("timer.starting", { seconds: startupSeconds })}>{startupSeconds}<span>{t("timer.secondsUnit")}</span></div>
+          : <div className={styles.target} aria-label={t("timer.targetAccessible", { amount: step.cumulative })}>{step.cumulative}<span>g</span></div>}
       </div>}
-      countdown={<>
+      countdown={<div className={starting ? styles.countdownHidden : undefined} aria-hidden={starting}>
         <span className={styles.targetLabel}>{t(lastPour ? "timer.untilFinish" : "timer.untilNext")}</span>
         <Countdown remainingSeconds={remainingSeconds} progress={progress} isImminent={isImminent} />
-      </>}
+      </div>}
       preview={nextStepPreview}
       timeline={<>
       <div className={styles.overall}>
