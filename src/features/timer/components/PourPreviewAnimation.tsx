@@ -101,6 +101,14 @@ function HanddrawnPour({ progress, running }: { progress: number; running: boole
   }, [progress]);
 
   useEffect(() => {
+    if (!running) return;
+    // The initial frame may have been mounted for an arbitrary amount of time
+    // before Brew is pressed. Start interpolation from the press, not mount time.
+    progressReceivedAtRef.current = performance.now();
+    progressVelocityRef.current = 1 / 5000;
+  }, [running]);
+
+  useEffect(() => {
     let active = true;
     const abortController = new AbortController();
     void fetch("/assets/lottie/pour.json", { signal: abortController.signal }).then((response) => response.json()).then((data: LottieData) => {
