@@ -5,6 +5,7 @@ import { IntroPage } from "./routes/IntroPage";
 import { SetupPage } from "./routes/SetupPage";
 import { TimerPage } from "./routes/TimerPage";
 import { useSettingsStore } from "../features/settings/store";
+import { useSessionStore } from "../features/timer/store";
 import { getActiveBgmDayOfWeek, getActiveBgmTracks } from "../features/timer/data/bgm";
 import { getSavedBgmTrackIndex, setSavedBgmTrackIndex } from "../features/timer/data/bgm/playbackProgress";
 import { FloatingMiniPlayer } from "../features/timer/components/FloatingMiniPlayer";
@@ -97,7 +98,7 @@ function AppShell({ page }: { page: AppPage }) {
 
 function RoutedApp() {
   const location = useLocation();
-  const introSeen = true;
+  const introSeen = useSessionStore((state) => state.introSeen);
   const savedLanguage = useSettingsStore((state) => state.language);
   const preferredLanguage = choosePreferredLanguage(
     savedLanguage,
