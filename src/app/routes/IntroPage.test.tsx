@@ -29,7 +29,7 @@ describe("intro page", () => {
       </DisplayLanguageProvider>,
     );
 
-    expect(screen.getByRole("heading", { level: 1, name: "10回の注湯を、迷わず。" })).toBeVisible();
+    expect(screen.getByRole("heading", { level: 1, name: "迷わず注ぐ、10回" })).toBeVisible();
     expect(screen.getByRole("heading", { level: 2, name: "用意するもの" })).toBeVisible();
     expect(screen.getByRole("button", { name: "豆の量を設定する" })).toBeVisible();
 

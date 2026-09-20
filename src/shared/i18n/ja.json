@@ -27,9 +27,9 @@
     "brewing": "抽出"
   },
   "intro": {
-    "headingFirst": "10回の注湯を、",
-    "headingSecond": "迷わず。",
-    "valueDescription": "注ぐタイミングと湯量を、画面と音声でお知らせします。",
+    "heading": "迷わず注ぐ、10回",
+    "valueDescriptionFirst": "お湯を注ぐタイミングと量を、",
+    "valueDescriptionSecond": "画面と音声でお知らせ",
     "recipeDescription": "粕谷哲さんのレシピ「Neo Brew」に対応しています。",
     "preparation": "用意するもの",
     "preparationItems": {
@@ -38,7 +38,6 @@
       "coffee": "浅煎りの豆（超粗挽き）",
       "temperature": "95〜96℃のお湯"
     },
-    "calculation": "豆の量に合わせて、湯量を自動で計算します。",
     "example": "豆20gなら、お湯300gを30gずつ10回に分けて注ぎます。",
     "continue": "豆の量を設定する",
     "videoHeading": "淹れ方を動画で確認",

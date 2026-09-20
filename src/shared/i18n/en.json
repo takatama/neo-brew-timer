@@ -27,9 +27,9 @@
     "brewing": "Brewing"
   },
   "intro": {
-    "headingFirst": "Ten pours, ",
-    "headingSecond": "with no guesswork.",
-    "valueDescription": "On-screen guidance shows when to pour next and the target water weight. Voice guidance is also available.",
+    "heading": "Ten pours, no guesswork",
+    "valueDescriptionFirst": "Know when and how much water to pour,",
+    "valueDescriptionSecond": "with on-screen and voice cues",
     "recipeDescription": "This app supports your brew following Tetsu Kasuya's Neo Brew drip recipe.",
     "preparation": "What you'll need",
     "preparationItems": {
@@ -38,7 +38,6 @@
       "coffee": "Light-roast coffee / very coarse grind",
       "temperature": "Water at 95–96°C"
     },
-    "calculation": "Water amounts are calculated from your coffee dose.",
     "example": "Example: 20g coffee → 300g water in ten 30g pours",
     "continue": "Set coffee amount",
     "videoHeading": "Watch how to brew",

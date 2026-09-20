@@ -29,10 +29,10 @@ export function IntroPage() {
       />
 
       <section className={styles.introduction} aria-labelledby="intro-heading">
-        <h1 id="intro-heading" className={styles.heading}>
-          {t("intro.headingFirst")}<wbr />{t("intro.headingSecond")}
-        </h1>
-        <p className={styles.lead}>{t("intro.valueDescription")}</p>
+        <h1 id="intro-heading" className={styles.heading}>{t("intro.heading")}</h1>
+        <p className={styles.lead}>
+          {t("intro.valueDescriptionFirst")}<br />{t("intro.valueDescriptionSecond")}
+        </p>
         <p className={styles.recipeDescription}>{t("intro.recipeDescription")}</p>
       </section>
 
@@ -47,7 +47,6 @@ export function IntroPage() {
           <li>{t("intro.preparationItems.temperature")}</li>
         </ul>
         <div className={styles.calculationNote}>
-          <p>{t("intro.calculation")}</p>
           <p className={styles.example}>{t("intro.example")}</p>
         </div>
       </section>
