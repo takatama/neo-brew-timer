@@ -37,7 +37,7 @@ export function TimerPage() {
 
   const isFinishStep = currentStep?.actionType === "none";
   const requestedAnimation = new URLSearchParams(location.search).get("pourAnimation");
-  const animationMode: PourAnimationMode = requestedAnimation === "handdrawn" || requestedAnimation === "calligraphy" ? requestedAnimation : "none";
+  const animationMode: PourAnimationMode = requestedAnimation === "none" ? "none" : "handdrawn";
   const { debugEnabled, debugSpeed, setDebugSpeed, startDelay } = useSettingsStore();
   const isStarting = startupSeconds !== null;
   const showsStartupPresentation = isStarting || (startDelay && timer.status === "idle" && timer.currentTime === 0);

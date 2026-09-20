@@ -1,7 +1,4 @@
 .animation { width: 100%; height: 78px; overflow: hidden; align-self: stretch; display: grid; place-items: center; }
 .art { display: block; width: 142px; height: auto; transform: scale(var(--pour-scale, 1)); transform-origin: 58% 52%; }
-.ink { fill: #704a2d; opacity: .82; }
-.maskPath { fill: none; stroke: white; stroke-width: 11; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; transition: stroke-dashoffset 100ms linear; }
-.water { fill: none; stroke: #a66f3f; stroke-width: 4; stroke-linecap: round; stroke-dasharray: 1; transition: stroke-dashoffset 100ms linear; }
 @media (prefers-reduced-motion: reduce) { .animation { visibility: hidden; } }
 @media (max-width: 360px) { .art { width: 126px; } }

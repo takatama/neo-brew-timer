@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import styles from "./PourPreviewAnimation.module.css";
 
-export type PourAnimationMode = "none" | "handdrawn" | "calligraphy";
+export type PourAnimationMode = "none" | "handdrawn";
 
 type LottieValue = { a?: number; k: number | number[] | LottieKeyframe[] };
 type LottieKeyframe = { t: number; s: number[]; e?: number[]; h?: number };
@@ -87,6 +87,18 @@ function drawLayers(context: CanvasRenderingContext2D, data: LottieData, layers:
 function HanddrawnPour({ progress }: { progress: number }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [data, setData] = useState<LottieData | null>(null);
+  const progressRef = useRef(progress);
+  const progressReceivedAtRef = useRef(performance.now());
+  const progressVelocityRef = useRef(1 / 5000);
+
+  useEffect(() => {
+    const now = performance.now();
+    const elapsed = now - progressReceivedAtRef.current;
+    const delta = progress - progressRef.current;
+    if (delta > 0 && elapsed > 0) progressVelocityRef.current = Math.min(0.002, delta / elapsed);
+    progressRef.current = progress;
+    progressReceivedAtRef.current = now;
+  }, [progress]);
 
   useEffect(() => {
     let active = true;
@@ -102,34 +114,24 @@ function HanddrawnPour({ progress }: { progress: number }) {
     if (!canvas || !data) return;
     const context = canvas.getContext("2d");
     if (!context) return;
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    context.save();
-    context.scale(canvas.width / data.w, canvas.height / data.h);
-    drawLayers(context, data, data.layers, data.ip + progress * (data.op - data.ip - 1), "#704a2d");
-    context.restore();
-  }, [data, progress]);
+
+    let animationFrame = 0;
+    const render = (now: number) => {
+      // Timer progress remains authoritative. Extrapolating only between its
+      // 100 ms updates prevents visible stepping without affecting transitions.
+      const smoothedProgress = Math.min(1, progressRef.current + (now - progressReceivedAtRef.current) * progressVelocityRef.current);
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      context.save();
+      context.scale(canvas.width / data.w, canvas.height / data.h);
+      drawLayers(context, data, data.layers, data.ip + smoothedProgress * (data.op - data.ip - 1), "#704a2d");
+      context.restore();
+      animationFrame = requestAnimationFrame(render);
+    };
+    animationFrame = requestAnimationFrame(render);
+    return () => cancelAnimationFrame(animationFrame);
+  }, [data]);
 
   return <canvas ref={canvasRef} width="180" height="180" className={styles.art} />;
-}
-
-function CalligraphyPour({ progress }: { progress: number }) {
-  const draw = Math.min(1, progress / 0.58);
-  const stream = Math.min(1, Math.max(0, (progress - 0.28) / 0.42));
-  return (
-    <svg className={styles.art} viewBox="0 0 150 100" focusable="false">
-      <defs>
-        <mask id="calligraphy-reveal">
-          <path className={styles.maskPath} pathLength="1" style={{ strokeDashoffset: 1 - draw }} d="M9 48 C10 25 26 14 49 17 C67 18 78 29 78 45 C78 64 62 72 39 72 C20 72 10 63 9 48 M20 26 C4 25 1 62 20 64 M73 33 C89 29 98 23 111 19 C114 22 113 26 108 28 C98 34 89 41 77 46 M104 58 L137 58 L130 84 L112 84 Z M106 87 L139 87" />
-        </mask>
-      </defs>
-      <g mask="url(#calligraphy-reveal)" className={styles.ink}>
-        <path d="M8 48 C8 24 25 12 49 14 C69 15 81 28 81 46 C81 66 64 75 39 75 C18 75 7 65 8 48 Z M21 23 C7 18 -2 29 1 48 C3 65 11 72 24 66 L20 59 C13 61 10 54 10 44 C10 34 14 29 23 30 Z" />
-        <path d="M73 31 C91 28 99 20 113 16 C119 20 117 27 110 31 C98 37 90 44 77 49 L72 42 C85 37 94 30 104 24 C94 28 84 34 75 38 Z" />
-        <path d="M103 56 C114 51 130 51 140 57 L132 87 H110 Z M105 61 L136 61 L129 81 H113 Z M103 84 C114 88 130 89 141 84 L139 91 H105 Z" fillRule="evenodd" />
-      </g>
-      <path className={styles.water} pathLength="1" style={{ strokeDashoffset: 1 - stream }} d="M109 30 C113 38 117 46 120 55" />
-    </svg>
-  );
 }
 
 export function PourPreviewAnimation({ mode, progress }: { mode: PourAnimationMode; progress: number }) {
@@ -145,7 +147,7 @@ export function PourPreviewAnimation({ mode, progress }: { mode: PourAnimationMo
   if (mode === "none" || reducedMotion) return null;
   return (
     <div className={styles.animation} aria-hidden="true" data-testid={`pour-animation-${mode}`} style={{ "--pour-scale": 1 + progress * 0.08 } as CSSProperties}>
-      {mode === "handdrawn" ? <HanddrawnPour progress={progress} /> : <CalligraphyPour progress={progress} />}
+      <HanddrawnPour progress={progress} />
     </div>
   );
 }

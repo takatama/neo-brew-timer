@@ -62,8 +62,8 @@ describe("timer cards", () => {
   });
 
   it("renders the selected decorative preview without exposing it to assistive technology", () => {
-    render(<NextStepPreview step={firstStep} animationMode="calligraphy" animationProgress={0.5} />);
-    const animation = screen.getByTestId("pour-animation-calligraphy");
+    render(<NextStepPreview step={firstStep} animationMode="handdrawn" animationProgress={0.5} />);
+    const animation = screen.getByTestId("pour-animation-handdrawn");
     expect(animation).toHaveAttribute("aria-hidden", "true");
     expect(screen.getByText("30g")).toBeVisible();
   });
