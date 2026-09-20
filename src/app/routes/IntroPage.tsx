@@ -4,52 +4,69 @@ import { useSessionStore } from "../../features/timer/store";
 import { useDisplayLanguage } from "../../shared/i18n/DisplayLanguage";
 import { localizedPath } from "../../shared/i18n/routing";
 import styles from "./IntroPage.module.css";
+
 const heroImage = "/assets/images/goran-ivos-1JsjRW6Sbwg-unsplash.jpg";
 
 export function IntroPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const displayLanguage = useDisplayLanguage();
-  const setIntroSeen = useSessionStore((s) => s.setIntroSeen);
+  const setIntroSeen = useSessionStore((state) => state.setIntroSeen);
 
-  const handleStart = () => {
+  const handleContinue = () => {
     setIntroSeen(true);
     navigate(localizedPath(displayLanguage, "setup"));
   };
 
   return (
-    <main className="content">
-      <section className={`card ${styles.heroCard}`}>
-        <img
-          className={styles.heroImage}
-          src={heroImage}
-          alt="Neo Brew"
-        />
-        <div className={styles.heroTitle}>{t("intro.title")}</div>
-        <div className={styles.heroDesc}>{t("intro.description")}</div>
+    <main className={`content ${styles.intro}`}>
+      <img
+        className={styles.heroImage}
+        src={heroImage}
+        alt={t("intro.imageAlt")}
+        width="2048"
+        height="1365"
+      />
+
+      <section className={styles.introduction} aria-labelledby="intro-heading">
+        <h1 id="intro-heading" className={styles.heading}>{t("intro.heading")}</h1>
+        <p className={styles.lead}>
+          {t("intro.valueDescriptionFirst")}<br />{t("intro.valueDescriptionSecond")}
+        </p>
+        <p className={styles.recipeDescription}>{t("intro.recipeDescription")}</p>
       </section>
 
-      <section className="card">
-        <div className="card-title">{t("intro.youtube")}</div>
+      <section className={styles.preparation} aria-labelledby="preparation-heading">
+        <h2 id="preparation-heading" className={styles.sectionHeading}>
+          {t("intro.preparation")}
+        </h2>
+        <ul className={styles.preparationList}>
+          <li>{t("intro.preparationItems.dripper")}</li>
+          <li>{t("intro.preparationItems.tools")}</li>
+          <li>{t("intro.preparationItems.coffee")}</li>
+          <li>{t("intro.preparationItems.temperature")}</li>
+        </ul>
+        <div className={styles.calculationNote}>
+          <p className={styles.example}>{t("intro.example")}</p>
+        </div>
+      </section>
+
+      <button type="button" className={styles.primaryButton} onClick={handleContinue}>
+        {t("intro.continue")}
+      </button>
+
+      <section className={`card ${styles.videoCard}`} aria-labelledby="video-heading">
+        <h2 id="video-heading" className={styles.videoHeading}>{t("intro.videoHeading")}</h2>
         <div className={styles.videoWrap}>
           <iframe
             src="https://www.youtube.com/embed/k0nsShguOsU"
-            title="YouTube video player"
-            frameBorder="0"
+            title={t("intro.videoTitle")}
+            loading="lazy"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
           />
         </div>
       </section>
-
-      <div className={styles.actions}>
-        <button className={`${styles.btn} ${styles.primary}`} onClick={handleStart}>
-          {t("intro.start")}
-        </button>
-        <button className={`${styles.btn} ${styles.ghost}`} onClick={handleStart}>
-          {t("intro.skip")}
-        </button>
-      </div>
     </main>
   );
 }

@@ -17,9 +17,10 @@ pours differ by at most 1g, stay positive, and sum to the intended total.
 ## Introduction and preparation
 
 - On the first root visit, redirect to the localized introduction (`/{lang}/intro`).
-  Start and Skip both remember that the introduction has been seen and continue to
-  preparation. On later root visits, open preparation directly. Explicit localized
-  introduction, preparation and timer URLs remain available.
+  The single primary action remembers that the introduction has been seen and
+  continues to bean-amount preparation without starting a brew. On later root
+  visits, open preparation directly. Explicit localized introduction, preparation
+  and timer URLs remain available.
 - Keep everyday setup focused on beans, total water, ratio and Start. Do not assume a cup count.
 - Remember beans locally; accept whole grams from 1 through 100. This is an input
   bound, not a claim that all drippers can hold the largest batch.

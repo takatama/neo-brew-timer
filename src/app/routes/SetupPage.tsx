@@ -106,7 +106,7 @@ export function SetupPage() {
             src={heroImage}
             alt="Neo Brew"
           />
-          <div className={styles.detailsText}>{t("intro.description")}</div>
+          <div className={styles.detailsText}>{t("intro.recipeDescription")}</div>
           <div>
             <div className={styles.detailsSubTitle}>{t("setup.steps")}</div>
             <div className={styles.stepList}>

@@ -27,11 +27,22 @@
     "brewing": "抽出"
   },
   "intro": {
-    "title": "Neo Brew",
-    "description": "粕谷哲氏の最新式ドリップレシピ（多回数レシピ）です。HARIO V60 ドリッパー Neoで、豆20gに対してお湯300g、比率は1:15。浅煎りの豆を超粗挽きにし、95〜96℃のお湯を30gずつ10回に分けて注ぎます。甘さと質感をシンプルに引き出すレシピです。",
-    "youtube": "動画で確認",
-    "start": "始める",
-    "skip": "スキップ"
+    "heading": "迷わず注ぐ、10回",
+    "valueDescriptionFirst": "お湯を注ぐタイミングと量を、",
+    "valueDescriptionSecond": "画面と音声でお知らせ",
+    "recipeDescription": "粕谷哲さんのレシピ「Neo Brew」に対応しています。",
+    "preparation": "用意するもの",
+    "preparationItems": {
+      "dripper": "HARIO V60 ドリッパー Neo",
+      "tools": "スケールとケトル",
+      "coffee": "浅煎りの豆（超粗挽き）",
+      "temperature": "95〜96℃のお湯"
+    },
+    "example": "豆20gなら、お湯300gを30gずつ10回に分けて注ぎます。",
+    "continue": "豆の量を設定する",
+    "videoHeading": "淹れ方を動画で確認",
+    "videoTitle": "Neo Brewの淹れ方",
+    "imageAlt": "コーヒーの入ったサーバーとカップ"
   },
   "setup": {
     "beans": "豆",
