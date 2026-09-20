@@ -84,7 +84,7 @@ function drawLayers(context: CanvasRenderingContext2D, data: LottieData, layers:
   }
 }
 
-function HanddrawnPour({ progress }: { progress: number }) {
+function HanddrawnPour({ progress, running }: { progress: number; running: boolean }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [data, setData] = useState<LottieData | null>(null);
   const progressRef = useRef(progress);
@@ -119,7 +119,9 @@ function HanddrawnPour({ progress }: { progress: number }) {
     const render = (now: number) => {
       // Timer progress remains authoritative. Extrapolating only between its
       // 100 ms updates prevents visible stepping without affecting transitions.
-      const smoothedProgress = Math.min(1, progressRef.current + (now - progressReceivedAtRef.current) * progressVelocityRef.current);
+      const smoothedProgress = running
+        ? Math.min(1, progressRef.current + (now - progressReceivedAtRef.current) * progressVelocityRef.current)
+        : progressRef.current;
       context.clearRect(0, 0, canvas.width, canvas.height);
       context.save();
       context.scale(canvas.width / data.w, canvas.height / data.h);
@@ -129,12 +131,12 @@ function HanddrawnPour({ progress }: { progress: number }) {
     };
     animationFrame = requestAnimationFrame(render);
     return () => cancelAnimationFrame(animationFrame);
-  }, [data]);
+  }, [data, running]);
 
   return <canvas ref={canvasRef} width="180" height="180" className={styles.art} />;
 }
 
-export function PourPreviewAnimation({ mode, progress }: { mode: PourAnimationMode; progress: number }) {
+export function PourPreviewAnimation({ mode, progress, running = true }: { mode: PourAnimationMode; progress: number; running?: boolean }) {
   const [reducedMotion, setReducedMotion] = useState(false);
   useEffect(() => {
     const query = window.matchMedia?.("(prefers-reduced-motion: reduce)");
@@ -146,8 +148,8 @@ export function PourPreviewAnimation({ mode, progress }: { mode: PourAnimationMo
   }, []);
   if (mode === "none" || reducedMotion) return null;
   return (
-    <div className={styles.animation} aria-hidden="true" data-testid={`pour-animation-${mode}`} style={{ "--pour-scale": 1 + progress * 0.08 } as CSSProperties}>
-      <HanddrawnPour progress={progress} />
+    <div className={styles.animation} aria-hidden="true" data-testid={`pour-animation-${mode}`} data-running={running} style={{ "--pour-scale": 1 + progress * 0.08 } as CSSProperties}>
+      <HanddrawnPour progress={progress} running={running} />
     </div>
   );
 }

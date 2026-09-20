@@ -18,7 +18,7 @@ export function BrewStepCardFrame({ ariaLabel, stepLabel, instruction, countdown
     <section className={"card " + styles.primaryCard + (isImminent ? " " + styles.imminent : "")} aria-label={ariaLabel}>
       <div className={styles.meta}>{stepLabel}</div>
       <div className={styles.instruction}>{instruction}</div>
-      <div className={styles.countdown + (isPreviewExpanded ? " " + styles.countdownBehindPreview : "")}>{countdown}</div>
+      <div className={styles.countdown}>{countdown}</div>
       {preview && <div
         className={styles.nextStep + (isPreviewImminent ? " " + styles.nextStepImminent : "") + (isPreviewExpanded ? " " + styles.nextStepExpanded : "")}
         data-expanded={isPreviewExpanded || undefined}

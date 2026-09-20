@@ -5,7 +5,8 @@
 .targetLabel { color: var(--md-text-muted); font-size: .8rem; }
 .target { font-size: clamp(4.5rem, 20vw, 6rem); font-weight: 750; letter-spacing: -.055em; line-height: 1.15; font-variant-numeric: tabular-nums; }
 .target span { font-size: 1.6rem; margin-left: 8px; letter-spacing: 0; font-weight: 500; }
-.countdownHidden { visibility: hidden; }
+.countdownContent { opacity: 1; transition: opacity 180ms ease 60ms; }
+.countdownHidden { visibility: hidden; opacity: 0; transition: none; }
 .overall { margin: 18px 0 8px; }
 
 @media (max-height: 700px) {
@@ -13,3 +14,4 @@
   .target { font-size: 4rem; }
   .overall { margin: 10px 0 0; }
 }
+@media (prefers-reduced-motion: reduce) { .countdownContent { transition: none; } }

@@ -68,9 +68,12 @@ describe("timer cards", () => {
   });
 
   it("renders the selected decorative preview without exposing it to assistive technology", () => {
-    render(<NextStepPreview step={firstStep} animationMode="handdrawn" animationProgress={0.5} />);
+    const { rerender } = render(<NextStepPreview step={firstStep} animationMode="handdrawn" animationProgress={0} animationRunning={false} />);
     const animation = screen.getByTestId("pour-animation-handdrawn");
     expect(animation).toHaveAttribute("aria-hidden", "true");
+    expect(animation).toHaveAttribute("data-running", "false");
     expect(screen.getByText("30g")).toBeVisible();
+    rerender(<NextStepPreview step={firstStep} animationMode="handdrawn" animationProgress={0.2} animationRunning />);
+    expect(screen.getByTestId("pour-animation-handdrawn")).toHaveAttribute("data-running", "true");
   });
 });

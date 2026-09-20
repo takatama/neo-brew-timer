@@ -3,10 +3,11 @@ import type { ComputedStep } from "../../recipe/types";
 import styles from "./NextStepPreview.module.css";
 import { PourPreviewAnimation, type PourAnimationMode } from "./PourPreviewAnimation";
 
-export function NextStepPreview({ step, animationMode = "none", animationProgress = null, expanded = false }: {
+export function NextStepPreview({ step, animationMode = "none", animationProgress = null, animationRunning = true, expanded = false }: {
   step: ComputedStep;
   animationMode?: PourAnimationMode;
   animationProgress?: number | null;
+  animationRunning?: boolean;
   expanded?: boolean;
 }) {
   const { t } = useTranslation();
@@ -17,7 +18,7 @@ export function NextStepPreview({ step, animationMode = "none", animationProgres
         {step.actionType === "none" ? t("timer.finish") : t("timer.targetAmount", { amount: step.cumulative })}
       </span>
       {animationProgress !== null && <div className={styles.artwork}>
-        <PourPreviewAnimation mode={animationMode} progress={animationProgress} />
+        <PourPreviewAnimation mode={animationMode} progress={animationProgress} running={animationRunning} />
       </div>}
     </div>
   );
