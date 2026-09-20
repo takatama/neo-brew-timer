@@ -100,6 +100,7 @@ export function TimerPage() {
               step={previewStep}
               animationMode={animationMode}
               animationProgress={animationProgress}
+              expanded={showsStartupPresentation}
             />
           )}
           steps={steps}

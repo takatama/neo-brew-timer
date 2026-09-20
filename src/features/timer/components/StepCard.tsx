@@ -25,6 +25,7 @@ export function StepCard({ step, stepIndex, totalSteps, remainingSeconds,
       ariaLabel={t("timer.pourCount", { current: stepIndex + 1, total: totalSteps })}
       isImminent={isImminent && status === "running"}
       isPreviewImminent={starting || (isImminent && status === "running")}
+      isPreviewExpanded={starting}
       stepLabel={<>
         <span>{t("timer.pourCount", { current: stepIndex + 1, total: totalSteps })}</span>
         <span className={styles.status} role="status">{stateLabel}</span>
