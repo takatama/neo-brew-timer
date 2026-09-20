@@ -5,44 +5,36 @@ import { useSessionStore } from "../../features/timer/store";
 import { useSettingsStore } from "../../features/settings/store";
 import type { BgmDayOfWeek } from "../../features/settings/types";
 import { neoBrewMethod, computeSteps, getTotalWater } from "../../features/recipe";
-import type { FlavorProfile } from "../../features/recipe";
 import { CoffeeNews } from "../../features/timer/components/CoffeeNews";
 import { useCoffeeNews } from "../../features/timer/hooks/useCoffeeNews";
 import styles from "./SetupPage.module.css";
 import { getEquipmentItems, type SupportedLanguage } from "../../shared/affiliate/amazon";
 import { useDisplayLanguage } from "../../shared/i18n/DisplayLanguage";
 import { localizedPath } from "../../shared/i18n/routing";
-const heroImage = "/assets/images/goran-ivos-1JsjRW6Sbwg-unsplash.jpg";
-
-const validFlavors: FlavorProfile[] = ["sweet", "neutral", "sour"];
 
 export function SetupPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const displayLanguage = useDisplayLanguage();
   const [searchParams] = useSearchParams();
-  const { beans, flavor, setBeans, setFlavor } = useSessionStore();
+  const { beans, setBeans } = useSessionStore();
   const { debugEnabled, startDelay, debugBgmDayOfWeek, setDebugBgmDayOfWeek } = useSettingsStore();
   const { news, loading: newsLoading } = useCoffeeNews(displayLanguage, debugEnabled);
   const [detailsOpen, setDetailsOpen] = useState(false);
 
-  // Apply URL parameters on mount (e.g. ?beans=25&flavor=sweet)
   useEffect(() => {
     const beansParam = searchParams.get("beans");
     if (beansParam) {
       const n = Number(beansParam);
-      if (!isNaN(n) && n > 0) setBeans(n);
+      if (Number.isFinite(n) && n > 0) setBeans(n);
     }
-    const flavorParam = searchParams.get("flavor");
-    if (flavorParam && validFlavors.includes(flavorParam as FlavorProfile)) {
-      setFlavor(flavorParam as FlavorProfile);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [searchParams, setBeans]);
 
   const lang: SupportedLanguage = displayLanguage;
   const totalWater = getTotalWater(beans, neoBrewMethod.waterRatio);
-  const steps = computeSteps(neoBrewMethod, beans, flavor);
+  const pourSteps = computeSteps(neoBrewMethod, beans).filter(
+    (step) => step.actionType !== "none",
+  );
   const equipment = getEquipmentItems(lang);
 
   const handleStart = () => {
@@ -94,50 +86,33 @@ export function SetupPage() {
           </span>
         </summary>
         {detailsOpen && <div className={styles.detailsBody}>
-          <p className={styles.detailsText}>{t("setup.toolDescription")}</p>
           <section className={styles.preparation}>
             <h2>{t("setup.preparation")}</h2><p>{t("setup.prepHint")}</p>
             <p>{t("setup.scaleHint")}</p>
             <p>{t(startDelay ? "setup.startHint" : "setup.startImmediately")}</p>
             <span>{t("setup.overview")}</span>
           </section>
-          <img
-            className={styles.detailsImage}
-            src={heroImage}
-            alt="Neo Brew"
-          />
-          <div className={styles.detailsText}>{t("intro.recipeDescription")}</div>
-          <div>
-            <div className={styles.detailsSubTitle}>{t("setup.steps")}</div>
-            <div className={styles.stepList}>
-              {steps
-                .filter((step) => step.actionType !== "none")
-                .map((step, idx) => (
-                  <div key={`${step.timeSec}-${step.actionType}`} className={styles.stepItem}>
-                    <span className={styles.stepNumber}>STEP {idx + 1}</span>
-                    <span className={styles.stepInstruction}>
-                      {t(step.actionType === "bloom" ? "setup.stepBloom" : "setup.stepPourTo", {
-                        amount: step.cumulative,
-                      })}
-                    </span>
-                    <span className={styles.stepDuration}>
-                      {t("setup.stepDuration", {
-                        seconds: steps[idx + 1].timeSec - step.timeSec,
-                      })}
-                    </span>
-                  </div>
-                ))}
-            </div>
-          </div>
-          <div className={styles.detailsVideo}>
-            <iframe
-              src="https://www.youtube.com/embed/k0nsShguOsU"
-              title="YouTube video player"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
-          </div>
+          <section aria-labelledby="pour-guide-heading">
+            <h2 id="pour-guide-heading" className={styles.detailsSubTitle}>{t("setup.steps")}</h2>
+            <p className={styles.detailsText}>{t("setup.recipeSummary")}</p>
+            <ol className={styles.stepList}>
+              {pourSteps.map((step, idx) => (
+                <li key={step.timeSec} className={styles.stepItem}>
+                  <span className={styles.stepNumber}>STEP {idx + 1}</span>
+                  <span className={styles.stepInstruction}>
+                    {t(step.actionType === "bloom" ? "setup.stepBloom" : "setup.stepPourTo", {
+                      amount: step.cumulative,
+                    })}
+                  </span>
+                  <span className={styles.stepDuration}>
+                    {t("setup.stepDuration", {
+                      seconds: neoBrewMethod.steps[idx + 1].timeSec - step.timeSec,
+                    })}
+                  </span>
+                </li>
+              ))}
+            </ol>
+          </section>
           <section aria-labelledby="label-equipment">
             <div className={styles.equipmentHeader}>
               <h2 id="label-equipment" className={`card-title ${styles.equipmentTitle}`}>{t("setup.equipment")}</h2>

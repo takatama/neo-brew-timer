@@ -1,10 +1,6 @@
 import { describe, it, expect } from "vitest";
 import {
   getTotalWater,
-  calcFlavor1,
-  calcFlavor2,
-  calcStrength,
-  calcEqualPour,
   computeSteps,
   getCurrentStepIndex,
   formatTime,
@@ -25,59 +21,19 @@ describe("getTotalWater", () => {
   });
 });
 
-describe("calcFlavor1", () => {
-  it("sweet: 42% of 40% of total", () => {
-    expect(calcFlavor1(300, "sweet")).toBe(50); // 300 * 0.4 * 0.42 = 50.4 → 50
-  });
-
-  it("neutral: 50% of 40% of total", () => {
-    expect(calcFlavor1(300, "neutral")).toBe(60); // 300 * 0.4 * 0.5 = 60
-  });
-
-  it("sour: 58% of 40% of total", () => {
-    expect(calcFlavor1(300, "sour")).toBe(70); // 300 * 0.4 * 0.58 = 69.6 → 70
-  });
-});
-
-describe("calcFlavor2", () => {
-  it("sweet: 58% of 40% of total", () => {
-    expect(calcFlavor2(300, "sweet")).toBe(70); // 300 * 0.4 * 0.58 = 69.6 → 70
-  });
-
-  it("neutral: 50% of 40% of total", () => {
-    expect(calcFlavor2(300, "neutral")).toBe(60); // 300 * 0.4 * 0.5 = 60
-  });
-
-  it("sour: 42% of 40% of total", () => {
-    expect(calcFlavor2(300, "sour")).toBe(50); // 300 * 0.4 * 0.42 = 50.4 → 50
-  });
-});
-
-describe("calcStrength", () => {
-  it("calculates 30% of total (60% / 2)", () => {
-    expect(calcStrength(300)).toBe(90); // 300 * 0.6 / 2 = 90
-  });
-});
-
-describe("calcEqualPour", () => {
-  it("calculates one tenth of total water for 10 pours", () => {
-    expect(calcEqualPour(300, 10)).toBe(30);
-  });
-});
-
 describe("computeSteps", () => {
   it("produces 10 pours and one finish step for Neo Brew", () => {
-    const steps = computeSteps(neoBrewMethod, 20, "neutral");
+    const steps = computeSteps(neoBrewMethod, 20);
     expect(steps).toHaveLength(11);
   });
 
-  it("neutral 20g: final cumulative is 300g", () => {
-    const steps = computeSteps(neoBrewMethod, 20, "neutral");
+  it("20g: final cumulative is 300g", () => {
+    const steps = computeSteps(neoBrewMethod, 20);
     expect(steps[steps.length - 1].cumulative).toBe(300);
   });
 
-  it("neutral 20g: step water amounts are correct", () => {
-    const steps = computeSteps(neoBrewMethod, 20, "neutral");
+  it("20g: step water amounts are correct", () => {
+    const steps = computeSteps(neoBrewMethod, 20);
     expect(steps.slice(0, 10).map((s) => s.increment)).toEqual([
       30, 30, 30, 30, 30, 30, 30, 30, 30, 30,
     ]);
@@ -86,23 +42,13 @@ describe("computeSteps", () => {
     ]);
   });
 
-  it("sweet 20g: keeps equal pours", () => {
-    const steps = computeSteps(neoBrewMethod, 20, "sweet");
-    expect(steps[0].increment).toBe(steps[1].increment);
-  });
-
-  it("sour 20g: keeps equal pours", () => {
-    const steps = computeSteps(neoBrewMethod, 20, "sour");
-    expect(steps[0].increment).toBe(steps[1].increment);
-  });
-
   it("preserves step timing", () => {
-    const steps = computeSteps(neoBrewMethod, 20, "neutral");
+    const steps = computeSteps(neoBrewMethod, 20);
     expect(steps.map((s) => s.timeSec)).toEqual([0, 30, 45, 60, 75, 90, 105, 120, 135, 150, 210]);
   });
 
   it("preserves action types", () => {
-    const steps = computeSteps(neoBrewMethod, 20, "neutral");
+    const steps = computeSteps(neoBrewMethod, 20);
     expect(steps.map((s) => s.actionType)).toEqual([
       "bloom",
       "pour",
@@ -119,15 +65,15 @@ describe("computeSteps", () => {
   });
 
   it("handles different bean amounts", () => {
-    const steps10 = computeSteps(neoBrewMethod, 10, "neutral");
-    const steps30 = computeSteps(neoBrewMethod, 30, "neutral");
+    const steps10 = computeSteps(neoBrewMethod, 10);
+    const steps30 = computeSteps(neoBrewMethod, 30);
     expect(steps10[steps10.length - 1].cumulative).toBe(150);
     expect(steps30[steps30.length - 1].cumulative).toBe(450);
   });
 });
 
 describe("getCurrentStepIndex", () => {
-  const steps = computeSteps(neoBrewMethod, 20, "neutral");
+  const steps = computeSteps(neoBrewMethod, 20);
 
   it("returns 0 at time 0", () => {
     expect(getCurrentStepIndex(steps, 0)).toBe(0);
@@ -176,7 +122,7 @@ describe("formatTime", () => {
 describe("rounding across all supported bean amounts", () => {
   it("keeps pours positive, balanced, and equal to the total", () => {
     for (let beans = 1; beans <= 100; beans++) {
-      const pours = computeSteps(neoBrewMethod, beans, "neutral").slice(0, 10);
+      const pours = computeSteps(neoBrewMethod, beans).slice(0, 10);
       const amounts = pours.map(step => step.increment);
       expect(Math.min(...amounts)).toBeGreaterThan(0);
       expect(Math.max(...amounts) - Math.min(...amounts)).toBeLessThanOrEqual(1);

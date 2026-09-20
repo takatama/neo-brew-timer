@@ -14,14 +14,14 @@ import { useDisplayLanguage } from "../../../shared/i18n/DisplayLanguage";
 export function useTimerOrchestrator() {
   const [searchParams, setSearchParams] = useSearchParams();
   const displayLanguage = useDisplayLanguage();
-  const { beans, flavor } = useSessionStore();
+  const beans = useSessionStore((state) => state.beans);
   const { debugSpeed, startDelay } = useSettingsStore();
   const { playSound, playFirstSound, vibrate, stop } = useNotification(displayLanguage);
   const wakeLock = useWakeLock();
 
   const steps = useMemo(
-    () => computeSteps(neoBrewMethod, beans, flavor),
-    [beans, flavor],
+    () => computeSteps(neoBrewMethod, beans),
+    [beans],
   );
   const timerSteps = useMemo(
     () => steps.map((step) => ({
@@ -91,7 +91,6 @@ export function useTimerOrchestrator() {
   return {
     steps,
     beans,
-    flavor,
     totalWater,
     currentStep,
     timer,

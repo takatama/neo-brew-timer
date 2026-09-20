@@ -1,5 +1,3 @@
-export type FlavorProfile = "sweet" | "neutral" | "sour";
-
 export type ActionType =
   | "bloom"
   | "switch_close_pour"
@@ -10,7 +8,7 @@ export type ActionType =
   | "drawdown"
   | "none";
 
-export type WaterAmountType = "flavor1" | "flavor2" | "strength" | "equalPour" | "none";
+export type WaterAmountType = "equalPour" | "none";
 
 export interface RecipeStep {
   timeSec: number;
