@@ -1,11 +1,16 @@
 import { describe, it, expect } from "vitest";
 import {
   getTotalWater,
+  calcFlavor1,
+  calcFlavor2,
+  calcStrength,
+  calcEqualPour,
   computeSteps,
   getCurrentStepIndex,
   formatTime,
 } from "./waterCalc";
 import { neoBrewMethod } from "./recipe";
+import type { Recipe } from "./types";
 
 describe("getTotalWater", () => {
   it("calculates total water with 15:1 ratio", () => {
@@ -18,6 +23,38 @@ describe("getTotalWater", () => {
 
   it("handles 1g beans", () => {
     expect(getTotalWater(1, 15)).toBe(15);
+  });
+});
+
+describe("water amount strategies", () => {
+  it("calculates the flavor, strength, and equal-pour amounts", () => {
+    expect(calcFlavor1(300, "sweet")).toBe(50);
+    expect(calcFlavor1(300, "neutral")).toBe(60);
+    expect(calcFlavor1(300, "sour")).toBe(70);
+    expect(calcFlavor2(300, "sweet")).toBe(70);
+    expect(calcFlavor2(300, "neutral")).toBe(60);
+    expect(calcFlavor2(300, "sour")).toBe(50);
+    expect(calcStrength(300)).toBe(90);
+    expect(calcEqualPour(300, 10)).toBe(30);
+  });
+
+  it("supports every recipe water amount variant", () => {
+    const recipe: Recipe = {
+      id: "all-water-amount-types",
+      waterRatio: 15,
+      waterTemp: 96,
+      steps: [
+        { timeSec: 0, actionType: "pour", waterAmountType: "flavor1" },
+        { timeSec: 30, actionType: "pour", waterAmountType: "flavor2" },
+        { timeSec: 60, actionType: "pour", waterAmountType: "strength" },
+        { timeSec: 90, actionType: "pour", waterAmountType: "equalPour" },
+        { timeSec: 120, actionType: "none", waterAmountType: "none" },
+      ],
+    };
+
+    expect(computeSteps(recipe, 20, "sweet").map((step) => step.increment)).toEqual([
+      50, 70, 90, 90, 0,
+    ]);
   });
 });
 

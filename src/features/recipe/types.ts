@@ -8,7 +8,7 @@ export type ActionType =
   | "drawdown"
   | "none";
 
-export type WaterAmountType = "equalPour" | "none";
+export type WaterAmountType = "flavor1" | "flavor2" | "strength" | "equalPour" | "none";
 
 export interface RecipeStep {
   timeSec: number;
@@ -27,3 +27,4 @@ export interface ComputedStep extends RecipeStep {
   cumulative: number;
   increment: number;
 }
+export type FlavorProfile = "sweet" | "neutral" | "sour";

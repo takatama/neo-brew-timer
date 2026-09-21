@@ -98,7 +98,7 @@ public/                            # Vite publicDir — served as-is at /
 
 ### Type Safety
 
-- `WaterAmountType` uses `"flavor1" | "flavor2" | "strength" | "none"` (not `null`).
+- `WaterAmountType` supports `"flavor1" | "flavor2" | "strength" | "equalPour" | "none"` (not `null`). Keep these recipe-level strategies even when the current UI uses only equal pours.
 - `computeSteps` uses exhaustive `switch` with `never` check on `waterAmountType`.
 
 ## Commands
