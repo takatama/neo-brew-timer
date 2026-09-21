@@ -46,11 +46,6 @@
   },
   "setup": {
     "beans": "Beans",
-    "flavor": "Flavor",
-    "sweet": "Sweet",
-    "neutral": "Balance",
-    "sour": "Sour",
-    "total": "Total",
     "steps": "Pour targets",
     "stepBloom": "Bloom {{amount}}g",
     "stepPourTo": "Pour to {{amount}}g",
@@ -62,9 +57,6 @@
     "equipment": "Equipment",
     "affiliate": "As an Amazon Associate, Neo Brew Timer earns from qualifying purchases.",
     "water": "Water",
-    "debugBgmType": "Debug BGM Type",
-    "debugBgmWeekday": "Weekday",
-    "debugBgmHoliday": "Holiday",
     "debugBgmDay": "Debug BGM Day",
     "daySun": "Sun",
     "dayMon": "Mon",
@@ -82,7 +74,7 @@
     "decrease": "Decrease beans by 1g",
     "scaleHint": "The weight shown is total water added. Zero your scale only before the first pour.",
     "startImmediately": "Starts as soon as you tap",
-    "toolDescription": "A timer for Neo Brew pour amounts and timing. Water amounts adjust to your coffee dose."
+    "recipeSummary": "Pour 15 times the coffee amount in water, divided across ten pours. Each target is the total water shown on your scale."
   },
   "timer": {
     "currentStep": "Current Step",
@@ -118,7 +110,6 @@
     "openPourTo": "Open, pour to <num>{{amount}}</num><unit>g</unit>",
     "pourCoolTo": "Pour to <num>{{amount}}</num><unit>g</unit>, cool to <num>70</num><unit>℃</unit>",
     "beansLabel": "Beans",
-    "flavorLabel": "Flavor",
     "waterLabel": "Water",
     "pourToAmount": "Pour to <num>{{amount}}</num><unit>g</unit>",
     "toAmount": "To <num>{{amount}}</num><unit>g</unit>",
@@ -190,11 +181,6 @@
         "description": "Keep your beans fresher for everyday brewing."
       }
     }
-  },
-  "flavorLabels": {
-    "sweet": "Sweet",
-    "neutral": "Balance",
-    "sour": "Sour"
   },
   "pwa": {
     "ready": "Ready to brew offline",

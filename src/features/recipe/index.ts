@@ -4,6 +4,7 @@ export {
   calcFlavor1,
   calcFlavor2,
   calcStrength,
+  calcEqualPour,
   computeSteps,
   getCurrentStepIndex,
   formatTime,

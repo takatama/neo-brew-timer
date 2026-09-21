@@ -29,7 +29,7 @@ export function calcEqualPour(total: number, pourCount: number): number {
 export function computeSteps(
   recipe: Recipe,
   beans: number,
-  flavor: FlavorProfile,
+  flavor: FlavorProfile = "neutral",
 ): ComputedStep[] {
   const total = getTotalWater(beans, recipe.waterRatio);
   const equalPourCount = recipe.steps.filter((step) => step.waterAmountType === "equalPour").length;
@@ -64,4 +64,3 @@ export function computeSteps(
     return { ...step, cumulative, increment };
   });
 }
-

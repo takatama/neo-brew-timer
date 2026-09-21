@@ -45,15 +45,10 @@
     "imageAlt": "コーヒーの入ったサーバーとカップ"
   },
   "setup": {
-    "beans": "豆",
-    "flavor": "味わい",
-    "sweet": "甘味",
-    "neutral": "バランス",
-    "sour": "酸味",
-    "total": "合計",
-    "steps": "注湯量",
-    "stepBloom": "蒸らし {{amount}}g",
-    "stepPourTo": "{{amount}}g まで注ぐ",
+    "beans": "豆の量",
+    "steps": "お湯を注ぐ目安",
+    "stepBloom": "お湯を {{amount}}g 注いで蒸らす",
+    "stepPourTo": "合計 {{amount}}g までお湯を注ぐ",
     "stepDuration": "{{seconds}} 秒",
     "start": "淹れる",
     "details": "レシピ・使い方",
@@ -61,10 +56,7 @@
     "closeAction": "閉じる",
     "equipment": "器具",
     "affiliate": "Amazonのアソシエイトとして、Neo Brew Timerは適格販売により収入を得ています。",
-    "water": "湯量",
-    "debugBgmType": "デバッグBGMタイプ",
-    "debugBgmWeekday": "平日",
-    "debugBgmHoliday": "休日",
+    "water": "お湯の量",
     "debugBgmDay": "デバッグBGM曜日",
     "daySun": "日",
     "dayMon": "月",
@@ -80,9 +72,9 @@
     "overview": "10湯 · 約3分30秒",
     "increase": "豆を1g増やす",
     "decrease": "豆を1g減らす",
-    "scaleHint": "表示のgは、注いだお湯の合計です。スケールの0g合わせは最初だけ。",
+    "scaleHint": "表示のgは、注いだお湯の合計です。スケールを0gに合わせるのは最初だけです。",
     "startImmediately": "押すとすぐにスタート",
-    "toolDescription": "Neo Brewの注湯量とタイミングを確認できるタイマーです。豆量に合わせて湯量を計算します。"
+    "recipeSummary": "豆の量の15倍のお湯を、10回に分けて注ぎます。表示される数字は、スケール上のお湯の合計です。"
   },
   "timer": {
     "currentStep": "今のステップ",
@@ -96,12 +88,12 @@
     "resetConfirmAction": "リセットする",
     "resetCancelAction": "キャンセル",
     "recipe": "Neo Brew",
-    "editParams": "豆量を変更",
+    "editParams": "豆の量を変更",
     "timeline": "タイムライン",
     "openWaitNoPour": "開けて待つ（注がない）",
     "pourTo": "まで注ぐ",
     "bloom": "蒸らし",
-    "pour": "注湯",
+    "pour": "お湯を注ぐ",
     "brew": "抽出",
     "drawdown": "待つ",
     "waitForDrawdown": "落ちきるまで待つ",
@@ -117,13 +109,12 @@
     "closePourTo": "閉じて <num>{{amount}}</num><unit>g</unit> まで注ぐ",
     "openPourTo": "開けて <num>{{amount}}</num><unit>g</unit> まで注ぐ",
     "pourCoolTo": "<num>{{amount}}</num><unit>g</unit> まで注ぎ、<num>70</num><unit>℃</unit> まで下げる",
-    "beansLabel": "豆量",
-    "flavorLabel": "味わい",
-    "waterLabel": "抽出量",
+    "beansLabel": "豆の量",
+    "waterLabel": "お湯の量",
     "pourToAmount": "<num>{{amount}}</num><unit>g</unit> まで注ぐ",
     "toAmount": "<num>{{amount}}</num><unit>g</unit> まで",
     "beansChipLabel": "豆",
-    "waterChipLabel": "湯量",
+    "waterChipLabel": "お湯",
     "starting": "開始まで {{seconds}} 秒",
     "state_idle": "開始前",
     "state_starting": "開始待ち",
@@ -145,7 +136,7 @@
     "leaveAction": "抽出を終了して移動",
     "leaveTitle": "抽出を終了しますか？",
     "targetAmount": "{{amount}}g",
-    "targetAccessible": "注湯の合計目標 {{amount}}g"
+    "targetAccessible": "注いだお湯の合計目標 {{amount}}g"
   },
   "stepLabels": [
     "蒸らし",
@@ -190,11 +181,6 @@
         "description": "豆の鮮度を守る、毎日の保存に。"
       }
     }
-  },
-  "flavorLabels": {
-    "sweet": "甘味",
-    "neutral": "バランス",
-    "sour": "酸味"
   },
   "pwa": {
     "ready": "オフラインで使う準備ができました",

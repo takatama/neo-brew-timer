@@ -1,5 +1,3 @@
-export type FlavorProfile = "sweet" | "neutral" | "sour";
-
 export type ActionType =
   | "bloom"
   | "switch_close_pour"
@@ -29,3 +27,4 @@ export interface ComputedStep extends RecipeStep {
   cumulative: number;
   increment: number;
 }
+export type FlavorProfile = "sweet" | "neutral" | "sour";

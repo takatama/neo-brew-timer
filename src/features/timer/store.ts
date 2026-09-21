@@ -1,12 +1,8 @@
 import { create } from "zustand";
-import type { FlavorProfile } from "../recipe/types";
-
 interface SessionStore {
   beans: number;
-  flavor: FlavorProfile;
   introSeen: boolean;
   setBeans: (beans: number) => void;
-  setFlavor: (flavor: FlavorProfile) => void;
   setIntroSeen: (seen: boolean) => void;
 }
 
@@ -28,14 +24,12 @@ function loadBeans(): number {
 
 export const useSessionStore = create<SessionStore>((set) => ({
   beans: loadBeans(),
-  flavor: "neutral",
   introSeen: loadIntroSeen(),
   setBeans: (value) => {
     const beans = normalizeBeans(value);
     try { localStorage.setItem("neo-brew-beans", String(beans)); } catch { /* Storage is optional. */ }
     set({ beans });
   },
-  setFlavor: (flavor) => set({ flavor }),
   setIntroSeen: (seen) => {
     try {
       if (seen) localStorage.setItem("brewsteps_intro_seen", "1");
