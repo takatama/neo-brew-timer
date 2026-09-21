@@ -15,7 +15,9 @@ export function NextStepPreview({ step, animationMode = "none", animationProgres
     <div className={`${styles.preview} ${expanded ? styles.expanded : ""}`} data-expanded={expanded || undefined}>
       <span className={styles.label}>{t("timer.nextStep")}</span>
       <span className={styles.action}>
-        {step.actionType === "none" ? t("timer.finish") : t("timer.targetAmount", { amount: step.cumulative })}
+        {step.actionType === "none"
+          ? t("timer.finish")
+          : <>{t("timer.targetAmount", { amount: step.cumulative })}{t("timer.targetSuffix") && <span className={styles.targetSuffix}>{t("timer.targetSuffix")}</span>}</>}
       </span>
       {animationProgress !== null && <div className={styles.artwork}>
         <PourPreviewAnimation mode={animationMode} progress={animationProgress} running={animationRunning} />

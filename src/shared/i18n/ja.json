@@ -135,7 +135,7 @@
     "leaveConfirm": "この画面を離れると抽出は終了します。途中からは再開できません。",
     "leaveAction": "抽出を終了して移動",
     "leaveTitle": "抽出を終了しますか？",
-    "targetAmount": "{{amount}}gまで",
+    "targetAmount": "{{amount}}g",
     "targetSuffix": "まで",
     "targetAccessible": "お湯の合計目標 {{amount}}gまで"
   },

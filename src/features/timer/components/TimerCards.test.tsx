@@ -50,6 +50,7 @@ describe("timer cards", () => {
     expect(screen.getByLabelText("お湯の合計目標 30gまで")).toHaveTextContent("30gまで");
     expect(screen.getByText("次に注ぐまで")).toBeVisible();
     expect(screen.getByText("次は").parentElement).toHaveTextContent("次は60gまで");
+    expect(screen.getAllByText("まで")).toHaveLength(2);
   });
 
 
