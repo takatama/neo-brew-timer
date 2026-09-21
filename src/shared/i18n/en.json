@@ -136,6 +136,7 @@
     "leaveAction": "End brew and leave",
     "leaveTitle": "End this brew?",
     "targetAmount": "{{amount}}g",
+    "targetSuffix": "",
     "targetAccessible": "Cumulative water target {{amount}}g"
   },
   "stepLabels": [
