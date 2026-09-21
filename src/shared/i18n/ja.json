@@ -78,7 +78,7 @@
   },
   "timer": {
     "currentStep": "今のステップ",
-    "nextStep": "次",
+    "nextStep": "次は",
     "firstStep": "まずは",
     "remaining": "あと <time>{{time}}</time>",
     "play": "淹れる",
@@ -121,12 +121,12 @@
     "state_running": "抽出中",
     "state_paused": "一時停止中",
     "state_finished": "完成",
-    "pourCount": "{{current}} / {{total}} 湯目",
+    "pourCount": "{{current}} / {{total}} 回",
     "getReady": "最初の一湯",
     "untilStart": "開始まで",
     "secondsUnit": "秒",
     "lastPour": "最後の一湯",
-    "untilNext": "次の一湯まで",
+    "untilNext": "次に注ぐまで",
     "untilFinish": "完成までの目安",
     "elapsed": "経過",
     "cancelStart": "取り消す",
@@ -135,8 +135,9 @@
     "leaveConfirm": "この画面を離れると抽出は終了します。途中からは再開できません。",
     "leaveAction": "抽出を終了して移動",
     "leaveTitle": "抽出を終了しますか？",
-    "targetAmount": "{{amount}}g",
-    "targetAccessible": "注いだお湯の合計目標 {{amount}}g"
+    "targetAmount": "{{amount}}gまで",
+    "targetSuffix": "まで",
+    "targetAccessible": "お湯の合計目標 {{amount}}gまで"
   },
   "stepLabels": [
     "蒸らし",

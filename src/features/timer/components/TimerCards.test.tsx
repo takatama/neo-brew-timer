@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
 import type { ComputedStep } from "../../recipe/types";
 import i18n from "../../../shared/i18n/config";
@@ -16,7 +16,7 @@ const firstStep: ComputedStep = {
 
 describe("timer cards", () => {
   afterEach(async () => {
-    await i18n.changeLanguage("en");
+    await act(() => i18n.changeLanguage("en"));
   });
 
   it("shows the English remaining-time label after the countdown", async () => {
@@ -29,12 +29,27 @@ describe("timer cards", () => {
   });
 
   it("shows the Japanese remaining-time label before the countdown", async () => {
-    await i18n.changeLanguage("ja");
+    await act(() => i18n.changeLanguage("ja"));
     const { container } = render(
       <Countdown remainingSeconds={4} progress={0} isImminent={false} />,
     );
 
     expect(container.firstElementChild).toHaveTextContent(/^あと 0:04$/);
+  });
+
+  it("uses approachable Japanese labels for pour progress and cumulative targets", async () => {
+    await act(() => i18n.changeLanguage("ja"));
+    const props = { step: firstStep, stepIndex: 3, totalSteps: 10, remainingSeconds: 15,
+      progress: 0.5, isImminent: false, steps: [firstStep], currentTime: 45,
+      nextStepPreview: <NextStepPreview step={{ ...firstStep, cumulative: 60 }} /> };
+
+    render(<StepCard {...props} status="running" startupSeconds={null} />);
+
+    expect(screen.getByLabelText("4 / 10 回")).toBeVisible();
+    expect(screen.getByRole("heading", { name: "お湯を注ぐ" })).toBeVisible();
+    expect(screen.getByLabelText("お湯の合計目標 30gまで")).toHaveTextContent("30gまで");
+    expect(screen.getByText("次に注ぐまで")).toBeVisible();
+    expect(screen.getByText("次は").parentElement).toHaveTextContent("次は60gまで");
   });
 
 
