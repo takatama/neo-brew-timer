@@ -156,6 +156,10 @@
   line-height: 1.5;
 }
 
+.detailsVideo {
+  padding-top: 4px;
+}
+
 /* Equipment */
 
 .equipmentHeader {

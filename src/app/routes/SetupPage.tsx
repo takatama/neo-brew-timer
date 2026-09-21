@@ -11,6 +11,7 @@ import styles from "./SetupPage.module.css";
 import { getEquipmentItems, type SupportedLanguage } from "../../shared/affiliate/amazon";
 import { useDisplayLanguage } from "../../shared/i18n/DisplayLanguage";
 import { localizedPath } from "../../shared/i18n/routing";
+import { RecipeVideo } from "../../shared/components/RecipeVideo";
 
 export function SetupPage() {
   const { t } = useTranslation();
@@ -113,6 +114,7 @@ export function SetupPage() {
               ))}
             </ol>
           </section>
+          <RecipeVideo className={styles.detailsVideo} />
           <section aria-labelledby="label-equipment">
             <div className={styles.equipmentHeader}>
               <h2 id="label-equipment" className={`card-title ${styles.equipmentTitle}`}>{t("setup.equipment")}</h2>

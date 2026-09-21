@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useSessionStore } from "../../features/timer/store";
 import { useDisplayLanguage } from "../../shared/i18n/DisplayLanguage";
 import { localizedPath } from "../../shared/i18n/routing";
+import { RecipeVideo } from "../../shared/components/RecipeVideo";
 import styles from "./IntroPage.module.css";
 
 const heroImage = "/assets/images/goran-ivos-1JsjRW6Sbwg-unsplash.jpg";
@@ -55,18 +56,7 @@ export function IntroPage() {
         {t("intro.continue")}
       </button>
 
-      <section className={`card ${styles.videoCard}`} aria-labelledby="video-heading">
-        <h2 id="video-heading" className={styles.videoHeading}>{t("intro.videoHeading")}</h2>
-        <div className={styles.videoWrap}>
-          <iframe
-            src="https://www.youtube.com/embed/k0nsShguOsU"
-            title={t("intro.videoTitle")}
-            loading="lazy"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          />
-        </div>
-      </section>
+      <RecipeVideo className={`card ${styles.videoCard}`} />
     </main>
   );
 }
