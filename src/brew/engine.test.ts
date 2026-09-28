@@ -104,15 +104,28 @@ describe("guidance timing", () => {
     run(engine, 24_900);
     expect(cues).toEqual([]);
     run(engine, 100);
-    expect(cues).toEqual([{ type: "approach", stepIndex: 1, isFinish: false, offsetMs: 0 }]);
+    expect(cues).toEqual([{ type: "approach", stepIndex: 1, isFinish: false, offsetMs: 0, fresh: true }]);
   });
 
-  it("scales timing and audio offsets under speed-up", () => {
+  it("under a speed-up, starts the clip late enough to still end on the step", () => {
     const engine = make(0, 5);
     engine.start();
     run(engine, 5_000);
     expect(engine.elapsedMs()).toBe(25_000);
-    expect(cues.at(-1)).toMatchObject({ type: "approach", stepIndex: 1 });
+    // Five brew seconds are one real second: play only the last second.
+    expect(cues.at(-1)).toEqual({ type: "approach", stepIndex: 1, isFinish: false, offsetMs: 4000, fresh: true });
+  });
+
+  it("under a speed-up, skips resuming a lead-in with too little real time left", () => {
+    const engine = make(0, 5);
+    engine.start();
+    run(engine, 5_200); // brew 26 s: 4 brew s = 0.8 real s left
+    engine.pause();
+    cues = [];
+    now += 100;
+    engine.seek(26_500); // 0.7 real s left
+    engine.resume();
+    expect(cues).toEqual([]);
   });
 });
 
@@ -140,7 +153,7 @@ describe("pause and resume", () => {
     cues = [];
     now += 60_000;
     engine.resume();
-    expect(cues).toEqual([{ type: "approach", stepIndex: 1, isFinish: false, offsetMs: 2000 }]);
+    expect(cues).toEqual([{ type: "approach", stepIndex: 1, isFinish: false, offsetMs: 2000, fresh: false }]);
   });
 
   it("does not replay a lead-in with too little left", () => {

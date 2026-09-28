@@ -32,14 +32,14 @@ src/
 │   ├── session.ts           # the one live brew: engine + cues + wake lock + store
 │   └── wakeLock.ts          # screen wake lock with race protection
 ├── cues/
-│   ├── clips.ts             # <audio> clip player: unlock, offset playback
+│   ├── clips.ts             # three pooled <audio> elements: unlock, offset playback
 │   ├── chime.ts             # code-generated chime clips (OfflineAudioContext → WAV)
 │   └── index.ts             # engine cue → sound / vibration, per settings
 ├── settings/                # persisted settings, bean amount, settings sheet
 ├── guide/                   # recipe sheet, Amazon links
 ├── music/                   # optional background music (player + track data)
 ├── i18n/                    # config, routing, translations
-├── ui/                      # Dial, DoseRuler, PourRail, Sheet, controls, icons
+├── ui/                      # Dial, FinishedCup, DoseRuler, PourRail, Sheet, controls, icons
 └── styles/global.css        # tokens (light + dark), font, reset
 ```
 
@@ -56,11 +56,15 @@ src/
   `brew.progress()`, `brew.level()` and `brew.elapsedMs()` per animation frame
   and on every render (so they stay truthful when frames are throttled). They
   never drive timing.
-- **Cues carry an offset.** A lead-in cue says how far into the five seconds the
-  brew already is, so resumed or late cues stay aligned with the step.
+- **Cues carry an offset.** A lead-in cue says where to start the five-second
+  clip so it ends exactly on the step in real time (after a pause, a late tick,
+  or under the 5× developer speed).
 - **Audio must be unlocked in a gesture.** Call `brew.start()` / `brew.resume()`
-  directly from the tap handler. Clips are `<audio>` elements (not Web Audio)
-  so they play with the iPhone ringer switch on silent.
+  directly from the tap handler (and `cues.unlock()` from any tap that turns
+  sound on). Clips are `<audio>` elements (not Web Audio) so they play with the
+  iPhone ringer switch on silent. `ClipPlayer` keeps one element per clip and
+  swaps sources, because iOS permission belongs to the element. Voice clips
+  are played from in-memory blobs because the offline cache can't seek.
 - **Numbers never count.** Targets change only at step boundaries.
 
 ## Conventions

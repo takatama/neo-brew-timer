@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { useBlocker, useNavigate, type Location } from "react-router-dom";
-import { brew, useBrew } from "../brew/session";
+import { brew, cues, useBrew } from "../brew/session";
 import { formatClock, type BrewStep } from "../brew/recipe";
 import type { BrewView } from "../brew/view";
 import { useDisplayLanguage } from "../i18n/DisplayLanguage";
@@ -123,7 +123,11 @@ export function BrewPage() {
           <button
             type="button"
             className={styles.iconButton}
-            onClick={toggleMute}
+            onClick={() => {
+              toggleMute();
+              // Turning cues on is a gesture too: make sure they can play.
+              cues.unlock();
+            }}
             aria-label={sound === "off" ? t("brew.unmute") : t("brew.mute")}
             aria-pressed={sound === "off"}
             data-muted={sound === "off" || undefined}

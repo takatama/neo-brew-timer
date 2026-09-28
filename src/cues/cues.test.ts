@@ -3,24 +3,44 @@ import { ClipPlayer, type ClipUrls } from "./clips";
 import { Cues } from "./index";
 import { DEFAULT_SETTINGS, useSettings } from "../settings/store";
 
-/** A minimal stand-in for HTMLAudioElement that models metadata and seeking. */
+const chime = vi.hoisted(() => ({
+  promise: null as Promise<Record<string, string> | null> | null,
+}));
+vi.mock("./chime", () => ({ loadChimes: () => chime.promise ?? Promise.resolve(null) }));
+
+/**
+ * A stand-in for HTMLAudioElement that models metadata, seeking and the iOS
+ * rule: play() is refused unless it happens inside a user gesture or the
+ * element has already been played in one (which survives source changes).
+ */
 class FakeAudio extends EventTarget {
   static all: FakeAudio[] = [];
-  src: string;
+  static inGesture = false;
   muted = false;
   preload = "";
   readyState = 0;
   duration = Number.NaN;
   paused = true;
-  /** When false, behaves like media served without range requests. */
-  seekable = true;
-  private time = 0;
   playedFrom: number | null = null;
+  private allowed = false;
+  private time = 0;
+  private url = "";
 
-  constructor(src: string) {
+  constructor(src = "") {
     super();
-    this.src = src;
+    this.url = src;
     FakeAudio.all.push(this);
+  }
+
+  get src() {
+    return this.url;
+  }
+
+  set src(value: string) {
+    this.url = value;
+    this.readyState = 0;
+    this.duration = Number.NaN;
+    this.time = 0;
   }
 
   get currentTime() {
@@ -28,10 +48,12 @@ class FakeAudio extends EventTarget {
   }
 
   set currentTime(value: number) {
-    this.time = this.seekable && this.readyState >= 1 ? value : 0;
+    this.time = this.readyState >= 1 ? value : 0;
   }
 
   play() {
+    if (FakeAudio.inGesture) this.allowed = true;
+    if (!this.allowed) return Promise.reject(new DOMException("blocked", "NotAllowedError"));
     this.paused = false;
     if (!this.muted) this.playedFrom = this.time;
     return Promise.resolve();
@@ -49,10 +71,23 @@ class FakeAudio extends EventTarget {
   }
 }
 
-const URLS: ClipUrls = { first: "/first.wav", next: "/next.wav", done: "/done.wav" };
+const tap = (action: () => void) => {
+  FakeAudio.inGesture = true;
+  try {
+    action();
+  } finally {
+    FakeAudio.inGesture = false;
+  }
+};
+const flush = () => new Promise((resolve) => setTimeout(resolve, 0));
+const playing = () => FakeAudio.all.filter((a) => a.playedFrom !== null);
+
+const A: ClipUrls = { first: "/a-first.wav", next: "/a-next.wav", done: "/a-done.wav" };
+const B: ClipUrls = { first: "/b-first.wav", next: "/b-next.wav", done: "/b-done.wav" };
 
 beforeEach(() => {
   FakeAudio.all = [];
+  chime.promise = null;
   vi.stubGlobal("Audio", FakeAudio);
 });
 
@@ -63,17 +98,17 @@ afterEach(() => {
 describe("clip player", () => {
   it("starts a clip part-way when its length is known", () => {
     const player = new ClipPlayer();
-    player.preload("k", URLS);
-    const next = FakeAudio.all.find((a) => a.src === "/next.wav")!;
+    player.preload(A);
+    const next = FakeAudio.all.find((a) => a.src === A.next)!;
     next.loadMetadata();
-    player.play("k", URLS, "next", 2.1);
+    tap(() => player.play(A, "next", 2.1));
     expect(next.playedFrom).toBe(2.1);
   });
 
   it("applies the offset once metadata arrives if it was not loaded yet", () => {
     const player = new ClipPlayer();
-    player.play("k", URLS, "next", 1.8);
-    const next = FakeAudio.all.find((a) => a.src === "/next.wav")!;
+    tap(() => player.play(A, "next", 1.8));
+    const next = FakeAudio.all.find((a) => a.src === A.next)!;
     expect(next.currentTime).toBe(0);
     next.loadMetadata();
     expect(next.currentTime).toBe(1.8);
@@ -81,52 +116,104 @@ describe("clip player", () => {
 
   it("skips a clip that would already be over, and stops the one playing", () => {
     const player = new ClipPlayer();
-    player.preload("k", URLS);
+    player.preload(A);
     FakeAudio.all.forEach((a) => a.loadMetadata(6));
-    player.play("k", URLS, "next", 1);
-    const next = FakeAudio.all.find((a) => a.src === "/next.wav")!;
-    player.play("k", URLS, "done", 5.9);
+    tap(() => player.play(A, "next", 1));
+    const next = FakeAudio.all.find((a) => a.src === A.next)!;
+    player.play(A, "done", 5.9);
     expect(next.paused).toBe(true);
-    expect(FakeAudio.all.find((a) => a.src === "/done.wav")!.playedFrom).toBeNull();
+    expect(FakeAudio.all.find((a) => a.src === A.done)!.playedFrom).toBeNull();
+  });
+
+  it("keeps one element per clip, so an unlock survives a change of source", async () => {
+    const player = new ClipPlayer();
+    tap(() => player.unlock(A));
+    await flush();
+    player.play(B, "next", 0);
+    await flush();
+    expect(FakeAudio.all).toHaveLength(3);
+    expect(playing().map((a) => a.src)).toEqual([B.next]);
   });
 });
 
-describe("voice cues", () => {
+describe("cues", () => {
+  let blobs = 0;
+
   beforeEach(() => {
+    blobs = 0;
     useSettings.setState({ ...DEFAULT_SETTINGS, sound: "voice", voice: "female" });
-    let n = 0;
     vi.stubGlobal("fetch", vi.fn(async () => new Response(new Blob(["wav"], { type: "audio/wav" }))));
-    vi.stubGlobal("URL", Object.assign(Object.create(URL), { createObjectURL: () => `blob:clip-${(n += 1)}` }));
+    (URL as unknown as { createObjectURL: () => string }).createObjectURL = () => `blob:clip-${(blobs += 1)}`;
   });
 
-  it("plays from memory once loaded, so a resumed countdown can start mid-way", async () => {
+  it("plays voice from memory once loaded, so a resumed countdown starts mid-way", async () => {
     const cues = new Cues(() => "ja");
     await cues.warm();
     expect(fetch).toHaveBeenCalledWith("/assets/audio/ja-female-next-step.wav");
+    tap(() => cues.unlock());
+    await flush();
 
-    cues.handle({ type: "approach", stepIndex: 1, isFinish: false, offsetMs: 0 });
-    const next = FakeAudio.all.find((a) => a.src.startsWith("blob:") && a.playedFrom !== null)!;
+    cues.handle({ type: "approach", stepIndex: 1, isFinish: false, offsetMs: 0, fresh: true });
+    const [next] = playing();
+    expect(next.src.startsWith("blob:")).toBe(true);
     next.loadMetadata();
     cues.handle({ type: "hush" });
     expect(next.paused).toBe(true);
 
-    // Resuming two seconds into the lead-in continues from there.
-    cues.handle({ type: "approach", stepIndex: 1, isFinish: false, offsetMs: 2000 });
+    cues.handle({ type: "approach", stepIndex: 1, isFinish: false, offsetMs: 2000, fresh: false });
     expect(next.playedFrom).toBe(2);
   });
 
   it("falls back to the network before clips are in memory", () => {
     const cues = new Cues(() => "en");
-    cues.handle({ type: "countdown", offsetMs: 0 });
-    const first = FakeAudio.all.find((a) => a.playedFrom !== null)!;
-    expect(first.src).toBe("/assets/audio/en-female-first-step.wav");
+    tap(() => cues.handle({ type: "countdown", offsetMs: 0 }));
+    expect(playing().map((a) => a.src)).toEqual(["/assets/audio/en-female-first-step.wav"]);
   });
 
-  it("plays nothing when cues are off", async () => {
+  it("stays silent when off, yet unmuting later in the brew still plays", async () => {
     useSettings.setState({ sound: "off" });
     const cues = new Cues(() => "en");
-    await cues.warm();
-    cues.handle({ type: "approach", stepIndex: 1, isFinish: false, offsetMs: 0 });
-    expect(FakeAudio.all.every((a) => a.playedFrom === null)).toBe(true);
+    tap(() => cues.unlock()); // the tap that started the brew
+    await flush();
+    cues.handle({ type: "approach", stepIndex: 1, isFinish: false, offsetMs: 0, fresh: true });
+    expect(playing()).toHaveLength(0);
+
+    useSettings.setState({ sound: "voice" }); // e.g. from a state change without a gesture
+    cues.handle({ type: "approach", stepIndex: 2, isFinish: false, offsetMs: 0, fresh: true });
+    await flush();
+    expect(playing()).toHaveLength(1);
+  });
+
+  it("waits for a chime that is still rendering instead of playing the voice", async () => {
+    let resolve: (urls: Record<string, string>) => void = () => {};
+    chime.promise = new Promise((r) => { resolve = r; });
+    useSettings.setState({ sound: "chime" });
+    const cues = new Cues(() => "en");
+
+    tap(() => {
+      cues.unlock();
+      cues.handle({ type: "countdown", offsetMs: 0 });
+    });
+    await flush();
+    expect(playing()).toHaveLength(0);
+
+    resolve({ first: "blob:chime-first", next: "blob:chime-next", done: "blob:chime-done" });
+    await flush();
+    expect(playing().map((a) => a.src)).toEqual(["blob:chime-first"]);
+  });
+
+  it("drops a deferred chime if the brew is paused first", async () => {
+    let resolve: (urls: Record<string, string>) => void = () => {};
+    chime.promise = new Promise((r) => { resolve = r; });
+    useSettings.setState({ sound: "chime" });
+    const cues = new Cues(() => "en");
+    tap(() => {
+      cues.unlock();
+      cues.handle({ type: "countdown", offsetMs: 0 });
+    });
+    cues.handle({ type: "hush" });
+    resolve({ first: "blob:chime-first", next: "blob:chime-next", done: "blob:chime-done" });
+    await flush();
+    expect(playing()).toHaveLength(0);
   });
 });

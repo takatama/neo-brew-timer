@@ -19,8 +19,13 @@ export type BrewStatus = "idle" | "countdown" | "running" | "paused" | "done";
 export type Cue =
   /** The lead-in before the first pour started (or resumed mid-way). */
   | { type: "countdown"; offsetMs: number }
-  /** The lead-in to an upcoming step started `offsetMs` ago. */
-  | { type: "approach"; stepIndex: number; isFinish: boolean; offsetMs: number }
+  /**
+   * The lead-in to an upcoming step. `offsetMs` is where to start the
+   * five-second clip so that it ends exactly on the step in real time (under
+   * a speed-up only its tail plays). `fresh` is false when picking up late,
+   * e.g. after resuming inside the lead-in.
+   */
+  | { type: "approach"; stepIndex: number; isFinish: boolean; offsetMs: number; fresh: boolean }
   /** A step boundary was crossed. */
   | { type: "step"; stepIndex: number; isFinish: boolean }
   /** Anything in flight (voice, chimes, vibration) must stop now. */
@@ -38,6 +43,8 @@ export interface EngineOptions {
 const STALE_GAP_MS = 1500;
 /** Don't start a lead-in cue that would have less than this left to play. */
 const MIN_LEAD_REMAINING_MS = 800;
+/** A lead-in noticed within this many real milliseconds is on time. */
+const FRESH_MS = 300;
 
 export class BrewEngine {
   private steps: readonly EngineStep[];
@@ -146,17 +153,9 @@ export class BrewEngine {
     // If paused inside a lead-in, pick the cue up where the brew now is.
     const t = this.baseMs;
     const next = this.nextStepAfter(t);
-    if (next) {
-      const leadStart = next.step.atSec * 1000 - this.leadMs;
-      const offset = t - leadStart;
-      if (offset >= 0 && this.leadMs - offset >= MIN_LEAD_REMAINING_MS) {
-        this.emitCue({
-          type: "approach",
-          stepIndex: next.index,
-          isFinish: next.step.isFinish,
-          offsetMs: offset / this.speed,
-        });
-      }
+    if (next && t >= next.step.atSec * 1000 - this.leadMs) {
+      const cue = this.approachCue(next, t, false);
+      if (cue) this.emitCue(cue);
     }
   }
 
@@ -230,15 +229,8 @@ export class BrewEngine {
     if (next) {
       const leadStart = next.step.atSec * 1000 - this.leadMs;
       if (previous < leadStart && leadStart <= t) {
-        const offset = t - leadStart;
-        if (!stale || this.leadMs - offset >= MIN_LEAD_REMAINING_MS) {
-          this.emitCue({
-            type: "approach",
-            stepIndex: next.index,
-            isFinish: next.step.isFinish,
-            offsetMs: offset / this.speed,
-          });
-        }
+        const cue = this.approachCue(next, t, !stale);
+        if (cue) this.emitCue(cue);
       }
     }
 
@@ -272,6 +264,24 @@ export class BrewEngine {
     this.anchorAt = at;
     this.emitChange();
     if (!stale) this.emitCue({ type: "step", stepIndex: 0, isFinish: false });
+  }
+
+  /**
+   * The lead-in cue for `next` at brew time `t`, or null if too little of it
+   * would be left to be useful. Brew time runs `speed` times faster than real
+   * time, so the clip starts late enough to finish exactly on the step.
+   */
+  private approachCue(next: { step: EngineStep; index: number }, t: number, onTime: boolean): Cue | null {
+    const realRemaining = (next.step.atSec * 1000 - t) / this.speed;
+    if (realRemaining < MIN_LEAD_REMAINING_MS) return null;
+    const offsetMs = Math.max(0, this.leadMs - realRemaining);
+    return {
+      type: "approach",
+      stepIndex: next.index,
+      isFinish: next.step.isFinish,
+      offsetMs,
+      fresh: onTime && this.leadMs - realRemaining * this.speed < FRESH_MS * this.speed,
+    };
   }
 
   private nextStepAfter(t: number): { step: EngineStep; index: number } | null {

@@ -94,8 +94,14 @@ States:
 - The lead-in for every step starts five seconds early and ends exactly on the
   step. Voice files say "5, 4, 3, 2, 1" then a message; the chime (generated in
   code) plays five soft ticks then a bell. Both are played through `<audio>`
-  so they sound with the iPhone ringer switch on silent, and both are unlocked
-  inside the tap that starts the brew (iOS requires a gesture per element).
+  so they sound with the iPhone ringer switch on silent. Clips are held in
+  memory so a resumed lead-in can start mid-way even from the offline cache.
+- iOS needs a gesture per `<audio>` element, so there are exactly three
+  (first / next / done), unlocked in the tap that starts or resumes the brew —
+  even when cues are off — and only their sources change afterwards. Unmuting,
+  switching to the chime, or a chime that is still rendering all keep working.
+- Under the developer 5× speed, only the tail of each lead-in plays, so it
+  still ends on the step.
 - Vibration: a short tap at each lead-in, a double pulse at each step, a longer
   pattern at the finish. Only offered where the browser supports it.
 - Background music, when on, is ducked while a cue plays (where the browser

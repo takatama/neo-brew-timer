@@ -38,28 +38,47 @@ export const canVibrate = typeof navigator !== "undefined" && typeof navigator.v
 
 export class Cues {
   private player = new ClipPlayer();
-  private chimes: ClipUrls | null = null;
+  /** undefined: not rendered yet; null: this browser cannot synthesise. */
+  private chimes: ClipUrls | null | undefined = undefined;
+  private chimesPending: Promise<void> | null = null;
   private voices = new Map<string, ClipUrls>();
   private loading = new Map<string, Promise<void>>();
+  /** Bumped on every play or hush, so a deferred cue can tell it is stale. */
+  private generation = 0;
 
   constructor(private language: () => Language) {
     this.player.onPlaying((playing) => duck(playing));
   }
 
-  private source(): { key: string; urls: ClipUrls } | null {
-    const { sound, voice } = useSettings.getState();
-    if (sound === "off") return null;
-    if (sound === "chime") {
-      if (this.chimes) return { key: "chime", urls: this.chimes };
-      void this.warm();
-    }
+  private voiceSource(): ClipUrls {
     const language = this.language();
-    const id = `${language}:${voice}`;
-    const inMemory = this.voices.get(id);
-    if (inMemory) return { key: `voice:${id}`, urls: inMemory };
+    const { voice } = useSettings.getState();
+    const inMemory = this.voices.get(`${language}:${voice}`);
+    if (inMemory) return inMemory;
     // Not loaded yet: play straight from the network so nothing is missed.
     void this.loadVoice(language, voice);
-    return { key: `voice-direct:${id}`, urls: voiceUrls(language, voice) };
+    return voiceUrls(language, voice);
+  }
+
+  /** What the current settings play; "pending" while the chime renders. */
+  private source(): ClipUrls | "pending" | null {
+    const { sound } = useSettings.getState();
+    if (sound === "off") return null;
+    if (sound === "chime") {
+      if (this.chimes) return this.chimes;
+      if (this.chimes === undefined) {
+        void this.loadChimes();
+        return "pending";
+      }
+    }
+    return this.voiceSource();
+  }
+
+  private loadChimes(): Promise<void> {
+    this.chimesPending ??= loadChimes().then((urls) => {
+      this.chimes = urls;
+    });
+    return this.chimesPending;
   }
 
   private loadVoice(language: Language, voice: Voice): Promise<void> {
@@ -79,16 +98,22 @@ export class Cues {
   /** Prepare whatever the current settings will play. Safe to call often. */
   async warm(): Promise<void> {
     const { sound, voice } = useSettings.getState();
-    if (sound === "chime" && !this.chimes) this.chimes = await loadChimes();
-    if (sound === "voice") await this.loadVoice(this.language(), voice);
+    if (sound === "chime") await this.loadChimes();
+    if (sound === "voice" || (sound === "chime" && this.chimes === null)) {
+      await this.loadVoice(this.language(), voice);
+    }
     const source = this.source();
-    if (source) this.player.preload(source.key, source.urls);
+    if (source && source !== "pending") this.player.preload(source);
   }
 
-  /** Must be called synchronously inside a user gesture (iOS). */
+  /**
+   * Must be called synchronously inside a user gesture (iOS). It unlocks the
+   * players even when cues are off or the chime is still rendering, so that
+   * turning sound on later in the brew works without another gesture.
+   */
   unlock(): void {
     const source = this.source();
-    if (source) this.player.unlock(source.key, source.urls);
+    this.player.unlock(source && source !== "pending" ? source : this.voiceSource());
   }
 
   handle(cue: Cue): void {
@@ -99,13 +124,13 @@ export class Cues {
         break;
       case "approach":
         this.play(cue.isFinish ? "done" : "next", cue.offsetMs);
-        if (cue.offsetMs < 300) this.vibrate(VIBRATE_APPROACH);
+        if (cue.fresh) this.vibrate(VIBRATE_APPROACH);
         break;
       case "step":
         this.vibrate(cue.isFinish ? VIBRATE_DONE : VIBRATE_STEP);
         break;
       case "hush":
-        this.player.stop();
+        this.stop();
         if (canVibrate) navigator.vibrate(0);
         break;
     }
@@ -118,13 +143,27 @@ export class Cues {
   }
 
   stop(): void {
+    this.generation += 1;
     this.player.stop();
   }
 
   private play(clip: Clip, offsetMs: number) {
+    const generation = (this.generation += 1);
     const source = this.source();
     if (!source) return;
-    this.player.play(source.key, source.urls, clip, offsetMs / 1000);
+    if (source !== "pending") {
+      this.player.play(source, clip, offsetMs / 1000);
+      return;
+    }
+    // The chime is still rendering (it takes a moment): play it as soon as it
+    // is ready, from the point the lead-in has reached by then.
+    const requestedAt = performance.now();
+    void this.loadChimes().then(() => {
+      if (generation !== this.generation) return;
+      const late = performance.now() - requestedAt;
+      const ready = this.source();
+      if (ready && ready !== "pending") this.player.play(ready, clip, (offsetMs + late) / 1000);
+    });
   }
 
   private vibrate(pattern: number | number[]) {

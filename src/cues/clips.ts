@@ -5,7 +5,11 @@
  *
  * <audio> elements are used rather than Web Audio because iOS plays them even
  * with the ringer switch on silent. iOS only allows play() on an element that
- * was first played during a user gesture, so `unlock()` must run inside a tap.
+ * has once been played during a user gesture, and that permission stays with
+ * the element when its source changes. So the player keeps exactly one
+ * element per clip ("first", "next", "done"), unlocks all three in the tap
+ * that starts a brew, and afterwards only swaps their sources (voice ↔ chime,
+ * one language ↔ another).
  */
 export type Clip = "first" | "next" | "done";
 export const CLIPS: readonly Clip[] = ["first", "next", "done"];
@@ -30,37 +34,47 @@ function seekTo(audio: HTMLAudioElement, seconds: number): void {
 }
 
 export class ClipPlayer {
-  private sets = new Map<string, Record<Clip, HTMLAudioElement>>();
+  private pool = new Map<Clip, HTMLAudioElement>();
+  private sources = new WeakMap<HTMLAudioElement, string>();
   private unlocked = new WeakSet<HTMLAudioElement>();
   private current: HTMLAudioElement | null = null;
   private listeners = new Set<Listener>();
 
-  private elements(key: string, urls: ClipUrls): Record<Clip, HTMLAudioElement> {
-    let set = this.sets.get(key);
-    if (!set) {
-      const make = (clip: Clip) => {
-        const audio = new Audio(urls[clip]);
-        audio.preload = "auto";
-        const end = () => this.finished(audio);
-        audio.addEventListener("ended", end);
-        audio.addEventListener("pause", end);
-        return audio;
-      };
-      set = { first: make("first"), next: make("next"), done: make("done") };
-      this.sets.set(key, set);
+  private element(clip: Clip): HTMLAudioElement {
+    let audio = this.pool.get(clip);
+    if (!audio) {
+      const created = new Audio();
+      created.preload = "auto";
+      const end = () => this.finished(created);
+      created.addEventListener("ended", end);
+      created.addEventListener("pause", end);
+      this.pool.set(clip, created);
+      audio = created;
     }
-    return set;
+    return audio;
   }
 
-  preload(key: string, urls: ClipUrls): void {
-    this.elements(key, urls);
+  /** The element for `clip`, pointed at `url` unless it is playing right now. */
+  private load(clip: Clip, url: string): HTMLAudioElement {
+    const audio = this.element(clip);
+    if (this.sources.get(audio) !== url && audio !== this.current) {
+      this.sources.set(audio, url);
+      audio.src = url;
+    }
+    return audio;
   }
 
-  /** Call from a user gesture: silently plays and rewinds each clip once. */
-  unlock(key: string, urls: ClipUrls): void {
-    const set = this.elements(key, urls);
+  preload(urls: ClipUrls): void {
+    CLIPS.forEach((clip) => this.load(clip, urls[clip]));
+  }
+
+  /**
+   * Call from a user gesture: silently plays and rewinds each element once.
+   * Any source will do; the permission outlives later source changes.
+   */
+  unlock(urls: ClipUrls): void {
     CLIPS.forEach((clip) => {
-      const audio = set[clip];
+      const audio = this.load(clip, urls[clip]);
       if (this.unlocked.has(audio) || this.current === audio) return;
       audio.muted = true;
       audio.play().then(() => {
@@ -75,9 +89,9 @@ export class ClipPlayer {
     });
   }
 
-  play(key: string, urls: ClipUrls, clip: Clip, offsetSec = 0): void {
-    const audio = this.elements(key, urls)[clip];
+  play(urls: ClipUrls, clip: Clip, offsetSec = 0): void {
     this.stop();
+    const audio = this.load(clip, urls[clip]);
     if (Number.isFinite(audio.duration) && offsetSec >= audio.duration - 0.25) return;
     audio.muted = false;
     seekTo(audio, Math.max(0, offsetSec));

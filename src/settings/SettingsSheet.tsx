@@ -44,6 +44,7 @@ export function SettingsSheet({ open, onClose }: { open: boolean; onClose: () =>
           value={s.sound}
           onChange={(sound) => {
             s.setSound(sound);
+            cues.unlock();
             void cues.warm();
           }}
           options={[
