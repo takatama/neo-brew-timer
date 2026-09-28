@@ -1,0 +1,63 @@
+.button {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--muted);
+  transition: color 200ms ease, background 200ms ease;
+}
+
+.button[data-playing] {
+  color: var(--ink);
+  background: var(--surface-2);
+}
+
+.bars {
+  position: absolute;
+  right: 7px;
+  bottom: 9px;
+  display: none;
+  align-items: flex-end;
+  gap: 1.5px;
+  height: 8px;
+}
+
+.button[data-playing] .bars {
+  display: flex;
+}
+
+.bars i {
+  width: 2px;
+  height: 100%;
+  border-radius: 1px;
+  background: var(--accent);
+  transform-origin: bottom;
+  animation: eq 900ms ease-in-out infinite;
+}
+
+.bars i:nth-child(2) {
+  animation-delay: -300ms;
+}
+
+.bars i:nth-child(3) {
+  animation-delay: -600ms;
+}
+
+.button[data-loading] .bars i {
+  animation-play-state: paused;
+  opacity: 0.5;
+}
+
+@keyframes eq {
+  0%,
+  100% {
+    transform: scaleY(0.35);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}

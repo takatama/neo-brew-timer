@@ -1,0 +1,67 @@
+.section {
+  padding: 16px 0;
+  border-top: 1px solid var(--line);
+}
+
+.section:first-child {
+  border-top: 0;
+  padding-top: 8px;
+}
+
+.heading {
+  margin-bottom: 10px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+:lang(ja) .heading {
+  letter-spacing: 0.04em;
+  font-size: 0.82rem;
+}
+
+.sub {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 14px;
+  margin-top: 10px;
+  padding-left: 14px;
+}
+
+.subLabel {
+  color: var(--ink-2);
+  font-size: 0.9rem;
+  font-weight: 560;
+}
+
+.cueFoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 10px 0 4px;
+}
+
+.hint {
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.45;
+}
+
+.sample {
+  flex: none;
+  min-height: 40px;
+  padding: 6px 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: transparent;
+  font-size: 0.88rem;
+  font-weight: 650;
+}
+
+.developer {
+  opacity: 0.75;
+}

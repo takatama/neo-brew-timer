@@ -7,7 +7,7 @@ const OUTPUTS = [
   { size: 192, path: resolve('public/pwa-192x192.png') },
   { size: 512, path: resolve('public/pwa-512x512.png') },
 ];
-const BACKGROUND_COLOR = '#FBF4F0';
+const BACKGROUND_COLOR = '#f2eadf';
 
 async function generateIcon(sourceBuffer, size) {
   const foregroundBuffer = await sharp(sourceBuffer)

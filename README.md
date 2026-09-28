@@ -1,43 +1,42 @@
 # Neo Brew Timer
 
-**A timer for Tetsu Kasuya's Neo Brew multi-pour drip recipe**
+**A calm, voice-guided timer for Tetsu Kasuya's Neo Brew**
 
-Neo Brew Timer is a React SPA, step-driven brewing timer designed for hands-busy coffee brewing. It guides 10 pours at a 1:15 coffee-to-water ratio, with audio/vibration support so you do not need to keep staring at the screen.
+Neo Brew Timer guides the ten-pour, 1:15 Neo Brew recipe for hands-busy
+brewing. A single dial shows what the scale should read, a ring of seconds shows
+when the next pour comes (the last five in amber, matching the spoken
+"5, 4, 3, 2, 1"), and the dial fills with coffee as the brew progresses.
 
 ## Pages
 
-- `/{ja|en}/intro` – optional recipe introduction (also available from setup details)
-- `/{ja|en}/setup` – beans, total water and start; recipe, instructions and equipment are in the optional Recipe & guide disclosure
-- `/{ja|en}/timer` – main timer UI
+- `/{ja|en}` – Prepare: set the coffee amount (swipe the ruler or use − / +),
+  see water, pours and time, check the three essentials, and start.
+  The Recipe sheet holds the pour schedule, equipment and video.
+- `/{ja|en}/brew` – Brew: the dial, what comes next, the whole-brew rail, and
+  Pause / Resume / Start over.
 
-`/` opens Setup directly in the saved or browser language. Unprefixed links redirect to the matching language URL. Changing language preserves an active brew. The chosen bean amount is remembered on this device.
-A five-second preparation delay is on by default and can be disabled in Settings.
-With the delay off, brewing starts immediately without countdown audio. During
-brewing, large cumulative scale targets stay visible alongside the next pour.
-Pause, resume, reset and leaving an active brew have explicit state feedback.
+`/` opens Prepare in the saved or browser language. Earlier URLs
+(`/setup`, `/intro`, `/timer`) redirect to their new pages.
 
-## Settings
+## Guidance
 
-Accessible from the header on every screen:
+- **Pour cue:** voice (male or female, Japanese or English), a code-generated
+  chime, or off. It starts five seconds before every pour and lands on it.
+  A mute button sits in the brewing screen's top bar.
+- **Vibration** where the browser supports it.
+- **5-second countdown** before the bloom (on by default).
+- **Background music** (off by default) is ducked under cues.
+- The screen stays awake while brewing.
 
-- Language (JA/EN)
-- Notifications (sound / vibrate / none)
-- Voice (male / female)
-- Five-second preparation delay (on by default)
-- Optional BGM (off by default)
-- Debug speed (x5)
-
-Audio files live in:
+Voice files live in:
 
 ```
 public/assets/audio/{lang}-{voice}-{type}.wav
 ```
 
-Where:
-
-- `lang`: `ja` or `en`
-- `voice`: `male` or `female`
-- `type`: `first-step`, `next-step`, or `finish`
+Where `lang` is `ja` or `en`, `voice` is `male` or `female`, and `type` is
+`first-step`, `next-step` or `finish`. Each is "5, 4, 3, 2, 1" followed by a
+message on the sixth second.
 
 ### Regenerating voice assets
 
@@ -89,9 +88,13 @@ npm run typecheck
 npm test
 ```
 
-The browser smoke suite intentionally contains only three journeys: setup to
-completion, pause/resume/reset, and cancel/retry during startup. Keep detailed
-recipe calculations, notification timing, and asynchronous edge cases in Vitest.
+Vitest covers the pure core: the recipe plan and rounding for every bean amount,
+the brew engine (countdown, cue timing and offsets, pause/resume, suspension
+catch-up), the view model, settings migration, wake-lock races, routing and
+translation parity.
+
+The browser suite has three journeys: setup to completion; pause, leave
+confirmation and start over; and cancelling the countdown on a small phone.
 
 ```bash
 # One-time browser setup (also repeat after upgrading Playwright)
@@ -99,28 +102,16 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-For a Linux cloud environment, install dependencies during environment setup:
-
-```bash
-npm ci
-npx playwright install --with-deps chromium
-```
-
-Then run the same `npm run typecheck`, `npm test`, and `npm run test:e2e`
-commands. The cloud instructions are provided for setup; this suite was verified
-locally on Windows, not in a cloud environment.
-
-Playwright builds the app and starts its own preview at `127.0.0.1:4179`; leave
-that port free. It runs one Chromium project at a phone-sized viewport, advances
-browser time, disables audio/BGM, supplies empty news, and blocks other external
-requests. Assertions use visible text and button roles rather than CSS classes
-or screenshot baselines. Failed runs keep screenshots and traces in
-`test-results/` (ignored by Git); inspect a trace with
-`npx playwright show-trace <path-to-trace.zip>`.
+Playwright builds the app and serves it at `127.0.0.1:4179`; leave that port
+free. It uses a phone-sized viewport, controls browser time, turns sound off and
+blocks external requests. Assertions use visible text and roles. Failed runs keep
+traces in `test-results/`.
 
 This is not phone hardware emulation. Real sound, vibration, screen wake lock,
-background/resume behavior, offline updates, and other browsers still need
-separate checks. Do not expand the E2E matrix for every setting or recipe value.
+background behaviour and offline updates need a physical phone.
+
+In development, `__neo.seek(seconds)` in the console jumps a running brew to any
+moment for visual checks.
 
 ## Build
 
@@ -138,24 +129,18 @@ npm run deploy
 
 Make sure your Pages project is configured to deploy the `dist/` directory.
 
-## Project Structure
-
-```
-src/        # React SPA source
-public/     # publicDir (assets)
-```
-
 ## Notes
 
-- The timer keeps the screen awake during playback and releases the wake lock after completion.
-- JSON-LD for the recipe is embedded in the root `index.html` for SEO.
+- JSON-LD for the recipe is embedded in `index.html` for search engines.
+- The display face is Fraunces (SIL OFL), self-hosted so it works offline.
 
 ## Offline use and updates
 
-After an online visit, wait for the offline-ready message on Setup. The timer,
-voice assets and icons are cached; news, YouTube and streamed music need
-a connection. App updates wait until you choose Update app on Setup, so they do
-not reload the page mid-brew. Closing the browser does not save an active brew.
+After one online visit the app, font, voice files and icons are cached and
+"Ready to brew offline" appears on Prepare. Music and the video need a
+connection. Updates are offered only on Prepare, so they never reload the page
+mid-brew. Closing the browser does not save an active brew.
 
 See SPEC.md for the current experience, accessibility decisions and limitations.
 There is no lint command configured; use typecheck, Vitest and the browser suite.
+See [AGENTS.md](./AGENTS.md) for architecture and conventions.

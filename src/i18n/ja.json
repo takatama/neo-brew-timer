@@ -1,0 +1,162 @@
+{
+  "app": {
+    "name": "Neo Brew",
+    "title": "Neo Brew Timer"
+  },
+  "prepare": {
+    "eyebrow": "粕谷哲さんのレシピ",
+    "headline": "迷わず注ぐ、<br/>10回。",
+    "lead": "豆の量を決めるだけ。注ぐタイミングと量を、毎回お知らせします。",
+    "coffee": "豆の量",
+    "doseLabel": "豆の量（グラム）",
+    "less": "1g減らす",
+    "more": "1g増やす",
+    "water": "お湯",
+    "pours": "注ぐ回数",
+    "time": "時間",
+    "poursValue": "{{count}}回 × {{amount}}",
+    "ready": "はじめる前に",
+    "grind": "豆は超粗挽き",
+    "temperature": "お湯は95〜96℃",
+    "tare": "粉を入れてスケールを0gに",
+    "start": "抽出をはじめる",
+    "startCountdown": "5秒のカウントダウンのあと、蒸らしから",
+    "startNow": "押すとすぐ、蒸らしから",
+    "guide": "レシピ",
+    "settings": "設定"
+  },
+  "brew": {
+    "stepOf": "{{n}} / {{total}}",
+    "stepOfLabel": "{{total}}回中 {{n}}回目",
+    "label": {
+      "startingIn": "開始まで",
+      "bloom": "蒸らし",
+      "pour": "合計",
+      "last": "最後の一湯",
+      "paused": "一時停止中",
+      "done": "完成",
+      "drain": "落ちきるのを待つ"
+    },
+    "suffix": "まで",
+    "caption": {
+      "next": "次まで",
+      "finish": "完成まで"
+    },
+    "enjoy": "完成",
+    "card": {
+      "first": "まずは",
+      "next": "次は",
+      "soon": "まもなく",
+      "then": "そのあと",
+      "bloom": "<b>{{amount}}</b>g注いで蒸らす",
+      "pourTo": "<b>{{amount}}</b>gまで注ぐ",
+      "drain": "落ちきるのを待つ",
+      "finishAt": "{{time}}ごろ完成",
+      "added": "+{{amount}}g",
+      "done": "完成",
+      "aroundTime": "{{time}}ごろ",
+      "before": "はじめに"
+    },
+    "start": "スタート",
+    "pause": "一時停止",
+    "resume": "再開",
+    "cancel": "取り消す",
+    "reset": "最初から",
+    "again": "もう一度淹れる",
+    "exit": "抽出を終了",
+    "mute": "合図の音を消す",
+    "unmute": "合図の音を出す",
+    "musicPlay": "BGMを再生",
+    "musicPause": "BGMを一時停止",
+    "done": {
+      "heading": "よいコーヒーの時間を。",
+      "summary": "豆 {{beans}}g · お湯 {{water}}g · {{time}}",
+      "note": "完成時間は目安です。まだ落ちきっていなければ、少しだけ待ちましょう。"
+    },
+    "confirmExit": {
+      "title": "抽出を終了しますか？",
+      "body": "タイマーは止まり、途中から再開できません。",
+      "confirm": "終了する",
+      "cancel": "続ける"
+    },
+    "confirmReset": {
+      "title": "最初からやり直しますか？",
+      "body": "タイマーを0:00に戻します。",
+      "confirm": "最初から",
+      "cancel": "キャンセル"
+    },
+    "announce": {
+      "bloom": "蒸らし。{{amount}}グラムまで注ぎます。",
+      "pour": "{{amount}}グラムまで注ぎます。",
+      "last": "最後の一湯。{{amount}}グラムまで注ぎます。",
+      "soon": "5秒後、{{amount}}グラムまで。",
+      "soonFinish": "5秒後に完成です。",
+      "done": "完成です。よいコーヒーの時間を。",
+      "paused": "一時停止しました。",
+      "countdown": "5秒後に開始します。{{amount}}グラム注いで蒸らします。",
+      "drain": "落ちきるのを待ちます。"
+    },
+    "a11y": {
+      "target": "{{label}}。スケールの目標は合計{{amount}}グラム。",
+      "countdown": "開始まで{{seconds}}秒",
+      "next": "次に注ぐまで{{time}}。",
+      "finish": "完成まで{{time}}。",
+      "progress": "抽出の進み具合 {{elapsed}} / {{total}}"
+    }
+  },
+  "settings": {
+    "title": "設定",
+    "language": "言語",
+    "cue": "注ぐ合図",
+    "cueHint": "注ぐ5秒前からカウントダウンします。",
+    "voice": "音声",
+    "chime": "チャイム",
+    "off": "なし",
+    "voiceType": "声",
+    "male": "男性",
+    "female": "女性",
+    "sample": "試しに聞く",
+    "vibrate": "振動",
+    "countdown": "開始前に5秒カウントダウン",
+    "music": "BGM",
+    "musicHint": "抽出中に今日のプレイリストを流します（通信します）。",
+    "developer": "開発者向け",
+    "speed": "タイマーを5倍速で進める",
+    "close": "閉じる"
+  },
+  "guide": {
+    "title": "Neo Brew",
+    "byline": "2016年 World Brewers Cup 王者、粕谷哲さんのレシピ",
+    "intro": "HARIO V60 ドリッパー Neo で淹れる、比率1:15・10回注ぎのレシピです。蒸らしのあと15秒ごとに少しずつ注ぎ、約3分30秒で完成します。",
+    "numbersTitle": "数字の読み方",
+    "numbers": "表示される数字は、スケールに表示されるお湯の合計です（1回に注ぐ量ではありません）。スケールは粉を入れたあとに一度だけ0gに合わせ、途中ではリセットしません。",
+    "scheduleTitle": "豆{{beans}}gの注ぎ方",
+    "colTime": "時間",
+    "colScale": "スケール",
+    "colAdd": "注ぐ量",
+    "bloom": "蒸らし",
+    "finish": "完成",
+    "needTitle": "用意するもの",
+    "videoTitle": "淹れ方を動画で",
+    "videoFrameTitle": "Neo Brewの淹れ方",
+    "affiliate": "リンク先はAmazonです。Amazonのアソシエイトとして、Neo Brew Timerは適格販売により収入を得ています。",
+    "close": "閉じる",
+    "items": {
+      "dripper": "HARIO V60 ドリッパー Neo",
+      "filter": "V60 ペーパーフィルター",
+      "scale": "コーヒースケール",
+      "kettle": "ドリップケトル",
+      "grinder": "グラインダー",
+      "beans": "浅煎りのコーヒー豆"
+    }
+  },
+  "pwa": {
+    "ready": "オフラインでも使えます",
+    "update": "新しいバージョンがあります",
+    "apply": "更新"
+  },
+  "error": {
+    "title": "画面を表示できませんでした",
+    "back": "最初の画面へ"
+  }
+}

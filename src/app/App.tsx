@@ -1,127 +1,66 @@
-import { useEffect, useMemo, useState } from "react";
-import { createBrowserRouter, RouterProvider, Navigate, useLocation } from "react-router-dom";
-import { Header } from "../shared/components/Header";
-import { IntroPage } from "./routes/IntroPage";
-import { SetupPage } from "./routes/SetupPage";
-import { TimerPage } from "./routes/TimerPage";
-import { useSettingsStore } from "../features/settings/store";
-import { useSessionStore } from "../features/timer/store";
-import { getActiveBgmDayOfWeek, getActiveBgmTracks } from "../features/timer/data/bgm";
-import { getSavedBgmTrackIndex, setSavedBgmTrackIndex } from "../features/timer/data/bgm/playbackProgress";
-import { FloatingMiniPlayer } from "../features/timer/components/FloatingMiniPlayer";
-import { ErrorBoundary } from "../shared/components/ErrorBoundary";
-import { OfflineNotice } from "../shared/components/OfflineNotice";
-import { DisplayLanguageProvider } from "../shared/i18n/DisplayLanguage";
-import {
-  choosePreferredLanguage,
-  resolveAppRoute,
-  type AppPage,
-} from "../shared/i18n/routing";
-import styles from "./App.module.css";
-
-function AppShell({ page }: { page: AppPage }) {
-  const bgmEnabled = useSettingsStore((s) => s.bgmEnabled);
-  const debugEnabled = useSettingsStore((s) => s.debugEnabled);
-  const debugBgmDayOfWeek = useSettingsStore((s) => s.debugBgmDayOfWeek);
-  const currentBgmDayOfWeek = useMemo(
-    () => getActiveBgmDayOfWeek({ debugEnabled, debugDayOfWeek: debugBgmDayOfWeek }),
-    [debugEnabled, debugBgmDayOfWeek],
-  );
-  const tracks = useMemo(
-    () => getActiveBgmTracks({ debugEnabled, debugDayOfWeek: debugBgmDayOfWeek }),
-    [debugEnabled, debugBgmDayOfWeek],
-  );
-  const [trackIndex, setTrackIndex] = useState(0);
-
-  useEffect(() => {
-    if (tracks.length === 0) {
-      setTrackIndex(0);
-      return;
-    }
-
-    const savedTrackIndex = getSavedBgmTrackIndex(currentBgmDayOfWeek);
-    setTrackIndex(savedTrackIndex % tracks.length);
-  }, [currentBgmDayOfWeek, tracks.length]);
-
-  const currentTrack = tracks[trackIndex] ?? tracks[0];
-  const isSetupPage = page === "setup";
-  const isTimerPage = page === "timer";
-
-  const shouldShowMiniPlayer =
-    Boolean(currentTrack) &&
-    bgmEnabled &&
-    (isTimerPage || isSetupPage);
-
-  const handleNextTrack = (trigger: "manual" | "ended") => {
-    if (tracks.length <= 1) {
-      return;
-    }
-
-    setTrackIndex((prevIndex) => {
-      const nextIndex = (prevIndex + 1) % tracks.length;
-      if (trigger === "ended") {
-        setSavedBgmTrackIndex(currentBgmDayOfWeek, nextIndex);
-      }
-      return nextIndex;
-    });
-  };
-
-  const handleTrackPlaybackStarted = () => {
-    if (tracks.length === 0) {
-      return;
-    }
-
-    const nextIndex = (trackIndex + 1) % tracks.length;
-    setSavedBgmTrackIndex(currentBgmDayOfWeek, nextIndex);
-  };
-
-  return (
-    <div className={`${styles.app} ${shouldShowMiniPlayer && !isTimerPage ? styles.withMiniPlayer : ""}`}>
-      <Header />
-      <OfflineNotice visible={isSetupPage} />
-      <ErrorBoundary>
-        {page === "intro" && <IntroPage />}
-        {page === "setup" && <SetupPage />}
-        {page === "timer" && <TimerPage />}
-      </ErrorBoundary>
-      {shouldShowMiniPlayer && currentTrack && (
-        <FloatingMiniPlayer
-          inline={isTimerPage}
-          track={currentTrack}
-          onNextTrack={handleNextTrack}
-          onTrackPlaybackStarted={handleTrackPlaybackStarted}
-        />
-      )}
-    </div>
-  );
-}
+import { Component, type ReactNode } from "react";
+import { createBrowserRouter, Navigate, RouterProvider, useLocation } from "react-router-dom";
+import i18n from "../i18n/config";
+import { DisplayLanguageProvider } from "../i18n/DisplayLanguage";
+import { choosePreferredLanguage, resolveRoute } from "../i18n/routing";
+import { useSettings } from "../settings/store";
+import { BrewPage } from "../pages/BrewPage";
+import { PreparePage } from "../pages/PreparePage";
 
 function RoutedApp() {
   const location = useLocation();
-  const introSeen = useSessionStore((state) => state.introSeen);
-  const savedLanguage = useSettingsStore((state) => state.language);
-  const preferredLanguage = choosePreferredLanguage(
-    savedLanguage,
-    typeof navigator === "undefined" ? undefined : navigator.language,
-  );
-  const route = resolveAppRoute(
-    location.pathname,
-    location.search,
-    location.hash,
-    preferredLanguage,
-    introSeen,
-  );
+  const saved = useSettings((s) => s.language);
+  const preferred = choosePreferredLanguage(saved, typeof navigator === "undefined" ? undefined : navigator.language);
+  const route = resolveRoute(location.pathname, location.search, location.hash, preferred);
 
-  if (route.redirectTo) {
-    return <Navigate to={route.redirectTo} replace />;
-  }
+  if (route.redirectTo) return <Navigate to={route.redirectTo} replace />;
 
   return (
     <DisplayLanguageProvider language={route.language}>
-      <AppShell page={route.page} />
+      <ErrorBoundary>
+        {route.page === "brew" ? <BrewPage /> : <PreparePage key="prepare" />}
+      </ErrorBoundary>
     </DisplayLanguageProvider>
   );
 }
 
+class ErrorBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
+  state = { failed: false };
+
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+
+  render() {
+    if (!this.state.failed) return this.props.children;
+    return (
+      <div style={{ display: "grid", placeItems: "center", minHeight: "100dvh", padding: 32, textAlign: "center" }}>
+        <div>
+          <p style={{ fontFamily: "var(--font-display)", fontSize: "1.5rem" }}>{i18n.t("error.title")}</p>
+          <button
+            type="button"
+            onClick={() => window.location.assign("/")}
+            style={{
+              marginTop: 20,
+              minHeight: 52,
+              padding: "0 24px",
+              border: 0,
+              borderRadius: 999,
+              background: "var(--primary)",
+              color: "var(--primary-ink)",
+              fontWeight: 700,
+            }}
+          >
+            {i18n.t("error.back")}
+          </button>
+        </div>
+      </div>
+    );
+  }
+}
+
 const router = createBrowserRouter([{ path: "*", element: <RoutedApp /> }]);
-export function App() { return <RouterProvider router={router} />; }
+
+export function App() {
+  return <RouterProvider router={router} />;
+}

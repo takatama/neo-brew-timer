@@ -15,8 +15,8 @@ export default defineConfig({
         name: 'Neo Brew Timer',
         short_name: 'Neo Brew',
         description: "A timer for Tetsu Kasuya's Neo Brew multi-pour drip recipe",
-        theme_color: '#6d4c41',
-        background_color: '#FBF4F0',
+        theme_color: '#f2eadf',
+        background_color: '#f2eadf',
         display: 'standalone',
         start_url: '/',
         icons: [
@@ -35,27 +35,7 @@ export default defineConfig({
         ],
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,png,jpg,wav,json,svg}'],
-        runtimeCaching: [
-          {
-            urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'google-fonts-cache',
-              expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 * 365 },
-              cacheableResponse: { statuses: [0, 200] },
-            },
-          },
-          {
-            urlPattern: /^https:\/\/fonts\.gstatic\.com\/.*/i,
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'gstatic-fonts-cache',
-              expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 * 365 },
-              cacheableResponse: { statuses: [0, 200] },
-            },
-          },
-        ],
+        globPatterns: ['**/*.{js,css,html,png,wav,svg,woff2}'],
       },
     }),
   ],

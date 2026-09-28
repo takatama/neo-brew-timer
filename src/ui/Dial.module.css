@@ -1,0 +1,281 @@
+.dial {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  isolation: isolate;
+}
+
+/* A warm halo that breathes once per second during the final five. */
+.dial::before {
+  content: "";
+  position: absolute;
+  inset: 4%;
+  z-index: -1;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, var(--accent-soft), transparent 72%);
+  opacity: 0;
+  transform: scale(0.94);
+  transition: opacity 400ms var(--ease-out), transform 400ms var(--ease-out);
+}
+
+.dial[data-approaching]::before {
+  opacity: 1;
+  transform: scale(1.12);
+  animation: breathe 1s var(--ease-out) infinite;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.tickDim {
+  fill: none;
+  stroke: var(--tick-dim);
+  stroke-width: 7;
+  stroke-linecap: round;
+}
+
+.tickLit,
+.tickLead {
+  fill: none;
+  stroke-width: 7;
+  stroke-linecap: round;
+  transition: stroke 300ms ease, opacity 300ms ease;
+}
+
+.tickLit {
+  stroke: var(--tick-lit);
+}
+
+.tickLead {
+  stroke: var(--accent);
+}
+
+.lit {
+  transition: opacity 300ms ease;
+}
+
+.dial[data-tone="ready"] .lit {
+  opacity: 0.32;
+}
+
+.dial[data-tone="paused"] .lit {
+  opacity: 0.4;
+}
+
+.dial[data-tone="done"] .lit,
+.dial[data-tone="done"] .tickDim {
+  opacity: 0;
+}
+
+.tickDim {
+  transition: opacity 600ms ease;
+}
+
+.cup {
+  opacity: 0;
+  transition: opacity 900ms var(--ease-out) 150ms;
+  pointer-events: none;
+}
+
+.dial[data-tone="done"] .cup {
+  opacity: 1;
+}
+
+.cupWall {
+  fill: none;
+  stroke: var(--surface);
+  stroke-width: 26;
+  filter: drop-shadow(0 6px 10px rgba(58, 37, 26, 0.18));
+}
+
+.crema {
+  fill: none;
+  stroke: var(--crema);
+  stroke-width: 7;
+  opacity: 0.45;
+  filter: blur(2.5px);
+}
+
+.shine {
+  fill: #fff;
+  opacity: 0.1;
+  filter: blur(6px);
+}
+
+.dial[data-tone="countdown"] .tickLit,
+.dial[data-approaching] .tickLead {
+  stroke: var(--accent);
+}
+
+.hand {
+  fill: var(--surface);
+  stroke: var(--tick-lit);
+  stroke-width: 2.4;
+  opacity: 0;
+  transition: opacity 240ms ease;
+}
+
+.dial[data-tone="brewing"] .hand {
+  opacity: 1;
+}
+
+.dial[data-approaching] .hand {
+  stroke: var(--accent);
+}
+
+.rim {
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 1;
+}
+
+.liquidBack {
+  fill: var(--crema);
+  opacity: 0.55;
+}
+
+/* ---------- Text ---------- */
+
+.label,
+.caption {
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 650;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+:lang(ja) .label,
+:lang(ja) .caption {
+  letter-spacing: 0.06em;
+  font-size: 15px;
+}
+
+.caption {
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+}
+
+:lang(ja) .caption {
+  font-size: 13px;
+}
+
+.value {
+  transform-box: fill-box;
+  transform-origin: 50% 60%;
+  animation: settle 280ms var(--ease-out);
+  font-family: var(--font-display);
+  font-variation-settings: "SOFT" 100, "WONK" 0, "opsz" 144;
+  font-weight: 500;
+  letter-spacing: -0.035em;
+}
+
+.unit {
+  font-size: 0.4em;
+  font-weight: 450;
+  letter-spacing: 0;
+}
+
+.suffix {
+  font-family: var(--font-ui);
+  font-size: 0.2em;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.captionValue {
+  font-family: var(--font-display);
+  font-variation-settings: "SOFT" 100, "WONK" 0, "opsz" 36;
+  font-weight: 500;
+}
+
+.inkText .label {
+  fill: var(--muted);
+}
+
+.inkText .value {
+  fill: var(--ink);
+}
+
+.inkText .caption {
+  fill: var(--muted);
+}
+
+.inkText .captionValue {
+  fill: var(--ink-2);
+}
+
+.creamText .label,
+.creamText .caption {
+  fill: color-mix(in srgb, var(--on-coffee) 78%, transparent);
+}
+
+.creamText .value,
+.creamText .captionValue {
+  fill: var(--on-coffee);
+}
+
+.dial[data-approaching] .inkText .captionValue,
+.dial[data-approaching] .inkText .caption,
+.dial[data-tone="countdown"] .inkText .value,
+.dial[data-tone="countdown"] .inkText .label {
+  fill: var(--accent-ink);
+}
+
+.dial[data-tone="paused"] .inkText .label {
+  fill: var(--accent-ink);
+}
+
+.dial[data-tone="done"] .value {
+  font-weight: 420;
+  letter-spacing: -0.02em;
+}
+
+@keyframes breathe {
+  0% {
+    transform: scale(1.04);
+    opacity: 0.6;
+  }
+  30% {
+    transform: scale(1.14);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.06);
+    opacity: 0.7;
+  }
+}
+
+/* A new target arrives with a small settle, never counting through values. */
+@keyframes settle {
+  from {
+    opacity: 0.4;
+    transform: scale(0.95);
+  }
+}
+
+.ripples ellipse {
+  fill: none;
+  stroke: var(--on-coffee);
+  stroke-width: 1.6;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ripple 1.5s var(--ease-out) forwards;
+}
+
+@keyframes ripple {
+  0% {
+    opacity: 0.55;
+    transform: scale(0.15);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.35);
+  }
+}

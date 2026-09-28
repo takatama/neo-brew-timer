@@ -1,0 +1,85 @@
+.ruler {
+  position: relative;
+  height: 64px;
+  border-radius: var(--radius-md);
+  outline-offset: 4px;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 22%, #000 78%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 22%, #000 78%, transparent);
+}
+
+.scroller {
+  height: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  touch-action: pan-x;
+  cursor: grab;
+  overscroll-behavior-x: contain;
+}
+
+.scroller::-webkit-scrollbar {
+  display: none;
+}
+
+.scale {
+  display: flex;
+  width: max-content;
+  height: 100%;
+  /* Percent padding resolves against the scroller, centring the first cell. */
+  padding: 0 calc(50% - var(--tick) / 2);
+}
+
+.cell {
+  position: relative;
+  flex: none;
+  width: var(--tick);
+  height: 100%;
+  scroll-snap-align: center;
+}
+
+.tick {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  width: 2px;
+  height: 16px;
+  margin-left: -1px;
+  border-radius: 2px;
+  background: var(--line-strong);
+  transition: background 160ms ease;
+}
+
+.cell[data-major] .tick {
+  height: 24px;
+  background: color-mix(in srgb, var(--ink) 38%, transparent);
+}
+
+.cell[data-active] .tick {
+  background: transparent;
+}
+
+.number {
+  position: absolute;
+  top: 34px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+
+.needle {
+  position: absolute;
+  top: 2px;
+  left: 50%;
+  width: 3px;
+  height: 32px;
+  margin-left: -1.5px;
+  border-radius: 3px;
+  background: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--surface) 80%, transparent);
+  pointer-events: none;
+}
