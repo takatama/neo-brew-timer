@@ -1,8 +1,8 @@
 import type { Cue } from "../brew/engine";
-import type { Language } from "../settings/store";
+import type { Language, Voice } from "../settings/store";
 import { useSettings } from "../settings/store";
 import { duck } from "../music/player";
-import { ClipPlayer, type Clip, type ClipUrls } from "./clips";
+import { CLIPS, ClipPlayer, type Clip, type ClipUrls } from "./clips";
 import { loadChimes } from "./chime";
 
 /**
@@ -11,9 +11,23 @@ import { loadChimes } from "./chime";
  */
 const VOICE_SUFFIX: Record<Clip, string> = { first: "first-step", next: "next-step", done: "finish" };
 
-function voiceUrls(language: Language, voice: "male" | "female"): ClipUrls {
+function voiceUrls(language: Language, voice: Voice): ClipUrls {
   const url = (clip: Clip) => `/assets/audio/${language}-${voice}-${VOICE_SUFFIX[clip]}.wav`;
   return { first: url("first"), next: url("next"), done: url("done") };
+}
+
+/**
+ * Reads the clips into memory and returns blob: URLs. A resumed lead-in must
+ * start mid-clip, and media served by the offline cache (or any server without
+ * range requests) cannot seek; in-memory blobs always can.
+ */
+async function loadIntoMemory(urls: ClipUrls): Promise<ClipUrls> {
+  const entries = await Promise.all(CLIPS.map(async (clip) => {
+    const response = await fetch(urls[clip]);
+    if (!response.ok) throw new Error(`Could not load ${urls[clip]}`);
+    return [clip, URL.createObjectURL(await response.blob())] as const;
+  }));
+  return Object.fromEntries(entries) as ClipUrls;
 }
 
 const VIBRATE_APPROACH = 60;
@@ -25,6 +39,8 @@ export const canVibrate = typeof navigator !== "undefined" && typeof navigator.v
 export class Cues {
   private player = new ClipPlayer();
   private chimes: ClipUrls | null = null;
+  private voices = new Map<string, ClipUrls>();
+  private loading = new Map<string, Promise<void>>();
 
   constructor(private language: () => Language) {
     this.player.onPlaying((playing) => duck(playing));
@@ -38,14 +54,33 @@ export class Cues {
       void this.warm();
     }
     const language = this.language();
-    return { key: `voice:${language}:${voice}`, urls: voiceUrls(language, voice) };
+    const id = `${language}:${voice}`;
+    const inMemory = this.voices.get(id);
+    if (inMemory) return { key: `voice:${id}`, urls: inMemory };
+    // Not loaded yet: play straight from the network so nothing is missed.
+    void this.loadVoice(language, voice);
+    return { key: `voice-direct:${id}`, urls: voiceUrls(language, voice) };
+  }
+
+  private loadVoice(language: Language, voice: Voice): Promise<void> {
+    const id = `${language}:${voice}`;
+    if (this.voices.has(id)) return Promise.resolve();
+    let pending = this.loading.get(id);
+    if (!pending) {
+      pending = loadIntoMemory(voiceUrls(language, voice))
+        .then((urls) => void this.voices.set(id, urls))
+        .catch(() => undefined)
+        .finally(() => this.loading.delete(id));
+      this.loading.set(id, pending);
+    }
+    return pending;
   }
 
   /** Prepare whatever the current settings will play. Safe to call often. */
   async warm(): Promise<void> {
-    if (useSettings.getState().sound === "chime" && !this.chimes) {
-      this.chimes = await loadChimes();
-    }
+    const { sound, voice } = useSettings.getState();
+    if (sound === "chime" && !this.chimes) this.chimes = await loadChimes();
+    if (sound === "voice") await this.loadVoice(this.language(), voice);
     const source = this.source();
     if (source) this.player.preload(source.key, source.urls);
   }

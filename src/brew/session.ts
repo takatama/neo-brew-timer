@@ -39,6 +39,8 @@ export const useBrew = create<BrewState>(() => ({
 
 const language = (): Language => (i18n.resolvedLanguage === "ja" ? "ja" : "en");
 export const cues = new Cues(language);
+// Voice clips are per language; have the new ones ready before the next brew.
+i18n.on("languageChanged", () => void cues.warm());
 
 let wakeLock: WakeLockController | null = null;
 const getWakeLock = () => {

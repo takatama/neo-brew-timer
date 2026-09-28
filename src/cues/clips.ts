@@ -14,6 +14,21 @@ export type ClipUrls = Record<Clip, string>;
 
 type Listener = (playing: boolean) => void;
 
+const HAVE_METADATA = 1;
+
+/** Seek now if the clip's length is known, otherwise as soon as it is. */
+function seekTo(audio: HTMLAudioElement, seconds: number): void {
+  const apply = () => {
+    try {
+      audio.currentTime = seconds;
+    } catch {
+      // Some browsers throw while metadata is still loading; retried below.
+    }
+  };
+  if (audio.readyState >= HAVE_METADATA) apply();
+  else audio.addEventListener("loadedmetadata", apply, { once: true });
+}
+
 export class ClipPlayer {
   private sets = new Map<string, Record<Clip, HTMLAudioElement>>();
   private unlocked = new WeakSet<HTMLAudioElement>();
@@ -65,11 +80,7 @@ export class ClipPlayer {
     this.stop();
     if (Number.isFinite(audio.duration) && offsetSec >= audio.duration - 0.25) return;
     audio.muted = false;
-    try {
-      audio.currentTime = Math.max(0, offsetSec);
-    } catch {
-      // Seeking before metadata has loaded can throw in some browsers.
-    }
+    seekTo(audio, Math.max(0, offsetSec));
     this.current = audio;
     this.emit(true);
     audio.play().then(() => this.unlocked.add(audio)).catch(() => this.finished(audio));
