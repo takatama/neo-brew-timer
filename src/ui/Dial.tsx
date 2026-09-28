@@ -275,12 +275,6 @@ export function Dial(props: DialProps) {
         </g>
         <circle cx={C} cy={C} r={FACE_R} className={styles.rim} />
 
-        {/* When done, the ring of seconds becomes the rim of a full cup. */}
-        <g className={styles.cup}>
-          <circle cx={C} cy={C} r={RING_R - 3} className={styles.cupWall} />
-          <circle cx={C} cy={C} r={FACE_R - 7} className={styles.crema} />
-          <ellipse cx={C - 42} cy={C - 52} rx={46} ry={20} transform={`rotate(-32 ${C - 42} ${C - 52})`} className={styles.shine} />
-        </g>
         <circle ref={hand} className={styles.hand} r={3.4} cx={C} cy={C - RING_R} />
       </svg>
     </div>

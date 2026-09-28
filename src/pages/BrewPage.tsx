@@ -8,6 +8,7 @@ import { useDisplayLanguage } from "../i18n/DisplayLanguage";
 import { localizedPath, resolveRoute } from "../i18n/routing";
 import { useBeans, useSettings } from "../settings/store";
 import { Dial, type DialTone } from "../ui/Dial";
+import { FinishedCup } from "../ui/FinishedCup";
 import { PourRail } from "../ui/PourRail";
 import { MusicButton } from "../ui/MusicButton";
 import { ConfirmDialog } from "../ui/Sheet";
@@ -140,7 +141,7 @@ export function BrewPage() {
       <main className={styles.stage}>
         <div className={styles.dialArea}>
           <div className={styles.dialBox}>
-            {done && <Steam />}
+            {done ? <FinishedCup /> : (
             <Dial
               tone={tone}
               label={label}
@@ -156,6 +157,7 @@ export function BrewPage() {
               getLevel={brew.level}
               stepKey={started ? String(current.index) : "pre"}
             />
+            )}
             <p className="visually-hidden" role="timer" aria-live="off">
               {tone === "countdown"
                 ? t("brew.a11y.countdown", { seconds: view.countdownSeconds })
@@ -309,21 +311,6 @@ function NextCard({ view, duration }: { view: BrewView; duration: number }) {
       <span className={styles.what}>{what}</span>
       <span className={styles.meta}>{meta}</span>
     </section>
-  );
-}
-
-/** Steam that curls up from a finished cup. */
-function Steam() {
-  return (
-    <svg className={styles.steam} viewBox="0 0 120 80" aria-hidden="true" focusable="false">
-      {[28, 60, 92].map((x, i) => (
-        <path
-          key={x}
-          d={`M${x} 76c-9-11 9-19 0-31s9-20 0-31`}
-          style={{ animationDelay: `${i * -1.1}s` }}
-        />
-      ))}
-    </svg>
   );
 }
 

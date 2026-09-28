@@ -35,6 +35,12 @@
   --primary-ink: #fbf3e8;
   --dial-face: #f8f1e7;
   --thumb: #fffdf9;
+  --cup-light: #ffffff;
+  --cup: #f7f1e8;
+  --cup-shade: #ddd0bf;
+  --cup-line: rgba(64, 42, 28, 0.14);
+  --cup-cast: rgba(58, 37, 26, 0.3);
+  --steam: rgba(118, 95, 80, 0.34);
   --tick-dim: rgba(64, 42, 28, 0.11);
   --tick-lit: #6a4029;
 
@@ -80,6 +86,12 @@
     --primary-ink: #231811;
     --dial-face: #1c1510;
     --thumb: #3b2d24;
+    --cup-light: #f6eee4;
+    --cup: #e7dccd;
+    --cup-shade: #b8a591;
+    --cup-line: rgba(0, 0, 0, 0.28);
+    --cup-cast: rgba(0, 0, 0, 0.6);
+    --steam: rgba(246, 236, 222, 0.34);
     --tick-dim: rgba(243, 232, 217, 0.1);
     --tick-lit: #e6cdb0;
 

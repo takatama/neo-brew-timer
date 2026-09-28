@@ -77,8 +77,11 @@ States:
 | Brewing | Target, ticking ring | Next / Get ready | Pause |
 | Paused | "Paused", frozen liquid, muted ring | Next | Start over · Resume |
 | Draining | Let it drain · 300g (15 s after the last pour began) | Next: Done ~3:30 | Pause |
-| Done | A full cup seen from above, with steam; ring becomes the rim | "Enjoy your coffee." + summary | Brew again |
+| Done | The full dial tilts into the surface of a porcelain cup on a saucer, seen from a three-quarter angle, with soft steam rising | "Enjoy your coffee." + summary | Brew again |
 
+- The finish is continuous with the brew: during the drain the face is full of
+  coffee, and that same circle tilts back into the cup, so the dial you have
+  been filling is revealed to be the cup.
 - At the instant brewing starts, the countdown's "1" is replaced directly by the
   first target. No zero, no intermediate state.
 - Pause freezes time and cues. Resuming inside a lead-in resumes the spoken
@@ -119,8 +122,8 @@ States:
 - Native modal dialogs for focus containment, Escape and focus restoration.
   Segmented controls support arrow keys. Touch targets are at least 44 px.
 - Text meets WCAG AA contrast in light and dark mode.
-- Reduced motion: no liquid drift, slosh, ripples, halo or settle; the level
-  jumps. All information remains.
+- Reduced motion: no liquid drift, slosh, ripples, halo, settle or tilt, and the
+  steam stands still; the level jumps. All information remains.
 - Time is derived from a wall-clock anchor, so a throttled or suspended page
   catches up exactly; a long gap does not replay a burst of stale cues.
 - Storage failures never prevent choosing an amount or brewing.

@@ -75,37 +75,6 @@
   transition: opacity 600ms ease;
 }
 
-.cup {
-  opacity: 0;
-  transition: opacity 900ms var(--ease-out) 150ms;
-  pointer-events: none;
-}
-
-.dial[data-tone="done"] .cup {
-  opacity: 1;
-}
-
-.cupWall {
-  fill: none;
-  stroke: var(--surface);
-  stroke-width: 26;
-  filter: drop-shadow(0 6px 10px rgba(58, 37, 26, 0.18));
-}
-
-.crema {
-  fill: none;
-  stroke: var(--crema);
-  stroke-width: 7;
-  opacity: 0.45;
-  filter: blur(2.5px);
-}
-
-.shine {
-  fill: #fff;
-  opacity: 0.1;
-  filter: blur(6px);
-}
-
 .dial[data-tone="countdown"] .tickLit,
 .dial[data-approaching] .tickLead {
   stroke: var(--accent);

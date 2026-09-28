@@ -166,6 +166,7 @@
 }
 
 .doneHeading {
+  text-wrap: balance;
   font-family: var(--font-display);
   font-variation-settings: "SOFT" 100, "WONK" 1;
   font-size: clamp(1.9rem, 8vw, 2.3rem);
@@ -175,8 +176,11 @@
 }
 
 :lang(ja) .doneHeading {
+  font-size: clamp(1.45rem, 6.2vw, 1.85rem);
   font-weight: 600;
   letter-spacing: 0.02em;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
 }
 
 .doneSummary {
@@ -192,25 +196,6 @@
   color: var(--muted);
   font-size: 0.86rem;
   line-height: 1.5;
-}
-
-.steam {
-  position: absolute;
-  left: 50%;
-  bottom: 93%;
-  width: 38%;
-  transform: translateX(-50%);
-  overflow: visible;
-  pointer-events: none;
-}
-
-.steam path {
-  fill: none;
-  stroke: var(--muted);
-  stroke-width: 3;
-  stroke-linecap: round;
-  opacity: 0;
-  animation: steam 3.3s ease-in-out infinite;
 }
 
 /* ---------- Rail ---------- */
@@ -331,25 +316,5 @@
   from {
     opacity: 0;
     transform: translateY(8px);
-  }
-}
-
-@keyframes steam {
-  0% {
-    opacity: 0;
-    transform: translateY(10px) scaleY(0.85);
-  }
-  35% {
-    opacity: 0.55;
-  }
-  100% {
-    opacity: 0;
-    transform: translateY(-16px) scaleY(1.1);
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  .page {
-    --approach-mix: 20%;
   }
 }
