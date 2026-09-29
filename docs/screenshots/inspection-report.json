@@ -1,0 +1,569 @@
+[
+  {
+    "language": "ja",
+    "width": 390,
+    "name": "setup",
+    "height": 844,
+    "scrollWidth": 390,
+    "scrollHeight": 1035,
+    "scrollY": 0
+  },
+  {
+    "language": "ja",
+    "width": 390,
+    "name": "settings",
+    "height": 844,
+    "scrollWidth": 390,
+    "scrollHeight": 1035,
+    "scrollY": 0
+  },
+  {
+    "language": "ja",
+    "width": 390,
+    "name": "start",
+    "height": 844,
+    "scrollWidth": 390,
+    "scrollHeight": 844,
+    "scrollY": 0
+  },
+  {
+    "language": "ja",
+    "width": 390,
+    "name": "bloom",
+    "height": 844,
+    "scrollWidth": 390,
+    "scrollHeight": 844,
+    "scrollY": 0
+  },
+  {
+    "language": "ja",
+    "width": 390,
+    "name": "pour",
+    "height": 844,
+    "scrollWidth": 390,
+    "scrollHeight": 844,
+    "scrollY": 0
+  },
+  {
+    "language": "ja",
+    "width": 390,
+    "name": "imminent",
+    "height": 844,
+    "scrollWidth": 390,
+    "scrollHeight": 844,
+    "scrollY": 0
+  },
+  {
+    "language": "ja",
+    "width": 390,
+    "name": "paused",
+    "height": 844,
+    "scrollWidth": 390,
+    "scrollHeight": 844,
+    "scrollY": 0
+  },
+  {
+    "language": "ja",
+    "width": 390,
+    "name": "last",
+    "height": 844,
+    "scrollWidth": 390,
+    "scrollHeight": 844,
+    "scrollY": 0
+  },
+  {
+    "language": "ja",
+    "width": 390,
+    "name": "finish",
+    "height": 844,
+    "scrollWidth": 390,
+    "scrollHeight": 902,
+    "scrollY": 0
+  },
+  {
+    "language": "en",
+    "width": 390,
+    "name": "setup",
+    "height": 844,
+    "scrollWidth": 390,
+    "scrollHeight": 1035,
+    "scrollY": 0
+  },
+  {
+    "language": "en",
+    "width": 390,
+    "name": "settings",
+    "height": 844,
+    "scrollWidth": 390,
+    "scrollHeight": 1035,
+    "scrollY": 0
+  },
+  {
+    "language": "en",
+    "width": 390,
+    "name": "start",
+    "height": 844,
+    "scrollWidth": 390,
+    "scrollHeight": 844,
+    "scrollY": 0
+  },
+  {
+    "language": "en",
+    "width": 390,
+    "name": "bloom",
+    "height": 844,
+    "scrollWidth": 390,
+    "scrollHeight": 844,
+    "scrollY": 0
+  },
+  {
+    "language": "en",
+    "width": 390,
+    "name": "pour",
+    "height": 844,
+    "scrollWidth": 390,
+    "scrollHeight": 844,
+    "scrollY": 0
+  },
+  {
+    "language": "en",
+    "width": 390,
+    "name": "imminent",
+    "height": 844,
+    "scrollWidth": 390,
+    "scrollHeight": 844,
+    "scrollY": 0
+  },
+  {
+    "language": "en",
+    "width": 390,
+    "name": "paused",
+    "height": 844,
+    "scrollWidth": 390,
+    "scrollHeight": 844,
+    "scrollY": 0
+  },
+  {
+    "language": "en",
+    "width": 390,
+    "name": "last",
+    "height": 844,
+    "scrollWidth": 390,
+    "scrollHeight": 844,
+    "scrollY": 0
+  },
+  {
+    "language": "en",
+    "width": 390,
+    "name": "finish",
+    "height": 844,
+    "scrollWidth": 390,
+    "scrollHeight": 902,
+    "scrollY": 0
+  },
+  {
+    "language": "ja",
+    "width": 320,
+    "name": "setup",
+    "height": 568,
+    "scrollWidth": 320,
+    "scrollHeight": 753,
+    "scrollY": 0
+  },
+  {
+    "language": "ja",
+    "width": 320,
+    "name": "settings",
+    "height": 568,
+    "scrollWidth": 320,
+    "scrollHeight": 753,
+    "scrollY": 0
+  },
+  {
+    "language": "ja",
+    "width": 320,
+    "name": "start",
+    "height": 568,
+    "scrollWidth": 320,
+    "scrollHeight": 568,
+    "scrollY": 0
+  },
+  {
+    "language": "ja",
+    "width": 320,
+    "name": "bloom",
+    "height": 568,
+    "scrollWidth": 320,
+    "scrollHeight": 568,
+    "scrollY": 0
+  },
+  {
+    "language": "ja",
+    "width": 320,
+    "name": "pour",
+    "height": 568,
+    "scrollWidth": 320,
+    "scrollHeight": 568,
+    "scrollY": 0
+  },
+  {
+    "language": "ja",
+    "width": 320,
+    "name": "imminent",
+    "height": 568,
+    "scrollWidth": 320,
+    "scrollHeight": 568,
+    "scrollY": 0
+  },
+  {
+    "language": "ja",
+    "width": 320,
+    "name": "paused",
+    "height": 568,
+    "scrollWidth": 320,
+    "scrollHeight": 568,
+    "scrollY": 0
+  },
+  {
+    "language": "ja",
+    "width": 320,
+    "name": "last",
+    "height": 568,
+    "scrollWidth": 320,
+    "scrollHeight": 568,
+    "scrollY": 0
+  },
+  {
+    "language": "ja",
+    "width": 320,
+    "name": "finish",
+    "height": 568,
+    "scrollWidth": 320,
+    "scrollHeight": 850,
+    "scrollY": 0
+  },
+  {
+    "language": "en",
+    "width": 320,
+    "name": "setup",
+    "height": 568,
+    "scrollWidth": 320,
+    "scrollHeight": 753,
+    "scrollY": 0
+  },
+  {
+    "language": "en",
+    "width": 320,
+    "name": "settings",
+    "height": 568,
+    "scrollWidth": 320,
+    "scrollHeight": 753,
+    "scrollY": 0
+  },
+  {
+    "language": "en",
+    "width": 320,
+    "name": "start",
+    "height": 568,
+    "scrollWidth": 320,
+    "scrollHeight": 568,
+    "scrollY": 0
+  },
+  {
+    "language": "en",
+    "width": 320,
+    "name": "bloom",
+    "height": 568,
+    "scrollWidth": 320,
+    "scrollHeight": 568,
+    "scrollY": 0
+  },
+  {
+    "language": "en",
+    "width": 320,
+    "name": "pour",
+    "height": 568,
+    "scrollWidth": 320,
+    "scrollHeight": 568,
+    "scrollY": 0
+  },
+  {
+    "language": "en",
+    "width": 320,
+    "name": "imminent",
+    "height": 568,
+    "scrollWidth": 320,
+    "scrollHeight": 568,
+    "scrollY": 0
+  },
+  {
+    "language": "en",
+    "width": 320,
+    "name": "paused",
+    "height": 568,
+    "scrollWidth": 320,
+    "scrollHeight": 568,
+    "scrollY": 0
+  },
+  {
+    "language": "en",
+    "width": 320,
+    "name": "last",
+    "height": 568,
+    "scrollWidth": 320,
+    "scrollHeight": 568,
+    "scrollY": 0
+  },
+  {
+    "language": "en",
+    "width": 320,
+    "name": "finish",
+    "height": 568,
+    "scrollWidth": 320,
+    "scrollHeight": 850,
+    "scrollY": 0
+  },
+  {
+    "language": "ja",
+    "width": 430,
+    "name": "setup",
+    "height": 932,
+    "scrollWidth": 430,
+    "scrollHeight": 1044,
+    "scrollY": 0
+  },
+  {
+    "language": "ja",
+    "width": 430,
+    "name": "settings",
+    "height": 932,
+    "scrollWidth": 430,
+    "scrollHeight": 1044,
+    "scrollY": 0
+  },
+  {
+    "language": "ja",
+    "width": 430,
+    "name": "start",
+    "height": 932,
+    "scrollWidth": 430,
+    "scrollHeight": 932,
+    "scrollY": 0
+  },
+  {
+    "language": "ja",
+    "width": 430,
+    "name": "bloom",
+    "height": 932,
+    "scrollWidth": 430,
+    "scrollHeight": 932,
+    "scrollY": 0
+  },
+  {
+    "language": "ja",
+    "width": 430,
+    "name": "pour",
+    "height": 932,
+    "scrollWidth": 430,
+    "scrollHeight": 932,
+    "scrollY": 0
+  },
+  {
+    "language": "ja",
+    "width": 430,
+    "name": "imminent",
+    "height": 932,
+    "scrollWidth": 430,
+    "scrollHeight": 932,
+    "scrollY": 0
+  },
+  {
+    "language": "ja",
+    "width": 430,
+    "name": "paused",
+    "height": 932,
+    "scrollWidth": 430,
+    "scrollHeight": 932,
+    "scrollY": 0
+  },
+  {
+    "language": "ja",
+    "width": 430,
+    "name": "last",
+    "height": 932,
+    "scrollWidth": 430,
+    "scrollHeight": 932,
+    "scrollY": 0
+  },
+  {
+    "language": "ja",
+    "width": 430,
+    "name": "finish",
+    "height": 932,
+    "scrollWidth": 430,
+    "scrollHeight": 932,
+    "scrollY": 0
+  },
+  {
+    "language": "ja",
+    "width": 844,
+    "name": "setup",
+    "height": 390,
+    "scrollWidth": 844,
+    "scrollHeight": 765,
+    "scrollY": 0
+  },
+  {
+    "language": "ja",
+    "width": 844,
+    "name": "settings",
+    "height": 390,
+    "scrollWidth": 844,
+    "scrollHeight": 765,
+    "scrollY": 0
+  },
+  {
+    "language": "ja",
+    "width": 844,
+    "name": "start",
+    "height": 390,
+    "scrollWidth": 844,
+    "scrollHeight": 390,
+    "scrollY": 0
+  },
+  {
+    "language": "ja",
+    "width": 844,
+    "name": "bloom",
+    "height": 390,
+    "scrollWidth": 844,
+    "scrollHeight": 390,
+    "scrollY": 0
+  },
+  {
+    "language": "ja",
+    "width": 844,
+    "name": "pour",
+    "height": 390,
+    "scrollWidth": 844,
+    "scrollHeight": 390,
+    "scrollY": 0
+  },
+  {
+    "language": "ja",
+    "width": 844,
+    "name": "imminent",
+    "height": 390,
+    "scrollWidth": 844,
+    "scrollHeight": 390,
+    "scrollY": 0
+  },
+  {
+    "language": "ja",
+    "width": 844,
+    "name": "paused",
+    "height": 390,
+    "scrollWidth": 844,
+    "scrollHeight": 390,
+    "scrollY": 0
+  },
+  {
+    "language": "ja",
+    "width": 844,
+    "name": "last",
+    "height": 390,
+    "scrollWidth": 844,
+    "scrollHeight": 390,
+    "scrollY": 0
+  },
+  {
+    "language": "ja",
+    "width": 844,
+    "name": "finish",
+    "height": 390,
+    "scrollWidth": 844,
+    "scrollHeight": 836,
+    "scrollY": 0
+  },
+  {
+    "language": "en",
+    "width": 844,
+    "name": "setup",
+    "height": 390,
+    "scrollWidth": 844,
+    "scrollHeight": 765,
+    "scrollY": 0
+  },
+  {
+    "language": "en",
+    "width": 844,
+    "name": "settings",
+    "height": 390,
+    "scrollWidth": 844,
+    "scrollHeight": 765,
+    "scrollY": 0
+  },
+  {
+    "language": "en",
+    "width": 844,
+    "name": "start",
+    "height": 390,
+    "scrollWidth": 844,
+    "scrollHeight": 390,
+    "scrollY": 0
+  },
+  {
+    "language": "en",
+    "width": 844,
+    "name": "bloom",
+    "height": 390,
+    "scrollWidth": 844,
+    "scrollHeight": 390,
+    "scrollY": 0
+  },
+  {
+    "language": "en",
+    "width": 844,
+    "name": "pour",
+    "height": 390,
+    "scrollWidth": 844,
+    "scrollHeight": 390,
+    "scrollY": 0
+  },
+  {
+    "language": "en",
+    "width": 844,
+    "name": "imminent",
+    "height": 390,
+    "scrollWidth": 844,
+    "scrollHeight": 390,
+    "scrollY": 0
+  },
+  {
+    "language": "en",
+    "width": 844,
+    "name": "paused",
+    "height": 390,
+    "scrollWidth": 844,
+    "scrollHeight": 390,
+    "scrollY": 0
+  },
+  {
+    "language": "en",
+    "width": 844,
+    "name": "last",
+    "height": 390,
+    "scrollWidth": 844,
+    "scrollHeight": 390,
+    "scrollY": 0
+  },
+  {
+    "language": "en",
+    "width": 844,
+    "name": "finish",
+    "height": 390,
+    "scrollWidth": 844,
+    "scrollHeight": 836,
+    "scrollY": 0
+  }
+]

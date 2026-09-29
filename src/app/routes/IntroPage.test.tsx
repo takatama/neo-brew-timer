@@ -9,7 +9,7 @@ import { IntroPage } from "./IntroPage";
 describe("intro page", () => {
   beforeEach(async () => {
     localStorage.clear();
-    useSessionStore.setState({ beans: 24, introSeen: false });
+    useSessionStore.setState({ beans: 24 });
     await i18n.changeLanguage("ja");
   });
 
@@ -29,14 +29,19 @@ describe("intro page", () => {
       </DisplayLanguageProvider>,
     );
 
-    expect(screen.getByRole("heading", { level: 1, name: "迷わず注ぐ、10回" })).toBeVisible();
-    expect(screen.getByRole("heading", { level: 2, name: "用意するもの" })).toBeVisible();
-    expect(screen.getByRole("button", { name: "豆の量を設定する" })).toBeVisible();
+    expect(
+      screen.getByRole("heading", { level: 1, name: "迷わず注ぐ、10回" }),
+    ).toBeVisible();
+    expect(
+      screen.getByRole("heading", { level: 2, name: "用意するもの" }),
+    ).toBeVisible();
+    expect(
+      screen.getByRole("button", { name: "豆の量を設定する" }),
+    ).toBeVisible();
 
     fireEvent.click(screen.getByRole("button", { name: "豆の量を設定する" }));
 
     expect(screen.getByText("setup destination")).toBeVisible();
-    expect(useSessionStore.getState()).toMatchObject({ beans: 24, introSeen: true });
-    expect(localStorage.getItem("brewsteps_intro_seen")).toBe("1");
+    expect(useSessionStore.getState()).toMatchObject({ beans: 24 });
   });
 });

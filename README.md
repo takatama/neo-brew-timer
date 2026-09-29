@@ -24,8 +24,7 @@ Accessible from the header on every screen:
 - Notifications (sound / vibrate / none)
 - Voice (male / female)
 - Five-second preparation delay (on by default)
-- Optional BGM (off by default)
-- Debug speed (x5)
+- Voice preview before brewing
 
 Audio files live in:
 
@@ -82,6 +81,26 @@ Vite runs at:
 http://localhost:5173/
 ```
 
+## Design and mobile inspection
+
+The interface uses warm paper, forest green, sage and clay, with a small SVG
+dripper/server and steaming cup. The scale target is cumulative; its position
+stays fixed while the next-action countdown changes. Music playlists, rotating
+news ads and mandatory onboarding have been removed. Preparation and completion
+both provide access to coffee reading, outside the brewing flow.
+
+With `npm run dev` running, capture the actual mobile views:
+
+```bash
+npm run inspect:mobile
+# Optionally inspect a production preview or use an installed browser:
+APP_URL=http://127.0.0.1:4173 BROWSER_EXECUTABLE_PATH=/path/to/chrome npm run inspect:mobile
+```
+
+Screenshots and a geometry report go to `test-results/mobile/`. The inspector
+checks seven combinations of language and viewport, including landscape and
+reduced motion.
+
 ## Tests
 
 ```bash
@@ -107,12 +126,12 @@ npx playwright install --with-deps chromium
 ```
 
 Then run the same `npm run typecheck`, `npm test`, and `npm run test:e2e`
-commands. The cloud instructions are provided for setup; this suite was verified
-locally on Windows, not in a cloud environment.
+commands. The current redesign was also verified in Linux Chromium; see
+[the redesign review](docs/redesign.md) for screenshots and validation.
 
 Playwright builds the app and starts its own preview at `127.0.0.1:4179`; leave
 that port free. It runs one Chromium project at a phone-sized viewport, advances
-browser time, disables audio/BGM, supplies empty news, and blocks other external
+browser time, disables audio, supplies empty news, and blocks other external
 requests. Assertions use visible text and button roles rather than CSS classes
 or screenshot baselines. Failed runs keep screenshots and traces in
 `test-results/` (ignored by Git); inspect a trace with
@@ -153,8 +172,7 @@ public/     # publicDir (assets)
 ## Offline use and updates
 
 After an online visit, wait for the offline-ready message on Setup. The timer,
-voice assets and icons are cached; news, YouTube and streamed music need
-a connection. App updates wait until you choose Update app on Setup, so they do
+voice assets and icons are cached; news and YouTube need a connection. App updates wait until you choose Update app on Setup, so they do
 not reload the page mid-brew. Closing the browser does not save an active brew.
 
 See SPEC.md for the current experience, accessibility decisions and limitations.

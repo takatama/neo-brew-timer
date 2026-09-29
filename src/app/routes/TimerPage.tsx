@@ -1,162 +1,201 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useBlocker, useLocation, useNavigate } from "react-router-dom";
+import { useBlocker, useNavigate } from "react-router-dom";
 import { useTimerOrchestrator } from "../../features/timer/hooks/useTimerOrchestrator";
 import { useSettingsStore } from "../../features/settings/store";
-import { StepCard } from "../../features/timer/components/StepCard";
-import { FinishCard } from "../../features/timer/components/FinishCard";
-import { NextStepPreview } from "../../features/timer/components/NextStepPreview";
-import type { PourAnimationMode } from "../../features/timer/components/PourPreviewAnimation";
-import { useCoffeeNews } from "../../features/timer/hooks/useCoffeeNews";
+import { BrewGuide } from "../../features/timer/components/BrewGuide";
+import { CoffeeReading } from "../../features/timer/components/CoffeeReading";
 import { ConfirmDialog } from "../../shared/components/ConfirmDialog";
+import { BrewIllustration } from "../../shared/components/BrewIllustration";
+import { Icon } from "../../shared/components/Icon";
 import { useDisplayLanguage } from "../../shared/i18n/DisplayLanguage";
 import { localizedPath } from "../../shared/i18n/routing";
+import { primeVoiceAudio } from "../../features/timer/hooks/voiceAudio";
 import styles from "./TimerPage.module.css";
 
 export function TimerPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const location = useLocation();
-  const displayLanguage = useDisplayLanguage();
-
+  const language = useDisplayLanguage();
+  const settings = useSettingsStore();
   const {
     steps,
+    audioBlocked,
     beans,
     totalWater,
     currentStep,
     timer,
     remainingToNext,
     progress,
-    isImminent,
     isRunningOrStarting,
     startupSeconds,
-    startupProgress,
     handlePlayPause,
     handleReset,
   } = useTimerOrchestrator();
-
-  const isFinishStep = currentStep?.actionType === "none";
-  const requestedAnimation = new URLSearchParams(location.search).get("pourAnimation");
-  const animationMode: PourAnimationMode = requestedAnimation === "none" ? "none" : "handdrawn";
-  const { debugEnabled, debugSpeed, setDebugSpeed, startDelay } = useSettingsStore();
-  const isStarting = startupSeconds !== null;
-  const showsStartupPresentation = isStarting || (startDelay && timer.status === "idle" && timer.currentTime === 0);
-  const previewStepIndex = showsStartupPresentation ? timer.currentStepIndex : timer.currentStepIndex + 1;
-  const previewStep = steps[previewStepIndex];
-  const isPourStep = previewStep && ["bloom", "pour", "switch_close_pour", "switch_open_pour", "pour_cool"].includes(previewStep.actionType);
-  const animationProgress = isPourStep && (showsStartupPresentation || (timer.status === "running" && isImminent))
-    ? (isStarting ? startupProgress : showsStartupPresentation ? 0 : Math.min(1, Math.max(0, (5 - remainingToNext) / 5)))
-    : null;
-  const brewStepCount = steps.filter((step) => step.actionType !== "none").length;
-  const { news, loading: newsLoading } = useCoffeeNews(displayLanguage, Boolean(isFinishStep));
+  const finished = timer.status === "finished";
+  const starting = startupSeconds !== null;
+  const previewStart = starting;
   const hasProgress = isRunningOrStarting || timer.status === "paused";
-  const blocker = useBlocker(({ currentLocation, nextLocation }) => hasProgress && currentLocation.pathname.split("/").pop() !== nextLocation.pathname.split("/").pop());
+  const blocker = useBlocker(
+    ({ currentLocation, nextLocation }) =>
+      hasProgress &&
+      currentLocation.pathname.split("/").pop() !==
+        nextLocation.pathname.split("/").pop(),
+  );
   useEffect(() => {
     if (!hasProgress) return;
-    const warn = (event: BeforeUnloadEvent) => { event.preventDefault(); };
+    const warn = (event: BeforeUnloadEvent) => event.preventDefault();
     window.addEventListener("beforeunload", warn);
     return () => window.removeEventListener("beforeunload", warn);
   }, [hasProgress]);
-  const [resetDialogOpen, setResetDialogOpen] = useState(false);
-
-  const handleResetTimer = () => {
-    setResetDialogOpen(true);
+  const [resetOpen, setResetOpen] = useState(false);
+  const toggle = () => {
+    if (!isRunningOrStarting && settings.isSoundEnabled())
+      primeVoiceAudio(language, settings.voice);
+    handlePlayPause();
   };
-
-  const handleResetConfirm = () => {
-    setResetDialogOpen(false);
-    handleReset();
-  };
-
   return (
-    <main className="content">
-      <section className={styles.summary}>
-        <div className={styles.chipRow}>
-          <span className={styles.chip}>
-            {t("timer.beansChipLabel")} <span className={styles.chipValue}>{beans}g</span>
-          </span>
-          <span className={styles.chip}>
-            {t("timer.waterChipLabel")} <span className={styles.chipValue}>{totalWater}g</span>
-          </span>
-        </div>
-        <button className={styles.textLink} onClick={() => navigate(localizedPath(displayLanguage, "setup"))}>
-          {t("timer.editParams")}
-        </button>
-      </section>
-
-      {currentStep && currentStep.actionType !== "none" && (
-        <StepCard
-          step={currentStep}
-          stepIndex={timer.currentStepIndex}
-          totalSteps={brewStepCount}
-          remainingSeconds={remainingToNext}
-          progress={progress}
-          isImminent={isImminent}
-          status={timer.status}
-          startupSeconds={showsStartupPresentation ? (startupSeconds ?? 5) : null}
-          nextStepPreview={previewStep && (
-            <NextStepPreview
-              key={previewStepIndex}
-              step={previewStep}
-              animationMode={animationMode}
-              animationProgress={animationProgress}
-              animationRunning={isStarting || timer.status === "running"}
-              expanded={showsStartupPresentation}
+    <main
+      className={`content ${styles.timer} ${finished ? styles.finished : ""}`}
+    >
+      {!finished && (
+        <>
+          <section className={styles.summary}>
+            <div>
+              <span>
+                {t("timer.beansChipLabel")} {beans}g
+              </span>
+              <i>·</i>
+              <span>
+                {t("timer.waterChipLabel")} {totalWater}g
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={() => navigate(localizedPath(language, "setup"))}
+              aria-label={t("timer.editParams")}
+            >
+              {t("experience.changeDose")}
+            </button>
+          </section>
+          {currentStep && (
+            <BrewGuide
+              step={currentStep}
+              steps={steps}
+              stepIndex={timer.currentStepIndex}
+              remainingSeconds={remainingToNext}
+              progress={progress}
+              currentTime={timer.currentTime}
+              status={timer.status}
+              startupSeconds={previewStart ? (startupSeconds ?? 5) : null}
             />
           )}
-          steps={steps}
-          currentTime={timer.currentTime}
-        />
-      )}
-
-      {currentStep?.actionType === "none" && (
-        <FinishCard
-          news={news}
-          newsLoading={newsLoading}
-        />
-      )}
-
-      <section className={styles.controls}>
-        {isFinishStep && <button className={`${styles.btn} ${styles.primary}`} onClick={() => navigate(localizedPath(displayLanguage, "setup"))}>{t("timer.brewAgain")}</button>}
-        {!isFinishStep && (
-          <div className={styles.primaryControlRow}>
-            <button className={`${styles.btn} ${styles.primary}`} onClick={handlePlayPause}>
-              {startupSeconds !== null ? t("timer.cancelStart") : isRunningOrStarting ? t("timer.pause") : t(timer.status === "paused" ? "timer.resume" : "timer.play")}
+          <div className={styles.controls}>
+            <button className={styles.pause} type="button" onClick={toggle}>
+              <Icon name={isRunningOrStarting ? "pause" : "play"} size={17} />
+              {t(
+                starting
+                  ? "timer.cancelStart"
+                  : isRunningOrStarting
+                    ? "timer.pause"
+                    : timer.status === "paused"
+                      ? "timer.resume"
+                      : "timer.play",
+              )}
             </button>
-            {debugEnabled && (
-              <button
-                className={`${styles.speedToggle} ${debugSpeed === 5 ? styles.speedToggleActive : ""}`}
-                onClick={() => setDebugSpeed(debugSpeed === 5 ? 1 : 5)}
-              >
-                {t("settings.debugX5")}
-              </button>
-            )}
+            <button
+              className={styles.reset}
+              type="button"
+              onClick={() => setResetOpen(true)}
+              aria-label={t("timer.reset")}
+            >
+              <Icon name="reset" size={18} />
+              <span>{t("timer.reset")}</span>
+            </button>
           </div>
-        )}
-        {!isFinishStep && (
-          <button className={`${styles.btn} ${styles.outline}`} onClick={handleResetTimer}>
-            {t("timer.reset")}
+          <p
+            className={styles.screenHint}
+            role={
+              audioBlocked && settings.isSoundEnabled() ? "status" : undefined
+            }
+          >
+            {t(
+              audioBlocked && settings.isSoundEnabled()
+                ? "experience.audioFallback"
+                : "experience.keepOpen",
+            )}
+          </p>
+        </>
+      )}
+      {finished && (
+        <>
+          <section className={styles.finishScene}>
+            <p className="eyebrow">A MOMENT WELL BREWED</p>
+            <BrewIllustration
+              finished
+              animated
+              className={styles.finishIllustration}
+            />
+            <div role="status">
+              <h1>{t("experience.finishHeading")}</h1>
+              <p className={styles.enjoy}>{t("timer.enjoyCoffee")}</p>
+            </div>
+            <p className={styles.drawdown}>{t("experience.finishHint")}</p>
+            <div className={styles.receipt}>
+              <div>
+                <span>{t("setup.beans")}</span>
+                <strong>
+                  {beans}
+                  <small>g</small>
+                </strong>
+              </div>
+              <div>
+                <span>{t("setup.water")}</span>
+                <strong>
+                  {totalWater}
+                  <small>g</small>
+                </strong>
+              </div>
+              <div>
+                <span>{t("experience.brewTime")}</span>
+                <strong>3:30</strong>
+              </div>
+            </div>
+          </section>
+          <button
+            type="button"
+            className="primary-button"
+            onClick={() => navigate(localizedPath(language, "setup"))}
+          >
+            {t("timer.brewAgain")}
+            <Icon name="arrow" size={20} />
           </button>
-        )}
-      </section>
-
+          <CoffeeReading />
+        </>
+      )}
       <ConfirmDialog
         open={blocker.state === "blocked"}
         title={t("timer.leaveTitle")}
         message={t("timer.leaveConfirm")}
         confirmLabel={t("timer.leaveAction")}
         cancelLabel={t("timer.resetCancelAction")}
-        onConfirm={() => { handleReset(); blocker.proceed?.(); }}
+        onConfirm={() => {
+          handleReset();
+          blocker.proceed?.();
+        }}
         onCancel={() => blocker.reset?.()}
       />
       <ConfirmDialog
-        open={resetDialogOpen}
+        open={resetOpen}
         title={t("timer.reset")}
         message={t("timer.resetConfirm")}
         confirmLabel={t("timer.resetConfirmAction")}
         cancelLabel={t("timer.resetCancelAction")}
-        onConfirm={handleResetConfirm}
-        onCancel={() => setResetDialogOpen(false)}
+        onConfirm={() => {
+          setResetOpen(false);
+          handleReset();
+        }}
+        onCancel={() => setResetOpen(false)}
       />
     </main>
   );

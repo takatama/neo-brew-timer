@@ -1,17 +1,17 @@
-import { readFile, writeFile } from 'node:fs/promises';
-import { resolve } from 'node:path';
-import sharp from 'sharp';
+import { readFile, writeFile } from "node:fs/promises";
+import { resolve } from "node:path";
+import sharp from "sharp";
 
-const SOURCE_ICON_PATH = resolve('public/icon.svg');
+const SOURCE_ICON_PATH = resolve("public/icon.svg");
 const OUTPUTS = [
-  { size: 192, path: resolve('public/pwa-192x192.png') },
-  { size: 512, path: resolve('public/pwa-512x512.png') },
+  { size: 192, path: resolve("public/pwa-192x192.png") },
+  { size: 512, path: resolve("public/pwa-512x512.png") },
 ];
-const BACKGROUND_COLOR = '#FBF4F0';
+const BACKGROUND_COLOR = "#f6f2e8";
 
 async function generateIcon(sourceBuffer, size) {
   const foregroundBuffer = await sharp(sourceBuffer)
-    .resize(size, size, { fit: 'contain' })
+    .resize(size, size, { fit: "contain" })
     .png()
     .toBuffer();
 
@@ -26,7 +26,7 @@ async function generateIcon(sourceBuffer, size) {
     .composite([
       {
         input: foregroundBuffer,
-        gravity: 'center',
+        gravity: "center",
       },
     ])
     .png()
@@ -43,7 +43,9 @@ async function main() {
     }),
   );
 
-  console.log(`Generated ${OUTPUTS.length} PWA icons with ${BACKGROUND_COLOR} background.`);
+  console.log(
+    `Generated ${OUTPUTS.length} PWA icons with ${BACKGROUND_COLOR} background.`,
+  );
 }
 
 main().catch((error) => {

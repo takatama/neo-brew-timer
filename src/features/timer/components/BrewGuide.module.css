@@ -1,0 +1,435 @@
+.guide {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 22px;
+  border: 1px solid var(--md-outline);
+  border-radius: 28px;
+  background: var(--md-surface);
+  box-shadow: var(--shadow-1);
+}
+.topline {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
+}
+.pourCount {
+  display: flex;
+  gap: 7px;
+  align-items: baseline;
+  font-variant-numeric: tabular-nums;
+}
+.pourCount strong {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--md-primary);
+}
+.pourCount > span {
+  font-size: 0.72rem;
+  color: var(--md-text-muted);
+}
+.pourCount > span:last-child {
+  font-size: 0.58rem;
+  margin-left: 1px;
+  letter-spacing: 0.08em;
+}
+.state {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.64rem;
+  color: var(--md-text-muted);
+}
+.state i {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #a1a58f;
+}
+.state i[data-running="true"] {
+  background: var(--md-primary);
+  box-shadow: 0 0 0 3px #314f4310;
+}
+.current {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 0 28px;
+  min-height: 265px;
+}
+.current h1 {
+  font-size: 1.08rem;
+  font-weight: 500;
+  margin: 0 0 16px;
+  color: var(--md-primary);
+  text-align: center;
+}
+.scaleLabel {
+  color: var(--md-text-muted);
+  font-size: 0.65rem;
+  margin: 0 0 2px;
+}
+.target {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 9px;
+  width: 100%;
+  font-variant-numeric: lining-nums tabular-nums;
+  color: var(--md-primary);
+}
+.target strong {
+  font-family: var(--serif);
+  font-size: clamp(5rem, 25vw, 7.5rem);
+  font-weight: 500;
+  letter-spacing: -0.07em;
+  line-height: 1.16;
+}
+.target > span {
+  font-family: var(--serif);
+  font-size: 1.9rem;
+}
+.target small {
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Noto Sans CJK JP", sans-serif;
+  font-size: 0.78rem;
+  margin-left: 5px;
+}
+.increment {
+  color: var(--md-primary);
+  font-size: 0.75rem;
+  border: 1px solid #d8dece;
+  padding: 5px 12px;
+  border-radius: 100px;
+  background: #f2f4eb;
+  margin-top: 9px;
+}
+.pourHint {
+  font-size: 0.68rem;
+  color: var(--md-text-muted);
+  line-height: 1.8;
+  text-align: center;
+  margin: 14px 0 0;
+  max-width: 290px;
+  min-height: 24px;
+}
+.startNumber {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  width: 142px;
+  line-height: 1.2;
+  padding: 12px 0 20px;
+  font-family: var(--serif);
+  font-size: 6.5rem;
+  color: var(--md-primary);
+  font-variant-numeric: lining-nums tabular-nums;
+  background: var(--sage);
+  border-radius: 50%;
+}
+.startNumber span {
+  font-size: 0.8rem;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Noto Sans CJK JP", sans-serif;
+  padding-left: 8px;
+}
+.next {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  padding: 16px 18px 19px;
+  background: var(--sage);
+  border-radius: 18px;
+  overflow: hidden;
+  transition: background 0.3s;
+}
+.next::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  width: 100%;
+  background: #789179;
+  transform: scaleX(calc(1 - var(--progress)));
+  transform-origin: left;
+  transition: transform 0.1s linear;
+}
+.next[data-imminent="true"] {
+  background: var(--clay-light);
+}
+.next[data-imminent="true"]::after {
+  background: var(--md-accent);
+}
+.countdown {
+  padding-right: 14px;
+  border-right: 1px solid #cdd5c3;
+}
+.startReminder {
+  display: flex;
+  align-items: center;
+  min-height: 42px;
+  gap: 4px;
+}
+.startReminder > span {
+  font-size: 0.6rem !important;
+  line-height: 1.6;
+  margin-left: 4px;
+}
+.next[data-starting="true"]::after {
+  display: none;
+}
+.caption {
+  display: block;
+  color: #677361;
+  font-size: 0.65rem;
+  margin-bottom: 8px;
+}
+.countdown strong {
+  font-size: 2.3rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.045em;
+}
+.countdown div > span {
+  font-size: 0.72rem;
+  margin-left: 6px;
+}
+.nextTarget > strong {
+  font-size: 2rem;
+  font-family: var(--serif);
+  font-weight: 500;
+  line-height: 1.4;
+  font-variant-numeric: lining-nums tabular-nums;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+}
+.nextTarget > strong > span {
+  font-size: 1rem;
+  margin-left: 4px;
+}
+.nextTarget small {
+  font-size: 0.66rem;
+  margin-left: 3px;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Noto Sans CJK JP", sans-serif;
+}
+.wait {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.74rem;
+  min-height: 42px;
+  line-height: 1.6;
+}
+.wait svg {
+  flex-shrink: 0;
+}
+.journey {
+  margin-top: 22px;
+}
+.timeline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 9px;
+}
+.timeline > span {
+  width: 7px;
+  height: 7px;
+  border: 1px solid #bec5b2;
+  border-radius: 50%;
+  position: relative;
+  background: var(--md-surface);
+}
+.timeline > span[data-done="true"] {
+  border-color: var(--md-primary);
+  background: var(--md-primary);
+}
+.timeline > span[data-current="true"] {
+  background: var(--md-accent);
+  border-color: var(--md-accent);
+  box-shadow: 0 0 0 3px #bd795215;
+}
+.timeline > svg {
+  color: var(--md-text-muted);
+  margin-left: 3px;
+}
+.elapsed {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 11px;
+  font-size: 0.62rem;
+  color: var(--md-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+.guide[data-paused="true"] .state {
+  color: var(--md-accent);
+}
+.guide[data-paused="true"] .state i {
+  background: var(--md-accent);
+}
+@media (max-width: 350px) {
+  .guide {
+    padding: 16px;
+    border-radius: 24px;
+  }
+  .next {
+    gap: 12px;
+    padding: 13px;
+  }
+  .target strong {
+    font-size: 5rem;
+  }
+  .nextTarget > strong {
+    font-size: 1.8rem;
+  }
+  .timeline {
+    gap: 6px;
+  }
+}
+@media (max-height: 700px) {
+  .guide {
+    padding: 16px;
+    border-radius: 24px;
+  }
+  .current {
+    padding: 16px 0;
+    min-height: 200px;
+  }
+  .current h1 {
+    font-size: 0.95rem;
+    margin-bottom: 8px;
+  }
+  .target strong {
+    font-size: 5.2rem;
+  }
+  .startNumber {
+    width: 112px;
+    font-size: 5rem;
+    padding: 9px 0 16px;
+  }
+  .pourHint {
+    margin-top: 9px;
+    font-size: 0.62rem;
+    line-height: 1.7;
+  }
+  .increment {
+    font-size: 0.68rem;
+    margin-top: 5px;
+    padding: 3px 10px;
+  }
+  .next {
+    padding: 11px 14px 14px;
+  }
+  .caption {
+    margin-bottom: 4px;
+    font-size: 0.6rem;
+  }
+  .countdown strong {
+    font-size: 2rem;
+  }
+  .nextTarget > strong {
+    font-size: 1.8rem;
+  }
+  .journey {
+    margin-top: 15px;
+  }
+  .elapsed {
+    margin-top: 8px;
+  }
+}
+@media (max-height: 650px) {
+  .current {
+    min-height: 0;
+    padding: 12px 0 15px;
+  }
+  .current h1 {
+    font-size: 0.88rem;
+    line-height: 1.4;
+    margin-bottom: 6px;
+  }
+  .scaleLabel {
+    font-size: 0.58rem;
+  }
+  .target strong {
+    font-size: 4.4rem;
+    line-height: 1.1;
+  }
+  .target > span {
+    font-size: 1.5rem;
+  }
+  .target small {
+    font-size: 0.68rem;
+  }
+  .pourHint {
+    min-height: 0;
+    font-size: 0.6rem;
+    line-height: 1.6;
+    margin-top: 8px;
+  }
+  .increment {
+    font-size: 0.63rem;
+    padding: 3px 9px;
+  }
+  .journey {
+    margin-top: 12px;
+  }
+  .next {
+    padding: 10px 13px 12px;
+  }
+  .startNumber {
+    width: 102px;
+    font-size: 4.6rem;
+    padding: 8px 0 14px;
+  }
+}
+@media (orientation: landscape) and (max-height: 550px) {
+  .guide {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    grid-template-rows: auto 1fr auto;
+    column-gap: 32px;
+    padding: 14px 24px;
+    border-radius: 22px;
+  }
+  .topline {
+    grid-column: 1 / -1;
+  }
+  .current {
+    grid-column: 1;
+    grid-row: 2 / 4;
+    padding: 8px 0 0;
+    min-height: 0;
+  }
+  .current h1 {
+    margin-bottom: 4px;
+  }
+  .target strong {
+    font-size: 4.6rem;
+  }
+  .next {
+    grid-column: 2;
+    grid-row: 2;
+    align-self: center;
+    padding: 12px 16px;
+  }
+  .journey {
+    grid-column: 2;
+    grid-row: 3;
+    margin: 10px 0 0;
+    align-self: end;
+  }
+  .startNumber {
+    width: 104px;
+    font-size: 4.6rem;
+  }
+  .pourHint {
+    margin-top: 6px;
+  }
+}

@@ -1,0 +1,78 @@
+.reading summary {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 48px;
+  font-size: 0.8rem;
+  color: var(--md-primary);
+  cursor: pointer;
+}
+.reading summary::-webkit-details-marker {
+  display: none;
+}
+.reading summary > span {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.reading[open] summary > svg {
+  transform: rotate(180deg);
+}
+.reading header {
+  border-top: 1px solid var(--md-outline);
+  padding-top: 22px;
+}
+.reading h2 {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 1.2rem;
+  margin-bottom: 8px;
+}
+.reading header p {
+  color: var(--md-text-muted);
+  font-size: 0.75rem;
+  margin: 0 0 18px;
+}
+.message {
+  color: var(--md-text-muted);
+  font-size: 0.75rem;
+  line-height: 1.8;
+  margin: 4px 0 12px;
+}
+.articles ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.articles li {
+  border-bottom: 1px solid var(--md-outline);
+}
+.articles a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  color: var(--md-text);
+  padding: 16px 0;
+  text-decoration: none;
+}
+.articles a > svg {
+  flex-shrink: 0;
+}
+.articles a:hover strong {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.articles span {
+  display: block;
+  font-size: 0.62rem;
+  color: var(--md-text-muted);
+  margin-bottom: 6px;
+}
+.articles strong {
+  display: block;
+  font-size: 0.84rem;
+  line-height: 1.7;
+  font-weight: 500;
+}

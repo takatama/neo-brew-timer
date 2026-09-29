@@ -1,172 +1,266 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { useSessionStore } from "../../features/timer/store";
+import { useSessionStore, normalizeBeans } from "../../features/timer/store";
 import { useSettingsStore } from "../../features/settings/store";
-import type { BgmDayOfWeek } from "../../features/settings/types";
-import { neoBrewMethod, computeSteps, getTotalWater } from "../../features/recipe";
-import { CoffeeNews } from "../../features/timer/components/CoffeeNews";
-import { useCoffeeNews } from "../../features/timer/hooks/useCoffeeNews";
-import styles from "./SetupPage.module.css";
-import { getEquipmentItems, type SupportedLanguage } from "../../shared/affiliate/amazon";
+import {
+  neoBrewMethod,
+  computeSteps,
+  getTotalWater,
+  formatTime,
+} from "../../features/recipe";
 import { useDisplayLanguage } from "../../shared/i18n/DisplayLanguage";
 import { localizedPath } from "../../shared/i18n/routing";
+import { getEquipmentItems } from "../../shared/affiliate/amazon";
 import { RecipeVideo } from "../../shared/components/RecipeVideo";
+import { BrewIllustration } from "../../shared/components/BrewIllustration";
+import { Icon } from "../../shared/components/Icon";
+import { VoicePreview } from "../../features/settings/VoicePreview";
+import { primeVoiceAudio } from "../../features/timer/hooks/voiceAudio";
+import { CoffeeReading } from "../../features/timer/components/CoffeeReading";
+import styles from "./SetupPage.module.css";
 
 export function SetupPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const displayLanguage = useDisplayLanguage();
+  const language = useDisplayLanguage();
   const [searchParams] = useSearchParams();
   const { beans, setBeans } = useSessionStore();
-  const { debugEnabled, startDelay, debugBgmDayOfWeek, setDebugBgmDayOfWeek } = useSettingsStore();
-  const { news, loading: newsLoading } = useCoffeeNews(displayLanguage, debugEnabled);
-  const [detailsOpen, setDetailsOpen] = useState(false);
-
+  const settings = useSettingsStore();
+  const [draft, setDraft] = useState(String(beans));
+  const [guideOpen, setGuideOpen] = useState(false);
   useEffect(() => {
-    const beansParam = searchParams.get("beans");
-    if (beansParam) {
-      const n = Number(beansParam);
-      if (Number.isFinite(n) && n > 0) setBeans(n);
-    }
+    setDraft(String(beans));
+  }, [beans]);
+  useEffect(() => {
+    const value = searchParams.get("beans");
+    if (value && Number.isFinite(Number(value))) setBeans(Number(value));
   }, [searchParams, setBeans]);
-
-  const lang: SupportedLanguage = displayLanguage;
-  const totalWater = getTotalWater(beans, neoBrewMethod.waterRatio);
-  const pourSteps = computeSteps(neoBrewMethod, beans).filter(
+  const water = getTotalWater(beans, neoBrewMethod.waterRatio);
+  const pours = computeSteps(neoBrewMethod, beans).filter(
     (step) => step.actionType !== "none",
   );
-  const equipment = getEquipmentItems(lang);
-
-  const handleStart = () => {
-    navigate(localizedPath(displayLanguage, "timer", "?autostart=1"));
+  const commitDraft = () => {
+    const dose = normalizeBeans(Number(draft) || beans);
+    setBeans(dose);
+    setDraft(String(dose));
   };
-
+  const start = () => {
+    commitDraft();
+    if (settings.isSoundEnabled()) primeVoiceAudio(language, settings.voice);
+    navigate(localizedPath(language, "timer", "?autostart=1"));
+  };
   return (
-    <main className="content">
-      <header className={styles.heading}><h1>{t("setup.heading")}</h1></header>
-      <section className="card">
-        <div className={styles.stepperRow}>
-          <span className={styles.beansLabel}>{t("setup.beans")}</span>
-          <div className={styles.stepperControls}>
+    <main className={`content ${styles.setup}`}>
+      <section className={styles.hero}>
+        <div>
+          <p className="eyebrow">MAKE A MOMENT</p>
+          <h1>
+            {t("experience.setupHeading")
+              .split("\n")
+              .map((line, i) => (
+                <span key={i}>
+                  {line}
+                  <br />
+                </span>
+              ))}
+          </h1>
+          <p className={styles.heroHint}>{t("experience.setupLead")}</p>
+        </div>
+        <BrewIllustration animated className={styles.illustration} />
+      </section>
+      <section className={styles.recipeCard} aria-label={t("setup.heading")}>
+        <div className={styles.doseHeader}>
+          <label htmlFor="coffee-dose">{t("setup.beans")}</label>
+          <span className="eyebrow">COFFEE</span>
+        </div>
+        <div className={styles.stepper}>
+          <button
+            type="button"
+            onClick={() => setBeans(beans - 1)}
+            disabled={beans <= 1}
+            aria-label={t("setup.decrease")}
+          >
+            <Icon name="minus" />
+          </button>
+          <div className={styles.dose}>
+            <input
+              id="coffee-dose"
+              aria-label={t("setup.beans")}
+              type="number"
+              inputMode="numeric"
+              min="1"
+              max="100"
+              step="1"
+              value={draft}
+              onChange={(event) => {
+                setDraft(event.target.value);
+                const n = Number(event.target.value);
+                if (Number.isInteger(n) && n >= 1 && n <= 100) setBeans(n);
+              }}
+              onBlur={commitDraft}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") {
+                  commitDraft();
+                  event.currentTarget.blur();
+                }
+              }}
+            />
+            <span>g</span>
+          </div>
+          <button
+            type="button"
+            onClick={() => setBeans(beans + 1)}
+            disabled={beans >= 100}
+            aria-label={t("setup.increase")}
+          >
+            <Icon name="plus" />
+          </button>
+        </div>
+        <div
+          className={styles.presets}
+          aria-label={t("experience.dosePresets")}
+        >
+          {[15, 20, 25, 30].map((value) => (
             <button
-              className={styles.btnIcon}
-              onClick={() => setBeans(Math.max(1, beans - 1))}
-              aria-label={t("setup.decrease")}
-              disabled={beans <= 1}
+              key={value}
+              type="button"
+              aria-pressed={beans === value}
+              onClick={() => setBeans(value)}
             >
-              −
+              {value}
+              <span>g</span>
             </button>
-            <div className={styles.beansValue}>{beans}g</div>
-            <button
-              className={styles.btnIcon}
-              onClick={() => setBeans(beans + 1)}
-              aria-label={t("setup.increase")}
-              disabled={beans >= 100}
-            >
-              ＋
-            </button>
+          ))}
+        </div>
+        <div className={styles.waterSummary}>
+          <div>
+            <span>{t("setup.water")}</span>
+            <strong>
+              {water}
+              <small>g</small>
+            </strong>
+          </div>
+          <div>
+            <span>{t("experience.ratio")}</span>
+            <strong>
+              1<small>:</small>15
+            </strong>
+          </div>
+          <div>
+            <span>{t("experience.pours")}</span>
+            <strong>
+              10<small>{t("experience.times")}</small>
+            </strong>
           </div>
         </div>
-        <div className={styles.calculatedWater}>
-          <span className={styles.calculatedWaterLabel}>{t("setup.water")}</span>
-          <span className={styles.calculatedWaterValue}>{totalWater}g</span>
-          <span className={styles.waterRatio}>1:{neoBrewMethod.waterRatio}</span>
-        </div>
       </section>
-
-      <button className={styles.btnPrimary} onClick={handleStart}>
-        {t("setup.start")}
-      </button>
-
-      <details className="card" open={detailsOpen} onToggle={(e) => setDetailsOpen((e.target as HTMLDetailsElement).open)}>
-        <summary className={styles.detailsSummary}>
-          <span>{t("setup.details")}</span>
-          <span className={styles.detailsSummaryLink}>
-            {detailsOpen ? t("setup.closeAction") : t("setup.detailsAction")}
+      <div className={styles.preparation}>
+        <span>
+          <Icon name="thermometer" size={16} />
+          95–96°C
+        </span>
+        <span>
+          <Icon name="bean" size={16} />
+          {t("experience.grind")}
+        </span>
+        <span>≈ 3:30</span>
+      </div>
+      <section className={styles.voiceRow}>
+        <button
+          type="button"
+          className={styles.voiceToggle}
+          aria-pressed={settings.isSoundEnabled()}
+          onClick={() => {
+            if (!settings.isSoundEnabled())
+              primeVoiceAudio(language, settings.voice);
+            settings.toggleNotifyFlag("sound");
+          }}
+        >
+          <Icon name={settings.isSoundEnabled() ? "sound" : "mute"} size={18} />
+          <span>{t("experience.voiceGuide")}</span>
+          <span
+            className={styles.switch}
+            data-on={settings.isSoundEnabled()}
+            aria-hidden="true"
+          />
+        </button>
+        <VoicePreview />
+      </section>
+      <div className={styles.startArea}>
+        <p className={styles.scaleReminder}>
+          <Icon name="check" size={15} />
+          {t("experience.zeroScale")}
+        </p>
+        <button type="button" className="primary-button" onClick={start}>
+          {t("setup.start")}
+          <Icon name="arrow" size={21} />
+        </button>
+        <p className={styles.startHint}>
+          {t(
+            settings.startDelay ? "setup.startHint" : "setup.startImmediately",
+          )}
+        </p>
+      </div>
+      <details
+        className={styles.guide}
+        onToggle={(event) => setGuideOpen(event.currentTarget.open)}
+      >
+        <summary>
+          <span>
+            <Icon name="book" size={17} />
+            {t("setup.details")}
           </span>
+          <Icon name="chevron" size={18} />
         </summary>
-        {detailsOpen && <div className={styles.detailsBody}>
-          <section className={styles.preparation}>
-            <h2>{t("setup.preparation")}</h2><p>{t("setup.prepHint")}</p>
-            <p>{t("setup.scaleHint")}</p>
-            <p>{t(startDelay ? "setup.startHint" : "setup.startImmediately")}</p>
-            <span>{t("setup.overview")}</span>
-          </section>
-          <section aria-labelledby="pour-guide-heading">
-            <h2 id="pour-guide-heading" className={styles.detailsSubTitle}>{t("setup.steps")}</h2>
-            <p className={styles.detailsText}>{t("setup.recipeSummary")}</p>
-            <ol className={styles.stepList}>
-              {pourSteps.map((step, idx) => (
-                <li key={step.timeSec} className={styles.stepItem}>
-                  <span className={styles.stepNumber}>STEP {idx + 1}</span>
-                  <span className={styles.stepInstruction}>
-                    {t(step.actionType === "bloom" ? "setup.stepBloom" : "setup.stepPourTo", {
-                      amount: step.cumulative,
-                    })}
-                  </span>
-                  <span className={styles.stepDuration}>
-                    {t("setup.stepDuration", {
-                      seconds: neoBrewMethod.steps[idx + 1].timeSec - step.timeSec,
-                    })}
-                  </span>
-                </li>
-              ))}
-            </ol>
-          </section>
-          <RecipeVideo className={styles.detailsVideo} />
-          <section aria-labelledby="label-equipment">
-            <div className={styles.equipmentHeader}>
-              <h2 id="label-equipment" className={`card-title ${styles.equipmentTitle}`}>{t("setup.equipment")}</h2>
-            </div>
-            <ul className={styles.equipmentList}>
-              {equipment.map((item) => (
-                <li key={item.name}>
-                  <a
-                    href={item.href}
-                    target="_blank"
-                    rel="noopener noreferrer sponsored"
-                  >
-                    {item.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
-            <p className={styles.affiliateDisclosure}>{t("setup.affiliate")}</p>
-          </section>
-        </div>}
-      </details>
-
-      {debugEnabled && (
-        <>
-          <section className="card">
-            <div className="card-title">{t("setup.debugBgmDay")}</div>
-            <div className="choice-row">
-              {([
-                { value: "sun", label: t("setup.daySun") },
-                { value: "mon", label: t("setup.dayMon") },
-                { value: "tue", label: t("setup.dayTue") },
-                { value: "wed", label: t("setup.dayWed") },
-                { value: "thu", label: t("setup.dayThu") },
-                { value: "fri", label: t("setup.dayFri") },
-                { value: "sat", label: t("setup.daySat") },
-              ] as const).map((option) => (
-                <button
-                  key={option.value}
-                  className={`choice${debugBgmDayOfWeek === option.value ? " active" : ""}`}
-                  onClick={() => setDebugBgmDayOfWeek(option.value as BgmDayOfWeek)}
+        <div className={styles.guideBody}>
+          <h2>{t("experience.recipeCredit")}</h2>
+          <p>{t("setup.recipeSummary")}</p>
+          <p className={styles.guideNote}>{t("setup.scaleHint")}</p>
+          <h3>{t("intro.preparation")}</h3>
+          <ul>
+            {Object.keys(
+              t("intro.preparationItems", { returnObjects: true }),
+            ).map((key) => (
+              <li key={key}>{t(`intro.preparationItems.${key}`)}</li>
+            ))}
+          </ul>
+          <h3>{t("setup.steps")}</h3>
+          <ol className={styles.schedule}>
+            {pours.map((step, index) => (
+              <li key={step.timeSec}>
+                <span>{String(index + 1).padStart(2, "0")}</span>
+                <time>{formatTime(step.timeSec)}</time>
+                <strong>{step.cumulative}g</strong>
+                <span>+{step.increment}g</span>
+              </li>
+            ))}
+          </ol>
+          <p className={styles.guideNote}>{t("experience.drawdownHint")}</p>
+          {guideOpen && <RecipeVideo />}
+          <h3>{t("setup.equipment")}</h3>
+          <ul className={styles.equipment}>
+            {getEquipmentItems(language).map((item) => (
+              <li key={item.name}>
+                <a
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer sponsored"
                 >
-                  {option.label}
-                </button>
-              ))}
-            </div>
-          </section>
-          <section className="card">
-            <CoffeeNews news={news} loading={newsLoading} />
-          </section>
-        </>
-      )}
-
+                  {item.name}
+                  <Icon name="external" size={13} />
+                </a>
+              </li>
+            ))}
+          </ul>
+          <p className={styles.disclosure}>{t("setup.affiliate")}</p>
+        </div>
+      </details>
+      <CoffeeReading collapsible />
+      <footer className={styles.credit}>
+        {t("experience.recipeCredit")}
+        <span>Made for your coffee moment.</span>
+      </footer>
     </main>
   );
 }

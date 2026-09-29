@@ -11,18 +11,9 @@
     "voice": "Voice",
     "voiceMale": "Male",
     "voiceFemale": "Female",
-    "debug": "Debug",
-    "debugHint": "Speed up timer playback",
-    "debugOff": "Off",
-    "debugX5": "x5 Speed",
-    "notifySound": "Sound",
+    "notifySound": "Voice guidance",
     "notifyVibrate": "Vibrate",
-    "bgm": "BGM",
-    "save": "Save",
     "close": "Close",
-    "debugOn": "On",
-    "display": "Music",
-    "developer": "Developer",
     "startDelay": "Wait 5 seconds before starting",
     "brewing": "Brewing"
   },
@@ -57,14 +48,6 @@
     "equipment": "Equipment",
     "affiliate": "As an Amazon Associate, Neo Brew Timer earns from qualifying purchases.",
     "water": "Water",
-    "debugBgmDay": "Debug BGM Day",
-    "daySun": "Sun",
-    "dayMon": "Mon",
-    "dayTue": "Tue",
-    "dayWed": "Wed",
-    "dayThu": "Thu",
-    "dayFri": "Fri",
-    "daySat": "Sat",
     "heading": "Brew setup",
     "preparation": "Preparation",
     "prepHint": "95–96°C water · Very coarse grind",
@@ -78,7 +61,7 @@
   },
   "timer": {
     "currentStep": "Current Step",
-    "nextStep": "Next",
+    "nextStep": "Next target",
     "firstStep": "First",
     "remaining": "<time>{{time}}</time> left",
     "play": "Brew coffee",
@@ -154,34 +137,7 @@
   ],
   "news": {
     "title": "Today's Coffee News",
-    "loading": "Loading news...",
-    "ads": {
-      "label": "[Ad]",
-      "filter": {
-        "title": "HARIO V60 Paper Filters",
-        "description": "Ever had coffee but no filters in the morning?"
-      },
-      "dripper": {
-        "title": "V60 Dripper Neo",
-        "description": "A simple cone dripper that fits the Neo Brew recipe."
-      },
-      "kettle": {
-        "title": "Temperature-Control Coffee Kettle",
-        "description": "Brew at the right temperature and the flavor stays consistent."
-      },
-      "scale": {
-        "title": "Coffee Scale",
-        "description": "Consistent coffee starts with consistent numbers."
-      },
-      "grinder": {
-        "title": "Coffee Grinder",
-        "description": "Freshly ground coffee changes everything."
-      },
-      "canister": {
-        "title": "Coffee Canister",
-        "description": "Keep your beans fresher for everyday brewing."
-      }
-    }
+    "loading": "Loading news..."
   },
   "pwa": {
     "ready": "Ready to brew offline",
@@ -191,5 +147,52 @@
   "error": {
     "title": "Unable to display this screen",
     "back": "Back to preparation"
+  },
+  "experience": {
+    "setupHeading": "A little ritual.\nA lovely cup.",
+    "setupLead": "Ten pours.\nFollow the gentle cues.",
+    "dosePresets": "Common coffee amounts",
+    "ratio": "Coffee : water",
+    "pours": "Pours",
+    "times": "",
+    "grind": "Very coarse",
+    "voiceGuide": "Voice guide",
+    "previewVoice": "Try the voice",
+    "stopPreview": "Stop",
+    "audioUnavailable": "Audio could not play.",
+    "zeroScale": "Add your coffee. Zero the scale.",
+    "recipeCredit": "Tetsu Kasuya’s Neo Brew recipe",
+    "drawdownHint": "The final pour is at 2:30. Let the water drain. 3:30 is an estimated finish.",
+    "mute": "Turn voice guidance off",
+    "unmute": "Turn voice guidance on",
+    "scaleTarget": "TOTAL WATER ON YOUR SCALE",
+    "addWater": "Add {{amount}}g this pour",
+    "pourLabel": "POURS",
+    "getKettleReady": "Kettle in hand. Your first pour is next.",
+    "bloomAction": "The bloom",
+    "bloomHint": "Reach the target, then bloom until 0:30.",
+    "pourHint": "Reach the target, then wait for the next cue.",
+    "lastPourHint": "That’s all the water. Let it drain through.",
+    "pausedHeading": "A little pause",
+    "pausedHint": "Resume when you’re ready. We’ll pick up here.",
+    "comingNow": "Coming up",
+    "pourCountdown": "Next pour in {{seconds}} seconds",
+    "finishCountdown": "Estimated finish in {{seconds}} seconds",
+    "nextDrawdown": "Let it drain",
+    "progressAccessible": "Pour progress {{current}} of {{total}}",
+    "totalTime": "About 3:30 total",
+    "changeDose": "Change",
+    "keepOpen": "Keep this screen open while brewing.",
+    "finishHeading": "Your moment,\nwell brewed.",
+    "finishHint": "If there’s water in the dripper,\ngive it a little longer to drain.",
+    "brewTime": "Brew estimate",
+    "readingTitle": "With your coffee",
+    "readingLead": "A little reading with your first sip.",
+    "noNews": "Stories aren’t available right now. Enjoy a quiet coffee moment.",
+    "introLead": "When to pour. How much to add.\nLet the screen and voice guide you.",
+    "settingsSaved": "Your preferences are saved as you go.",
+    "scaleIsReady": "Scale at zero",
+    "audioFallback": "Voice could not play. Follow the on-screen cues.",
+    "afterLastPour": "After this pour"
   }
 }

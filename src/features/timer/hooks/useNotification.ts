@@ -1,128 +1,64 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useSettingsStore } from "../../settings/store";
-import type { Voice } from "../../settings/types";
 import type { DisplayLanguage } from "../../../shared/i18n/routing";
-
-export const VOICE_NOTIFICATION_EVENT = "coco:voice-notification";
-export const VOICE_NOTIFICATION_END_EVENT = "coco:voice-notification-end";
-
-type VoiceMessage = "first" | "next" | "done";
-
-function loadAudio(
-  language: string,
-  voice: string,
-): Record<VoiceMessage, HTMLAudioElement> {
-  const suffixes: Record<VoiceMessage, string> = {
-    first: "first-step",
-    next: "next-step",
-    done: "finish",
-  };
-  return Object.fromEntries(
-    Object.entries(suffixes).map(([type, suffix]) => {
-      const audio = new Audio(`/assets/audio/${language}-${voice}-${suffix}.wav`);
-      audio.load();
-      return [type, audio];
-    }),
-  ) as Record<VoiceMessage, HTMLAudioElement>;
-}
-
+import {
+  getVoiceAudio,
+  prepareVoiceCue,
+  stopVoiceAudio,
+  type VoiceMessage,
+} from "./voiceAudio";
 export function useNotification(language: DisplayLanguage) {
   const voice = useSettingsStore((state) => state.voice);
-  const audioSetsRef = useRef(new Map<string, Record<VoiceMessage, HTMLAudioElement>>());
-
+  const lifecycle = useRef(0);
+  const [audioBlocked, setAudioBlocked] = useState(false);
   const stop = useCallback(() => {
-    audioSetsRef.current.forEach(set => Object.values(set).forEach(audio => audio.pause()));
+    stopVoiceAudio();
     navigator.vibrate?.(0);
   }, []);
-
-  const getAudioSet = useCallback((nextLanguage: DisplayLanguage, nextVoice: Voice) => {
-    const key = `${nextLanguage}:${nextVoice}`;
-    const existing = audioSetsRef.current.get(key);
-    if (existing) return existing;
-
-    const loaded = loadAudio(nextLanguage, nextVoice);
-    audioSetsRef.current.set(key, loaded);
-    return loaded;
-  }, []);
-
   useEffect(() => {
-    getAudioSet(language, voice);
-  }, [getAudioSet, language, voice]);
-
+    getVoiceAudio(language, voice);
+  }, [language, voice]);
   useEffect(() => {
+    const generation = ++lifecycle.current;
+    const unsubscribe = useSettingsStore.subscribe((state) => {
+      if (!state.isSoundEnabled()) stopVoiceAudio();
+    });
     return () => {
-      audioSetsRef.current.forEach((audioSet) => {
-        Object.values(audioSet).forEach((audio) => audio.pause());
+      unsubscribe();
+      // StrictMode recreates effects in the same turn. Do not cancel that first cue.
+      queueMicrotask(() => {
+        if (lifecycle.current === generation) stop();
       });
-      audioSetsRef.current.clear();
     };
-  }, []);
-
-  const playVoiceMessage = useCallback((type: VoiceMessage) => {
-    if (!useSettingsStore.getState().isSoundEnabled()) return;
-    const audio = getAudioSet(language, voice)[type];
-
-    let isStarted = false;
-    let isCompleted = false;
-
-    const handleStarted = () => {
-      if (isStarted) {
-        return;
-      }
-
-      isStarted = true;
-      window.dispatchEvent(new CustomEvent(VOICE_NOTIFICATION_EVENT));
-    };
-
-    const handleCompleted = () => {
-      if (isCompleted) {
-        return;
-      }
-
-      isCompleted = true;
-      audio.removeEventListener("playing", handleStarted);
-      audio.removeEventListener("ended", handleCompleted);
-      audio.removeEventListener("pause", handleCompleted);
-      window.dispatchEvent(new CustomEvent(VOICE_NOTIFICATION_END_EVENT));
-    };
-
-    audio.addEventListener("playing", handleStarted);
-    audio.addEventListener("ended", handleCompleted);
-    audio.addEventListener("pause", handleCompleted);
-    audio.currentTime = 0;
-
-    audio.play()
-      .then(() => {
-        // Some browsers dispatch `playing` immediately, but if it already started before
-        // the event callback runs we still guarantee a single start notification.
-        if (!isStarted && !audio.paused) {
-          handleStarted();
-        }
-      })
-      .catch(() => {
-        handleCompleted();
-      });
-  }, [getAudioSet, language, voice]);
-
+  }, [stop]);
+  const playVoiceMessage = useCallback(
+    (type: VoiceMessage) => {
+      if (!useSettingsStore.getState().isSoundEnabled()) return;
+      const audio = getVoiceAudio(language, voice)[type];
+      prepareVoiceCue(audio);
+      void audio
+        .play()
+        .then(() => setAudioBlocked(false))
+        .catch((error: unknown) => {
+          // Pause/cancel interrupts pending play() by design; only report actual denial.
+          if (error instanceof DOMException && error.name === "AbortError")
+            return;
+          setAudioBlocked(true);
+        });
+    },
+    [language, voice],
+  );
   const playSound = useCallback(
-    (isFinish: boolean) => playVoiceMessage(isFinish ? "done" : "next"),
+    (finish: boolean) => playVoiceMessage(finish ? "done" : "next"),
     [playVoiceMessage],
   );
-
   const playFirstSound = useCallback(
     () => playVoiceMessage("first"),
     [playVoiceMessage],
   );
-
   const vibrate = useCallback((type: "pre-step" | "step-change") => {
     if (!useSettingsStore.getState().isVibrateEnabled()) return;
-    if (!navigator.vibrate) return;
-    if (type === "pre-step") {
-      navigator.vibrate(180);
-    } else {
-      navigator.vibrate([140, 80, 140]);
-    }
+    navigator.vibrate?.(type === "pre-step" ? 180 : [140, 80, 140]);
   }, []);
-
-  return { playSound, playFirstSound, vibrate, stop };
+  return { playSound, playFirstSound, vibrate, stop, audioBlocked };
 }

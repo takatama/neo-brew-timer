@@ -1,11 +1,31 @@
 .app {
-  max-width: 520px;
+  max-width: 480px;
   margin: 0 auto;
-  min-height: 100vh;
+  min-height: 100svh;
   display: flex;
   flex-direction: column;
 }
-
-.withMiniPlayer :global(.content) {
-  padding-bottom: calc(100px + env(safe-area-inset-bottom));
+@media (min-width: 600px) {
+  .app {
+    margin-block: 28px;
+    border: 1px solid var(--md-outline);
+    border-radius: 30px;
+    background: var(--paper);
+    box-shadow: 0 20px 90px #314f430a;
+    min-height: calc(100svh - 56px);
+    overflow: clip;
+  }
+}
+@media (orientation: landscape) and (max-height: 550px) {
+  .app {
+    position: relative;
+    max-width: none;
+    width: 100%;
+    margin: 0;
+    min-height: 100svh;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    overflow: visible;
+  }
 }

@@ -1,62 +1,43 @@
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { useSessionStore } from "../../features/timer/store";
 import { useDisplayLanguage } from "../../shared/i18n/DisplayLanguage";
 import { localizedPath } from "../../shared/i18n/routing";
 import { RecipeVideo } from "../../shared/components/RecipeVideo";
+import { BrewIllustration } from "../../shared/components/BrewIllustration";
+import { Icon } from "../../shared/components/Icon";
 import styles from "./IntroPage.module.css";
-
-const heroImage = "/assets/images/goran-ivos-1JsjRW6Sbwg-unsplash.jpg";
-
 export function IntroPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const displayLanguage = useDisplayLanguage();
-  const setIntroSeen = useSessionStore((state) => state.setIntroSeen);
-
-  const handleContinue = () => {
-    setIntroSeen(true);
-    navigate(localizedPath(displayLanguage, "setup"));
-  };
-
+  const language = useDisplayLanguage();
   return (
     <main className={`content ${styles.intro}`}>
-      <img
-        className={styles.heroImage}
-        src={heroImage}
-        alt={t("intro.imageAlt")}
-        width="2048"
-        height="1365"
-      />
-
-      <section className={styles.introduction} aria-labelledby="intro-heading">
-        <h1 id="intro-heading" className={styles.heading}>{t("intro.heading")}</h1>
-        <p className={styles.lead}>
-          {t("intro.valueDescriptionFirst")}<br />{t("intro.valueDescriptionSecond")}
-        </p>
-        <p className={styles.recipeDescription}>{t("intro.recipeDescription")}</p>
-      </section>
-
-      <section className={styles.preparation} aria-labelledby="preparation-heading">
-        <h2 id="preparation-heading" className={styles.sectionHeading}>
-          {t("intro.preparation")}
-        </h2>
-        <ul className={styles.preparationList}>
-          <li>{t("intro.preparationItems.dripper")}</li>
-          <li>{t("intro.preparationItems.tools")}</li>
-          <li>{t("intro.preparationItems.coffee")}</li>
-          <li>{t("intro.preparationItems.temperature")}</li>
-        </ul>
-        <div className={styles.calculationNote}>
-          <p className={styles.example}>{t("intro.example")}</p>
-        </div>
-      </section>
-
-      <button type="button" className={styles.primaryButton} onClick={handleContinue}>
+      <BrewIllustration animated className={styles.hero} />
+      <div className={styles.copy}>
+        <p className="eyebrow">TEN POURS. ONE LOVELY MOMENT.</p>
+        <h1>{t("intro.heading")}</h1>
+        <p>{t("experience.introLead")}</p>
+        <small>{t("experience.recipeCredit")}</small>
+      </div>
+      <button
+        className="primary-button"
+        onClick={() => {
+          navigate(localizedPath(language, "setup"));
+        }}
+      >
         {t("intro.continue")}
+        <Icon name="arrow" />
       </button>
-
-      <RecipeVideo className={`card ${styles.videoCard}`} />
+      <section className={styles.preparation}>
+        <h2>{t("intro.preparation")}</h2>
+        <ul>
+          {["dripper", "tools", "coffee", "temperature"].map((key) => (
+            <li key={key}>{t(`intro.preparationItems.${key}`)}</li>
+          ))}
+        </ul>
+        <p>{t("intro.example")}</p>
+      </section>
+      <RecipeVideo />
     </main>
   );
 }

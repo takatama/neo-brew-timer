@@ -1,219 +1,409 @@
-.stepperRow {
+.setup {
+  gap: 18px;
+  padding-top: 16px;
+}
+.hero {
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  grid-template-columns: 1fr 125px;
   align-items: center;
+  gap: 0;
+  position: relative;
+  padding: 10px 0 8px;
 }
-
-.stepperRow::after {
-  content: "";
+.hero :global(.eyebrow) {
+  margin-bottom: 14px;
+  font-size: 0.6rem;
+  letter-spacing: 0.16em;
 }
-
-.beansLabel {
+.hero h1 {
+  font-family: var(--serif);
+  font-size: clamp(1.6rem, 6.8vw, 1.95rem);
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  line-height: 1.55;
+  margin-bottom: 10px;
+}
+.heroHint {
+  white-space: pre-line;
+  margin: 0;
+  font-size: 0.72rem;
   color: var(--md-text-muted);
-  font-size: 0.9rem;
-  font-weight: 600;
+  line-height: 1.9;
+  max-width: 220px;
 }
-
-.stepperControls {
+.illustration {
+  width: 148px;
+  margin-left: -8px;
+  transform: rotate(-3deg);
+}
+.recipeCard {
+  border: 1px solid var(--md-outline);
+  background: var(--md-surface);
+  border-radius: 24px;
+  padding: 20px 20px 0;
+  box-shadow: var(--shadow-1);
+}
+.doseHeader {
   display: flex;
   align-items: center;
-  gap: 18px;
+  justify-content: space-between;
 }
-
-.btnIcon {
-  width: 44px;
-  height: 44px;
-  border-radius: 999px;
+.doseHeader label {
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+.doseHeader :global(.eyebrow) {
+  color: #929583;
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+}
+.stepper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 8px 0 7px;
+}
+.stepper button {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  color: var(--md-primary);
+  background: var(--paper);
   border: 1px solid var(--md-outline);
-  background: var(--md-surface-2);
-  font-size: 1.4rem;
-  cursor: pointer;
+  border-radius: 50%;
 }
-
-.beansValue {
-  font-size: 1.6rem;
-  font-weight: 700;
+.stepper button:hover {
+  background: var(--sage);
 }
-
-.calculatedWater {
+.dose {
   display: flex;
   align-items: baseline;
   justify-content: center;
-  gap: 8px;
-  margin-top: 12px;
+  color: var(--md-primary);
+  gap: 3px;
+}
+.dose input {
+  appearance: textfield;
+  -moz-appearance: textfield;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  width: 3ch;
+  padding: 0;
+  font-size: 3.5rem;
+  line-height: 1.2;
+  font-weight: 500;
+  font-family: var(--serif);
+  text-align: center;
+  font-variant-numeric: lining-nums tabular-nums;
+  letter-spacing: -0.05em;
+  border-radius: 6px;
+}
+.dose input::-webkit-inner-spin-button,
+.dose input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.dose > span {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+}
+.presets {
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+  margin-bottom: 19px;
+}
+.presets button {
+  min-height: 44px;
+  min-width: 52px;
+  padding: 5px 10px;
+  border: 1px solid transparent;
+  border-radius: 100px;
+  background: transparent;
+  font-size: 0.76rem;
+  font-variant-numeric: tabular-nums;
   color: var(--md-text-muted);
 }
-
-.calculatedWaterLabel {
-  font-size: 0.85rem;
+.presets button span {
+  font-size: 0.66rem;
+  margin-left: 1px;
 }
-
-.calculatedWaterValue {
-  font-size: 1.15rem;
-  font-weight: 600;
-  color: var(--md-text);
+.presets button[aria-pressed="true"] {
+  border-color: #cfd8c6;
+  background: var(--sage);
+  color: var(--md-primary);
 }
-
-.waterRatio {
-  font-size: 0.78rem;
-}
-
-.btnPrimary {
-  border: none;
-  padding: 14px 16px;
-  border-radius: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  font-size: 1rem;
-  background: var(--md-primary);
-  color: var(--md-primary-contrast);
-  width: 100%;
-}
-
-
-.detailsSubTitle {
-  font-size: 1rem;
-  font-weight: 600;
-  margin: 0 0 8px;
-  color: var(--md-text);
-}
-
-.stepList {
+.waterSummary {
+  margin-inline: -20px;
+  border-top: 1px solid var(--md-outline);
   display: grid;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  border: 1px solid var(--md-outline);
-  border-radius: 12px;
-  background: var(--md-surface-2);
-  overflow: hidden;
+  grid-template-columns: 1.25fr 1fr 1fr;
+  padding: 15px 12px 17px;
+  border-radius: 0 0 24px 24px;
+  background: #f6f3eaa8;
 }
-
-.stepItem {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+.waterSummary > div {
+  text-align: center;
+  border-left: 1px solid var(--md-outline);
+}
+.waterSummary > div:first-child {
+  border: 0;
+}
+.waterSummary span {
+  display: block;
+  font-size: 0.65rem;
+  color: var(--md-text-muted);
+  margin-bottom: 6px;
+}
+.waterSummary strong {
+  display: block;
+  font-family: var(--serif);
+  font-variant-numeric: lining-nums tabular-nums;
+  font-size: 1.7rem;
+  font-weight: 500;
+  line-height: 1;
+}
+.waterSummary small {
+  font-family: inherit;
+  font-size: 0.9rem;
+  margin-left: 3px;
+}
+.preparation {
+  display: flex;
   align-items: center;
-  column-gap: 12px;
-  font-size: 0.95rem;
-  padding: 10px 12px;
+  justify-content: space-between;
+  padding: 0 6px;
+  color: var(--md-text-muted);
+  font-size: 0.71rem;
+  font-variant-numeric: tabular-nums;
+}
+.preparation span {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+.voiceRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 5px;
+  border-top: 1px solid var(--md-outline);
+  padding-top: 10px;
+}
+.voiceToggle {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 0.8rem;
+  color: var(--md-primary);
+  border: 0;
+  background: transparent;
+  padding: 0 0 0 4px;
+}
+.switch {
+  width: 30px;
+  height: 18px;
+  border-radius: 20px;
+  background: #bbbdae;
+  position: relative;
+  margin-left: 2px;
+  transition: background 0.2s;
+}
+.switch::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 12px;
+  height: 12px;
+  background: var(--md-surface);
+  border-radius: 50%;
+  transition: transform 0.2s;
+}
+.switch[data-on="true"] {
+  background: var(--md-primary);
+}
+.switch[data-on="true"]::after {
+  transform: translateX(12px);
+}
+.startArea {
+  padding-top: 0;
+}
+.scaleReminder {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.73rem;
+  color: var(--md-text-muted);
+  margin-bottom: 10px;
+}
+.startHint {
+  text-align: center;
+  font-size: 0.67rem;
+  color: var(--md-text-muted);
+  margin: 10px 0 0;
+}
+.guide {
+  border-top: 1px solid var(--md-outline);
   border-bottom: 1px solid var(--md-outline);
 }
-
-.stepItem:last-child {
-  border-bottom: none;
-}
-
-.stepNumber {
-  color: var(--md-text-muted);
-  font-size: 0.78rem;
-  font-weight: 600;
-}
-
-.stepInstruction {
-  color: var(--md-text);
-}
-
-.stepDuration {
-  font-weight: 600;
-  color: var(--md-text);
-  white-space: nowrap;
-}
-
-/* Details */
-.detailsSummary {
+.guide summary {
   list-style: none;
-  cursor: pointer;
-  font-weight: 600;
-  color: var(--md-text);
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  align-items: center;
+  min-height: 54px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  color: var(--md-primary);
 }
-
-.detailsSummary::-webkit-details-marker {
+.guide summary::-webkit-details-marker {
   display: none;
 }
-
-.detailsSummaryLink {
-  color: var(--md-text-muted);
-  border: 1px solid var(--md-outline);
-  border-radius: 999px;
-  padding: 4px 10px;
+.guide summary > span {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.guide[open] summary > svg {
+  transform: rotate(180deg);
+}
+.guideBody {
+  padding: 12px 0 24px;
   font-size: 0.8rem;
-  font-weight: 500;
+  line-height: 1.9;
 }
-
-.detailsBody {
-  margin-top: 12px;
-  display: grid;
-  gap: 12px;
-}
-
-.detailsText {
-  color: var(--md-text-muted);
+.guideBody h2 {
   font-size: 0.95rem;
-  line-height: 1.5;
 }
-
-.detailsVideo {
-  padding-top: 4px;
+.guideBody h3 {
+  font-size: 0.85rem;
+  margin: 24px 0 10px;
 }
-
-/* Equipment */
-
-.equipmentHeader {
+.guideBody ul {
+  padding-left: 20px;
+}
+.guideNote {
+  background: var(--sage);
+  padding: 12px 14px;
+  border-radius: 12px;
+}
+.schedule {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.schedule li {
+  display: grid;
+  grid-template-columns: 30px 1fr 1fr 1fr;
+  gap: 8px;
+  padding: 8px 4px;
+  border-bottom: 1px solid var(--md-outline);
+  font-variant-numeric: tabular-nums;
+}
+.schedule li > span {
+  color: var(--md-text-muted);
+}
+.schedule li > span:last-child {
+  text-align: right;
+}
+.equipment {
+  list-style: none;
+  padding-left: 0 !important;
+}
+.equipment a {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  min-height: 44px;
+  gap: 12px;
 }
-
-.equipmentTitle {
-  margin: 0;
-}
-
-.equipmentList {
-  margin: 8px 0 0;
-  padding: 0;
-  list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.equipmentList li {
-  background: var(--md-surface-2);
-  border-radius: 999px;
-  padding: 6px 10px;
-  font-size: 0.85rem;
-}
-
-.equipmentList a {
-  color: var(--md-text);
-  text-decoration: none;
-}
-
-.equipmentList a:hover {
-  text-decoration: underline;
-}
-
-.affiliateDisclosure {
-  margin: 12px 0 0;
+.disclosure {
   color: var(--md-text-muted);
-  font-size: 0.78rem;
-  line-height: 1.45;
+  font-size: 0.65rem;
+  line-height: 1.7;
 }
-
-.heading { padding: 14px 2px 10px; }
-.heading h1 { font-size: clamp(1.5rem, 6vw, 1.85rem); letter-spacing: -.035em; line-height: 1.35; margin: 0 0 10px; }
-.preparation { padding: 4px 6px; }
-.preparation h2 { font-size: .9rem; margin: 0 0 8px; }
-.preparation p { font-size: .9rem; line-height: 1.7; margin: 0 0 10px; color: var(--md-text-muted); }
-.preparation span { font-size: .8rem; font-weight: 600; }
-.detailsSummary { min-height: 44px; }
-.stepperRow { grid-template-columns: auto 1fr; gap: 12px; }
-.stepperRow::after { display: none; }
-.stepperControls { justify-content: center; gap: 16px; }
-.beansValue { min-width: 3ch; font-variant-numeric: tabular-nums; }
-.btnPrimary { min-height: 56px; }
+.credit {
+  text-align: center;
+  font-size: 0.62rem;
+  color: var(--md-text-muted);
+  padding-top: 8px;
+}
+.credit span {
+  display: block;
+  font-family: var(--serif);
+  font-style: italic;
+  margin-top: 10px;
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+@media (max-width: 350px) {
+  .hero {
+    grid-template-columns: 1fr 90px;
+  }
+  .illustration {
+    width: 110px;
+    margin-left: -16px;
+  }
+  .hero h1 {
+    font-size: 1.6rem;
+  }
+  .heroHint {
+    font-size: 0.68rem;
+  }
+  .recipeCard {
+    padding-top: 16px;
+  }
+  .presets {
+    gap: 3px;
+  }
+  .presets button {
+    min-width: 48px;
+  }
+}
+@media (max-height: 650px) {
+  .setup {
+    gap: 14px;
+    padding-top: 12px;
+  }
+  .hero {
+    height: 0;
+    padding: 0;
+    margin-bottom: -14px;
+    display: block;
+  }
+  .hero > div > :not(h1),
+  .hero > svg {
+    display: none;
+  }
+  .hero h1 {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .recipeCard {
+    padding-top: 16px;
+  }
+  .dose input {
+    font-size: 3rem;
+  }
+  .presets {
+    margin-bottom: 12px;
+  }
+  .waterSummary {
+    padding-block: 13px;
+  }
+}
+@media (orientation: landscape) and (max-height: 550px) {
+  .setup {
+    max-width: 520px;
+    width: 100%;
+    margin-inline: auto;
+  }
+}
