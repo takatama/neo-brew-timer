@@ -22,26 +22,45 @@ export function useCoffeeNews(language: Language, enabled = true) {
     if (!enabled) return;
     const controller = new AbortController();
     let active = true;
+    const timeout = window.setTimeout(() => controller.abort(), 12_000);
     setLoading(true);
-    fetch(`https://daily-brew.takatama.workers.dev/news?lang=${language}`, { signal: controller.signal })
-      .then((r) => { if (!r.ok) throw new Error("News unavailable"); return r.json(); })
+    fetch(`https://daily-brew.takatama.workers.dev/news?lang=${language}`, {
+      signal: controller.signal,
+    })
+      .then((r) => {
+        if (!r.ok) throw new Error("News unavailable");
+        return r.json();
+      })
       .then((data) => {
         if (!active) return;
-        const items: NewsItem[] = (Array.isArray(data.items) ? data.items : []).filter((item: NewsItem) =>
-          typeof item.short_title === "string" && typeof item.source === "string" && typeof item.url === "string" && /^https?:\/\//.test(item.url)
-        ).map((item: NewsItem) => ({
-          id: item.id,
-          short_title: decodeHtml(item.short_title),
-          url: item.url,
-          source: decodeHtml(item.source),
-        }));
+        const items: NewsItem[] = (Array.isArray(data.items) ? data.items : [])
+          .filter(
+            (item: NewsItem) =>
+              typeof item.short_title === "string" &&
+              typeof item.source === "string" &&
+              typeof item.url === "string" &&
+              /^https?:\/\//.test(item.url),
+          )
+          .map((item: NewsItem) => ({
+            id: item.id,
+            short_title: decodeHtml(item.short_title),
+            url: item.url,
+            source: decodeHtml(item.source),
+          }));
         setNews(items);
         setLoading(false);
       })
       .catch(() => {
-        if (active) { setNews([]); setLoading(false); }
+        if (active) {
+          setNews([]);
+          setLoading(false);
+        }
       });
-    return () => { active = false; controller.abort(); };
+    return () => {
+      active = false;
+      window.clearTimeout(timeout);
+      controller.abort();
+    };
   }, [language, enabled]);
 
   return { news, loading };

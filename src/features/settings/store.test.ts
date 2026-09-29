@@ -35,8 +35,6 @@ describe("useSettingsStore", () => {
       debugEnabled: false,
       debugSpeed: 1,
       startDelay: true,
-      bgmEnabled: false,
-      debugBgmDayOfWeek: "mon",
     });
   });
 
@@ -47,8 +45,14 @@ describe("useSettingsStore", () => {
     expect(state.debugEnabled).toBe(false);
     expect(state.debugSpeed).toBe(1);
     expect(state.startDelay).toBe(true);
-    expect(state.bgmEnabled).toBe(false);
-    expect(["sun", "mon", "tue", "wed", "thu", "fri", "sat"]).toContain(state.debugBgmDayOfWeek);
+  });
+
+  it("still changes preferences when local storage is full", () => {
+    localStorageMock.setItem.mockImplementationOnce(() => {
+      throw new DOMException("full", "QuotaExceededError");
+    });
+    expect(() => useSettingsStore.getState().setLanguage("ja")).not.toThrow();
+    expect(useSettingsStore.getState().language).toBe("ja");
   });
 
   it("setLanguage updates language", () => {
@@ -123,29 +127,6 @@ describe("useSettingsStore", () => {
     useSettingsStore.getState().setStartDelay(false);
     expect(useSettingsStore.getState().startDelay).toBe(false);
   });
-
-  it("setBgmEnabled updates BGM toggle", () => {
-    useSettingsStore.getState().setBgmEnabled(false);
-    expect(useSettingsStore.getState().bgmEnabled).toBe(false);
-
-    useSettingsStore.getState().setBgmEnabled(true);
-    expect(useSettingsStore.getState().bgmEnabled).toBe(true);
-  });
-
-  it("setDebugBgmDayOfWeek updates debug BGM day", () => {
-    useSettingsStore.getState().setDebugBgmDayOfWeek("sun");
-    expect(useSettingsStore.getState().debugBgmDayOfWeek).toBe("sun");
-
-    useSettingsStore.getState().setDebugBgmDayOfWeek("fri");
-    expect(useSettingsStore.getState().debugBgmDayOfWeek).toBe("fri");
-  });
-
-  it("normalizes unexpected debug BGM day values", () => {
-    (useSettingsStore.getState() as unknown as { setDebugBgmDayOfWeek: (v: unknown) => void })
-      .setDebugBgmDayOfWeek("invalid");
-
-    expect(useSettingsStore.getState().debugBgmDayOfWeek).toBe("mon");
-  });
 });
 
 describe("preparation delay persistence", () => {
@@ -159,10 +140,18 @@ describe("preparation delay persistence", () => {
     expect(useSettingsStore.getState().startDelay).toBe(false);
   });
   it("defaults to waiting and drops the removed animation setting for existing installs", async () => {
-    localStorageMock.setItem("coco-timer-settings", JSON.stringify({version: 5, state: {language: "ja", animation: false}}));
+    localStorageMock.setItem(
+      "coco-timer-settings",
+      JSON.stringify({
+        version: 5,
+        state: { language: "ja", animation: false },
+      }),
+    );
     await useSettingsStore.persist.rehydrate();
     expect(useSettingsStore.getState().startDelay).toBe(true);
     expect(useSettingsStore.getState().language).toBe("ja");
-    expect(JSON.parse(localStorageMock.getItem("coco-timer-settings")!).state).not.toHaveProperty("animation");
+    expect(
+      JSON.parse(localStorageMock.getItem("coco-timer-settings")!).state,
+    ).not.toHaveProperty("animation");
   });
 });

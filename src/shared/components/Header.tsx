@@ -1,50 +1,65 @@
-import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { SettingsModal } from '../../features/settings/SettingsModal';
-import styles from './Header.module.css';
-
-const SettingsIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="20"
-    height="20"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    aria-hidden="true"
-  >
-    <path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915" />
-    <circle cx="12" cy="12" r="3" />
-  </svg>
-);
-
-export function Header() {
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { SettingsModal } from "../../features/settings/SettingsModal";
+import { useSettingsStore } from "../../features/settings/store";
+import { Icon } from "./Icon";
+import { primeVoiceAudio } from "../../features/timer/hooks/voiceAudio";
+import { useDisplayLanguage } from "../i18n/DisplayLanguage";
+import styles from "./Header.module.css";
+export function Header({ brewing = false }: { brewing?: boolean }) {
   const { t } = useTranslation();
   const [settingsOpen, setSettingsOpen] = useState(false);
-
+  const settings = useSettingsStore();
+  const language = useDisplayLanguage();
+  const sound = settings.isSoundEnabled();
   return (
     <>
       <header className={styles.appBar}>
-        <div className={styles.appTitle}>
-          <img
-            src="/icon.svg"
-            width="28"
-            height="28"
-            alt=""
+        <div className={styles.appTitle} aria-label={t("app.title")}>
+          <svg
+            width="27"
+            height="31"
+            viewBox="0 0 30 34"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.3"
             aria-hidden="true"
-          />
-          <span>{t("app.title")}</span>
+          >
+            <path
+              d="M4 11h22L17 24h-4L4 11ZM9 25h12M7 29h16M15 4v3M10 2v4M20 2v4"
+              strokeLinecap="round"
+            />
+            <path d="m9 13 5 8m7-8-5 8" opacity=".5" />
+          </svg>
+          <div>
+            <span className={styles.wordmark}>{t("app.wordmark")}</span>
+            <span className={styles.subtitle}>
+              {t("experience.brandTagline")}
+            </span>
+          </div>
         </div>
-        <button
-          className={styles.iconBtn}
-          onClick={() => setSettingsOpen(true)}
-          aria-label={t("settings.title")}
-        >
-          <SettingsIcon />
-        </button>
+        <div className={styles.actions}>
+          {brewing && (
+            <button
+              className={styles.iconBtn}
+              aria-label={t(sound ? "experience.mute" : "experience.unmute")}
+              aria-pressed={sound}
+              onClick={() => {
+                if (!sound) primeVoiceAudio(language, settings.voice);
+                settings.toggleNotifyFlag("sound");
+              }}
+            >
+              <Icon name={sound ? "sound" : "mute"} size={19} />
+            </button>
+          )}
+          <button
+            className={styles.iconBtn}
+            onClick={() => setSettingsOpen(true)}
+            aria-label={t("settings.title")}
+          >
+            <Icon name="settings" />
+          </button>
+        </div>
       </header>
       <SettingsModal
         open={settingsOpen}

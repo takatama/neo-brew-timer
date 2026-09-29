@@ -1,37 +1,130 @@
 @import "../brew-timer/theme.css";
-
 * {
   box-sizing: border-box;
 }
-
 body {
   margin: 0;
-  background: #f8f5ef;
+  background: var(--paper);
   color: var(--md-text);
+  -webkit-font-smoothing: antialiased;
 }
-
-.content {
-  padding: 16px;
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 15% 10%, #fdf9ee 0%, transparent 65%),
+    radial-gradient(ellipse at 90% 80%, #e9e7d9 0%, transparent 65%);
+}
+button,
+input {
+  font: inherit;
+}
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+button {
+  cursor: pointer;
+  touch-action: manipulation;
+}
+button {
+  min-height: 44px;
+}
+button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+a {
+  color: var(--md-primary);
+  text-underline-offset: 4px;
+}
+:focus-visible {
+  outline: 2px solid var(--md-primary);
+  outline-offset: 4px;
+}
+h1,
+h2,
+h3,
+h4,
+p {
+  margin-top: 0;
+}
+button,
+a,
+input,
+summary {
+  outline-offset: 4px;
+}
+:where(.content) {
+  padding: 22px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
+  padding-bottom: max(28px, env(safe-area-inset-bottom));
 }
-
-/* ===== Responsive ===== */
-@media (max-width: 480px) {
-  .controls {
-    grid-template-columns: 1fr;
+.primary-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  width: 100%;
+  min-height: 60px;
+  padding: 14px 22px;
+  border: 1px solid var(--md-primary);
+  border-radius: 18px;
+  background: var(--md-primary);
+  color: var(--md-primary-contrast);
+  font-size: 1rem;
+  font-weight: 600;
+  box-shadow: 0 5px 14px #314f4315;
+  transition:
+    background 0.2s,
+    box-shadow 0.2s;
+}
+.primary-button:hover {
+  background: #254236;
+  box-shadow: 0 6px 22px #314f4325;
+}
+.eyebrow {
+  font-size: 0.64rem;
+  letter-spacing: 0.2em;
+  color: var(--md-text-muted);
+  font-weight: 600;
+}
+.offline-notice {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 22px 20px;
+  color: var(--md-text-muted);
+  font-size: 0.7rem;
+}
+.offline-notice button {
+  border: 1px solid var(--md-outline);
+  border-radius: 12px;
+  padding: 5px 12px;
+  color: var(--md-primary);
+  background: var(--md-surface);
+}
+@media (max-width: 350px) {
+  :where(.content) {
+    padding: 16px;
+    gap: 16px;
   }
 }
-
-button, input { font: inherit; }
-button { touch-action: manipulation; }
-button:disabled { opacity: .45; cursor: default; }
-button, .choice { min-height: 44px; }
-:focus-visible { outline: 3px solid var(--md-primary); outline-offset: 3px; }
-.content { padding-bottom: max(24px, env(safe-area-inset-bottom)); }
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
 }
-
-.offline-notice { display: flex; gap: 12px; align-items: center; justify-content: space-between; padding: 12px 16px 0; color: var(--md-text-muted); font-size: .8rem; }

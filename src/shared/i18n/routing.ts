@@ -30,10 +30,6 @@ export function choosePreferredLanguage(
   return "en";
 }
 
-function defaultPage(introSeen: boolean): AppPage {
-  return introSeen ? "setup" : "intro";
-}
-
 export interface AppRouteResolution {
   language: DisplayLanguage;
   page: AppPage;
@@ -45,13 +41,12 @@ export function resolveAppRoute(
   search: string,
   hash: string,
   preferredLanguage: DisplayLanguage,
-  introSeen: boolean,
 ): AppRouteResolution {
   const segments = pathSegments(pathname);
   const first = segments[0];
   const second = segments[1];
   let language = preferredLanguage;
-  let page = defaultPage(introSeen);
+  let page: AppPage = "setup";
 
   if (isDisplayLanguage(first)) {
     language = first;
@@ -87,8 +82,9 @@ export function replacePathLanguage(
   hash = "",
 ): string {
   const segments = pathSegments(pathname);
-  const page = isDisplayLanguage(segments[0]) && isAppPage(segments[1])
-    ? segments[1]
-    : "setup";
+  const page =
+    isDisplayLanguage(segments[0]) && isAppPage(segments[1])
+      ? segments[1]
+      : "setup";
   return localizedPath(language, page, search, hash);
 }

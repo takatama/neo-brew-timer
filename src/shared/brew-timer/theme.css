@@ -1,78 +1,64 @@
 :root {
   color-scheme: light;
-  --md-primary: #6d4c41;
-  --md-primary-contrast: #ffffff;
-  --md-secondary: #8d6e63;
-  --md-surface: #fffef8;
-  --md-surface-2: #f7f2ea;
-  --md-outline: #e2d8c8;
-  --md-text: #2b221c;
-  --md-text-muted: #6f6258;
-  --md-accent: #ffb74d;
-  --md-danger: #d32f2f;
-  --shadow-1: 0 2px 6px rgba(36, 25, 16, 0.12);
-  --shadow-2: 0 10px 24px rgba(36, 25, 16, 0.18);
-  --radius-lg: 18px;
-  --radius-md: 12px;
-  --radius-sm: 10px;
-  font-family: system-ui, -apple-system, "Segoe UI", "Noto Sans JP", sans-serif;
+  --md-primary: #314f43;
+  --md-primary-contrast: #fffdf6;
+  --md-secondary: #9a694e;
+  --md-surface: #fffcf5;
+  --md-surface-2: #f1ecdf;
+  --md-outline: #ded9ca;
+  --md-text: #2e392f;
+  --md-text-muted: #6e7567;
+  --md-accent: #bd7952;
+  --md-danger: #a44833;
+  --paper: #f6f2e8;
+  --sage: #e9ede1;
+  --clay-light: #f1e4d4;
+  --serif:
+    "Iowan Old Style", "Palatino Linotype", "Noto Serif CJK JP", Georgia, serif;
+  --shadow-1: 0 3px 18px #3d423308;
+  --shadow-2: 0 20px 70px #273b2925;
+  --radius-lg: 26px;
+  --radius-md: 16px;
+  --radius-sm: 12px;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans CJK JP",
+    "Noto Sans JP", sans-serif;
+  font-synthesis: none;
+  font-optical-sizing: auto;
 }
-
 .card {
-  padding: 16px;
+  padding: 22px;
   background: var(--md-surface);
   border: 1px solid var(--md-outline);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-1);
 }
-
 .card-title {
   margin-bottom: 10px;
   color: var(--md-text-muted);
-  font-size: 0.9rem;
-  font-weight: 600;
-  letter-spacing: 0.3px;
-}
-
-.hint {
-  margin-top: 4px;
-  color: var(--md-text-muted);
   font-size: 0.85rem;
+  font-weight: 600;
 }
-
+.hint {
+  color: var(--md-text-muted);
+  font-size: 0.8rem;
+  line-height: 1.8;
+}
 .choice-row {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
   gap: 8px;
 }
-
 .choice {
-  padding: 8px 12px;
+  padding: 8px 16px;
   cursor: pointer;
   background: var(--md-surface-2);
   border: 1px solid var(--md-outline);
-  border-radius: 999px;
+  border-radius: 100px;
+  color: var(--md-text);
 }
-
 .choice.active {
   color: var(--md-primary-contrast);
   background: var(--md-primary);
   border-color: var(--md-primary);
-}
-
-.choice:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
-}
-
-.pour-number {
-  font-size: 2rem;
-  font-weight: 700;
-}
-
-.pour-unit {
-  margin-left: 0.14em;
-  font-size: 1em;
-  font-weight: 700;
 }

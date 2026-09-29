@@ -1,40 +1,63 @@
 .appBar {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  background: var(--md-surface);
-  box-shadow: var(--shadow-1);
-  padding: 14px 16px;
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  gap: 12px;
-}
-
-.appTitle {
-  display: inline-flex;
   align-items: center;
-  gap: 8px;
-  font-weight: 700;
-  letter-spacing: 0.3px;
+  padding: 18px 22px 12px;
+  min-height: 76px;
 }
-
-.appTitle img {
+.appTitle {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  color: var(--md-primary);
+}
+.wordmark {
   display: block;
+  font-family: var(--serif);
+  font-size: 1.65rem;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  font-weight: 500;
 }
-
+.subtitle {
+  display: block;
+  margin-top: 5px;
+  font-size: 0.5rem;
+  letter-spacing: 0.16em;
+  color: var(--md-text-muted);
+}
+.actions {
+  display: flex;
+  gap: 3px;
+}
 .iconBtn {
-  border: none;
+  border: 1px solid transparent;
+  color: var(--md-primary);
   background: transparent;
-  font-size: 22px;
-  cursor: pointer;
-  color: var(--md-text);
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
 }
-
-.iconBtn svg {
-  width: 20px;
-  height: 20px;
+.iconBtn:hover {
+  border-color: var(--md-outline);
+  background: var(--md-surface);
 }
-
-.iconBtn { width: 44px; height: 44px; display: grid; place-items: center; }
-.appBar { padding-block: 6px; box-shadow: none; border-bottom: 1px solid var(--md-outline); padding-top: max(6px, env(safe-area-inset-top)); }
+@media (max-width: 350px), (max-height: 650px) {
+  .appBar {
+    padding: 10px 16px;
+    min-height: 60px;
+  }
+  .wordmark {
+    font-size: 1.4rem;
+  }
+  .subtitle {
+    font-size: 0.45rem;
+  }
+}
+@media (max-height: 650px) {
+  .appBar {
+    padding-block: 8px;
+  }
+}

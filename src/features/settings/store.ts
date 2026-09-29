@@ -1,137 +1,112 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
-import type { BgmDayOfWeek, Language, NotifyMode, Settings, Voice } from "./types";
-
-function getDefaultLanguage(): Language {
-  if (typeof navigator === "undefined") return "en";
-  return navigator.language.startsWith("ja") ? "ja" : "en";
+import { createJSONStorage, persist } from "zustand/middleware";
+import type { Language, NotifyMode, Settings, Voice } from "./types";
+function defaultLanguage(): Language {
+  return typeof navigator !== "undefined" && navigator.language.startsWith("ja")
+    ? "ja"
+    : "en";
 }
-
-const DAY_OF_WEEK_BY_JS_DAY: BgmDayOfWeek[] = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
-
-function getDefaultDebugBgmDayOfWeek(): BgmDayOfWeek {
-  const jsDay = new Date().getDay();
-  return DAY_OF_WEEK_BY_JS_DAY[jsDay] ?? "mon";
+function normalizeNotifyMode(mode: unknown): NotifyMode {
+  return mode === "both" ||
+    mode === "sound" ||
+    mode === "vibrate" ||
+    mode === "none"
+    ? mode
+    : "both";
 }
-
-function normalizeDebugBgmDayOfWeek(dayOfWeek: unknown): BgmDayOfWeek {
-  return dayOfWeek === "sun"
-    || dayOfWeek === "mon"
-    || dayOfWeek === "tue"
-    || dayOfWeek === "wed"
-    || dayOfWeek === "thu"
-    || dayOfWeek === "fri"
-    || dayOfWeek === "sat"
-    ? dayOfWeek
-    : "mon";
-}
-
-function normalizeNotifyMode(mode: string | undefined): NotifyMode {
-  if (mode === "both" || mode === "sound" || mode === "vibrate" || mode === "none") {
-    return mode;
-  }
-  return "both";
-}
-
 export interface SettingsStore extends Settings {
-  setLanguage: (lang: Language) => void;
+  setLanguage: (language: Language) => void;
   setNotifyMode: (mode: NotifyMode) => void;
   toggleNotifyFlag: (flag: "sound" | "vibrate") => void;
   setVoice: (voice: Voice) => void;
   setDebugEnabled: (enabled: boolean) => void;
   setDebugSpeed: (speed: number) => void;
   setStartDelay: (enabled: boolean) => void;
-  setBgmEnabled: (enabled: boolean) => void;
-  setDebugBgmDayOfWeek: (dayOfWeek: BgmDayOfWeek) => void;
   isSoundEnabled: () => boolean;
   isVibrateEnabled: () => boolean;
 }
-
 export const useSettingsStore = create<SettingsStore>()(
   persist(
     (set, get) => ({
-      language: getDefaultLanguage(),
-      notifyMode: "both" as NotifyMode,
-      voice: "male" as Voice,
+      language: defaultLanguage(),
+      notifyMode: "both",
+      voice: "male",
+      startDelay: true,
       debugEnabled: false,
       debugSpeed: 1,
-      startDelay: true,
-      bgmEnabled: false,
-      debugBgmDayOfWeek: getDefaultDebugBgmDayOfWeek(),
-
       setLanguage: (language) => set({ language }),
       setNotifyMode: (notifyMode) => set({ notifyMode }),
-
       toggleNotifyFlag: (flag) => {
-        const { notifyMode } = get();
         const flags = {
-          sound: notifyMode === "sound" || notifyMode === "both",
-          vibrate: notifyMode === "vibrate" || notifyMode === "both",
+          sound: get().isSoundEnabled(),
+          vibrate: get().isVibrateEnabled(),
         };
         flags[flag] = !flags[flag];
-
-        let newMode: NotifyMode;
-        if (flags.sound && flags.vibrate) newMode = "both";
-        else if (flags.sound) newMode = "sound";
-        else if (flags.vibrate) newMode = "vibrate";
-        else newMode = "none";
-
-        set({ notifyMode: newMode });
+        set({
+          notifyMode: flags.sound
+            ? flags.vibrate
+              ? "both"
+              : "sound"
+            : flags.vibrate
+              ? "vibrate"
+              : "none",
+        });
       },
-
       setVoice: (voice) => set({ voice }),
-      setDebugEnabled: (debugEnabled) =>
-        set({
-          debugEnabled,
-          debugSpeed: debugEnabled ? 5 : 1,
-        }),
-      setDebugSpeed: (debugSpeed) =>
-        set({
-          debugSpeed: debugSpeed === 5 ? 5 : 1,
-        }),
       setStartDelay: (startDelay) => set({ startDelay }),
-      setBgmEnabled: (bgmEnabled) => set({ bgmEnabled }),
-      setDebugBgmDayOfWeek: (debugBgmDayOfWeek) => set({
-        debugBgmDayOfWeek: normalizeDebugBgmDayOfWeek(debugBgmDayOfWeek),
-      }),
-
-      isSoundEnabled: () => {
-        const mode = get().notifyMode;
-        return mode === "sound" || mode === "both";
-      },
-      isVibrateEnabled: () => {
-        const mode = get().notifyMode;
-        return mode === "vibrate" || mode === "both";
-      },
+      setDebugEnabled: (debugEnabled) =>
+        set({ debugEnabled, debugSpeed: debugEnabled ? 5 : 1 }),
+      setDebugSpeed: (speed) => set({ debugSpeed: speed === 5 ? 5 : 1 }),
+      isSoundEnabled: () =>
+        get().notifyMode === "sound" || get().notifyMode === "both",
+      isVibrateEnabled: () =>
+        get().notifyMode === "vibrate" || get().notifyMode === "both",
     }),
     {
       name: "coco-timer-settings",
-      version: 6,
-      migrate: (persistedState: unknown) => {
-        const state = (persistedState ?? {}) as Partial<Settings>;
-        const debugSpeed = state.debugSpeed === 5 ? 5 : 1;
+      version: 7,
+      storage: createJSONStorage(() => ({
+        getItem: (name) => {
+          try {
+            return localStorage.getItem(name);
+          } catch {
+            return null;
+          }
+        },
+        setItem: (name, value) => {
+          try {
+            localStorage.setItem(name, value);
+          } catch {
+            /* Preferences are optional. */
+          }
+        },
+        removeItem: (name) => {
+          try {
+            localStorage.removeItem(name);
+          } catch {
+            /* Preferences are optional. */
+          }
+        },
+      })),
+      migrate: (saved) => {
+        const state = (saved ?? {}) as Partial<Settings>;
         return {
-          language: state.language ?? getDefaultLanguage(),
+          language:
+            state.language === "ja" || state.language === "en"
+              ? state.language
+              : defaultLanguage(),
           notifyMode: normalizeNotifyMode(state.notifyMode),
-          voice: state.voice ?? "male",
+          voice: state.voice === "female" ? "female" : "male",
           startDelay: state.startDelay ?? true,
-          debugSpeed,
-          debugEnabled: state.debugEnabled ?? debugSpeed > 1,
-          bgmEnabled: state.bgmEnabled ?? false,
-          debugBgmDayOfWeek: state.debugBgmDayOfWeek == null
-            ? getDefaultDebugBgmDayOfWeek()
-            : normalizeDebugBgmDayOfWeek(state.debugBgmDayOfWeek),
+          debugEnabled: false,
+          debugSpeed: 1,
         };
       },
       partialize: (state) => ({
         language: state.language,
-        notifyMode: normalizeNotifyMode(state.notifyMode),
+        notifyMode: state.notifyMode,
         voice: state.voice,
-        debugEnabled: state.debugEnabled,
-        debugSpeed: state.debugSpeed,
         startDelay: state.startDelay,
-        bgmEnabled: state.bgmEnabled,
-        debugBgmDayOfWeek: normalizeDebugBgmDayOfWeek(state.debugBgmDayOfWeek),
       }),
     },
   ),

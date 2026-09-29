@@ -1,6 +1,7 @@
 {
   "app": {
     "title": "Neo Brew Timer",
+    "wordmark": "neo brew",
     "footer": "Neo Brew Timer"
   },
   "settings": {
@@ -11,18 +12,9 @@
     "voice": "音声",
     "voiceMale": "男性",
     "voiceFemale": "女性",
-    "debug": "デバッグ",
-    "debugHint": "タイマーを高速再生します",
-    "debugOff": "オフ",
-    "debugX5": "x5倍速",
-    "notifySound": "通知音",
+    "notifySound": "音声で案内",
     "notifyVibrate": "振動",
-    "bgm": "BGM",
-    "save": "保存",
     "close": "閉じる",
-    "debugOn": "オン",
-    "display": "音楽",
-    "developer": "開発者向け",
     "startDelay": "開始前に5秒待つ",
     "brewing": "抽出"
   },
@@ -57,14 +49,6 @@
     "equipment": "器具",
     "affiliate": "Amazonのアソシエイトとして、Neo Brew Timerは適格販売により収入を得ています。",
     "water": "お湯の量",
-    "debugBgmDay": "デバッグBGM曜日",
-    "daySun": "日",
-    "dayMon": "月",
-    "dayTue": "火",
-    "dayWed": "水",
-    "dayThu": "木",
-    "dayFri": "金",
-    "daySat": "土",
     "heading": "抽出の準備",
     "preparation": "抽出の準備",
     "prepHint": "湯温 95〜96℃ · 超粗挽き",
@@ -78,7 +62,7 @@
   },
   "timer": {
     "currentStep": "今のステップ",
-    "nextStep": "次は",
+    "nextStep": "次の合計",
     "firstStep": "まずは",
     "remaining": "あと <time>{{time}}</time>",
     "play": "淹れる",
@@ -127,7 +111,7 @@
     "secondsUnit": "秒",
     "lastPour": "最後の一湯",
     "untilNext": "次に注ぐまで",
-    "untilFinish": "完成までの目安",
+    "untilFinish": "完成の目安まで",
     "elapsed": "経過",
     "cancelStart": "取り消す",
     "resume": "再開",
@@ -154,34 +138,7 @@
   ],
   "news": {
     "title": "今日のコーヒーニュース",
-    "loading": "ニュースを読み込み中...",
-    "ads": {
-      "label": "[広告]",
-      "filter": {
-        "title": "HARIO V60用 ペーパーフィルター",
-        "description": "コーヒーはあるのにフィルターがない朝、ありませんか。"
-      },
-      "dripper": {
-        "title": "V60ドリッパーNeo",
-        "description": "Neo Brewに使いやすい、シンプルな円すい形ドリッパーです。"
-      },
-      "kettle": {
-        "title": "温度調整付きコーヒーケトル",
-        "description": "狙った温度で淹れると、味がブレません。"
-      },
-      "scale": {
-        "title": "コーヒースケール",
-        "description": "安定の美味しさは、いつもの数字から。"
-      },
-      "grinder": {
-        "title": "コーヒーグラインダー",
-        "description": "挽きたての香りは、やっぱり別格。"
-      },
-      "canister": {
-        "title": "コーヒー キャニスター",
-        "description": "豆の鮮度を守る、毎日の保存に。"
-      }
-    }
+    "loading": "ニュースを読み込み中..."
   },
   "pwa": {
     "ready": "オフラインで使う準備ができました",
@@ -191,5 +148,58 @@
   "error": {
     "title": "画面を表示できませんでした",
     "back": "準備画面に戻る"
+  },
+  "experience": {
+    "brandTagline": "毎日の、小さなひととき",
+    "setupEyebrow": "ひと息、淹れましょう",
+    "doseEyebrow": "コーヒー",
+    "introEyebrow": "10回の注湯で、いつもの一杯を",
+    "finishEyebrow": "淹れたてのひととき",
+    "footerNote": "あなたのコーヒー時間に。",
+    "setupHeading": "いい一杯を、\nいつもの朝に。",
+    "setupLead": "10回の注湯。\n合図に合わせるだけ。",
+    "dosePresets": "よく使う豆の量",
+    "ratio": "豆とお湯",
+    "pours": "注ぐ回数",
+    "times": "回",
+    "grind": "超粗挽き",
+    "voiceGuide": "音声で案内",
+    "previewVoice": "音声を試す",
+    "stopPreview": "止める",
+    "audioUnavailable": "音声を再生できませんでした。",
+    "zeroScale": "豆をセットして、スケールを0gに。",
+    "recipeCredit": "粕谷哲さんのレシピ「Neo Brew」",
+    "drawdownHint": "最後は2:30に注ぎ、落ちきるのを待ちます。3:30は完成の目安です。",
+    "mute": "音声案内をオフにする",
+    "unmute": "音声案内をオンにする",
+    "scaleTarget": "スケールのお湯の合計を",
+    "addWater": "今回 ＋{{amount}}g",
+    "pourLabel": "回目",
+    "getKettleReady": "ケトルを持って、最初の一湯へ。",
+    "bloomAction": "蒸らしの一湯",
+    "bloomHint": "目標まで注いだら、30秒まで蒸らします。",
+    "pourHint": "目標まで注いだら、次の合図を待ちます。",
+    "lastPourHint": "注湯はここまで。落ちきるのを待ちます。",
+    "pausedHeading": "ひと休み",
+    "pausedHint": "再開すると、続きから案内します。",
+    "comingNow": "まもなく、次は",
+    "pourCountdown": "次の注湯まで{{seconds}}秒",
+    "finishCountdown": "完成の目安まで{{seconds}}秒",
+    "nextDrawdown": "落ちきるまで待つ",
+    "progressAccessible": "注湯の進み具合 {{current}} / {{total}} 回",
+    "totalTime": "約3:30で完成",
+    "changeDose": "変更",
+    "keepOpen": "抽出中は、この画面を開いたままに。",
+    "finishHeading": "いい一杯の、\nできあがり。",
+    "finishHint": "まだお湯が残っていたら、\n落ちきるまで待ちましょう。",
+    "brewTime": "抽出の目安",
+    "readingTitle": "コーヒーのおともに",
+    "readingLead": "ひと口飲みながら、ちょっと読む。",
+    "noNews": "今は記事を読み込めません。コーヒーの時間を、ゆっくりどうぞ。",
+    "introLead": "お湯の量も、注ぐタイミングも。\n画面と音声に、まかせましょう。",
+    "settingsSaved": "変更は自動で保存されます。",
+    "scaleIsReady": "スケールは0gに",
+    "audioFallback": "音声を再生できません。画面の合図に合わせてください。",
+    "afterLastPour": "注ぎ終えたら"
   }
 }

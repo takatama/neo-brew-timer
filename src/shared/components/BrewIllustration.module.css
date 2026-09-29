@@ -1,0 +1,40 @@
+.scene {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.animated .steam {
+  animation: breathe 4s ease-in-out infinite;
+  transform-origin: center;
+}
+.animated .drops {
+  animation: drip 1.8s ease-in-out infinite;
+}
+@keyframes breathe {
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: translateY(2px);
+  }
+  50% {
+    opacity: 0.9;
+    transform: translateY(-3px);
+  }
+}
+@keyframes drip {
+  0%,
+  100% {
+    opacity: 0.2;
+    transform: translateY(-2px);
+  }
+  55% {
+    opacity: 0.9;
+    transform: translateY(3px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .animated .steam,
+  .animated .drops {
+    animation: none;
+  }
+}

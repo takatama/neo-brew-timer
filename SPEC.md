@@ -1,101 +1,102 @@
-# Neo Brew Timer experience specification
+# Neo Brew Timer experience
 
 ## Purpose
 
-Support a person pouring coffee while looking between a phone and a weight-only
-scale. The screen must answer: what do I do now, what should the scale read,
-and what happens next? The app cannot measure pouring or detect drawdown.
+Make a coffee ritual feel unhurried. A person holding a kettle and glancing
+between a phone and a scale should instantly know the current target, the next
+target, and when to act. The timer cannot measure pouring or drawdown.
 
 ## Recipe
 
-Keep the established Neo Brew schedule: ten pours at a 1:15 ratio, starting at
-0:00, 0:30, then every 15 seconds through 2:30; estimated finish at 3:30.
-Water targets are cumulative. Never ask the user to zero the scale between pours.
-Round cumulative targets rather than repeating a rounded increment: individual
-pours differ by at most 1g, stay positive, and sum to the intended total.
+Ten pours at a 1:15 ratio: 0:00, 0:30, then every 15 seconds through 2:30.
+Estimated finish: 3:30. The large number is cumulative water on the scale.
+Zero the scale once after adding the coffee, before starting. Round cumulative
+targets, so a 21g dose ends at exactly 315g even though its increments alternate.
 
-## Introduction and preparation
+## Preparation
 
-- On the first root visit, redirect to the localized introduction (`/{lang}/intro`).
-  The single primary action remembers that the introduction has been seen and
-  continues to bean-amount preparation without starting a brew. On later root
-  visits, open preparation directly. Explicit localized introduction, preparation
-  and timer URLs remain available.
-- Keep everyday setup focused on beans, total water, ratio and Start. Do not assume a cup count.
-- Remember beans locally; accept whole grams from 1 through 100. This is an input
-  bound, not a claim that all drippers can hold the largest batch.
-- Keep the product introduction and video on the introduction page. Keep preparation
-  advice, countdown explanation, the full recipe, pour schedule and equipment in
-  Recipe & guide from preparation.
+Root opens preparation in the saved/browser language immediately. The
+introduction remains available at `/{language}/intro` but never gates brewing.
 
-## Brewing
+A porcelain dripper illustration and restrained editorial type introduce the
+ritual. Short phones omit that decoration and prioritize the brewing controls.
+Use whole grams from 1 through 100, remembering the last dose. These bounds do
+not imply that every dripper accommodates every batch size. Offer direct input,
+1g adjustments, and 15/20/25/30g presets. Show total water, ratio, ten pours, grind,
+95–96°C temperature, and an estimated 3:30 duration. Explain zeroing the scale
+immediately above Start.
 
-- While brewing, use a fixed hierarchy: pour count and state; current action; a large cumulative
-  scale target; time to the next pour; the next target.
-  Use short phase names, not repeated task instructions. Explain cumulative
-  weights and zeroing in the optional guide; keep that meaning in accessible labels.
-- While brewing, keep the current and next target visible and stationary. Never
-  animate numbers through intermediate weights or move a weight for a preview.
-- Offer a five-second preparation delay, on by default and remembered in Settings.
-  When disabled, start immediately without countdown audio.
-  When enabled, the initial timer view and active startup delay use a dedicated
-  preparation presentation: show Starting in and a large 5-to-1 seconds value in
-  the center instead of the first scale target; show Waiting to start as the state;
-  hide the next-pour time and progress bar while preserving their layout height;
-  and show the recipe-calculated first scale target in the Next card. Elapsed brew
-  time remains 0:00. During the active delay, offer Cancel start.
-- At the instant brewing starts, replace 1 second directly with the first cumulative
-  target, restore the current action and next-pour timer, change the state to
-  Brewing, and update the Next card to the following target. Do not insert a zero,
-  START state, or wait for decorative animation to finish.
-- Show Brewing or Paused. Offer Pause while running and Resume when paused.
-- Show elapsed / total time; keep the graphical timeline visible at every viewport height.
-- Keep controls reachable at the bottom on short screens. All essential guidance
-  must also work without sound or vibration.
-- Next-step text and its target remain readable above a stable card layout. During
-  the startup delay and the five seconds before an upcoming pour, show the local
-  hand-drawn pour illustration in that card. It previews a future action rather
-  than signaling that pouring must wait until zero. Do not show it for waiting,
-  switch-only, completion, or other non-pour steps. End it and update its target
-  immediately when the step changes.
-- Decorative animation follows timer progress but never controls timer or recipe
-  transitions. Stop and release it when hidden, paused, canceled or reset; keep it
-  out of the accessibility tree; and suppress it for reduced motion. The countdown
-  and imminent background emphasis remain available without animation.
-- Keep the existing five-second notification timing and screen wake-lock support.
-  Cancel voice and vibration when canceling startup, pausing or resetting.
-- Confirm reset and leaving an active/paused brew, including browser Back.
-  Request the browser's own warning for reload/closing; mobile browsers may omit it.
-- The last phase is labeled Final pour. Completion is a
-  time estimate, not a measurement of actual drawdown.
+Voice guidance can be switched on/off and previewed before starting. The
+five-second preparation delay is remembered, on by default. Recipe & guide
+contains preparation, the cumulative pour schedule, the original video, and
+clearly disclosed equipment affiliate links. Reading is also accessible here;
+request articles only when the person opens it.
 
-## Completion and extras
+## Brewing hierarchy
 
-- Clearly announce completion and offer Brew again.
-- Keep coffee news collapsed. Do not request it during normal brewing.
-- Music remains an optional feature, off by default for new settings.
-- External news and music are not required for offline brewing.
+1. Pour position and an explicit Ready / Starting / Brewing / Paused state.
+2. Current action and the large, stationary cumulative scale target.
+3. The amount to add this pour and what to do once the target is reached.
+4. Seconds until the next action, alongside its target.
+5. Ten compact pour markers and discreet elapsed/estimated total time.
+6. Pause/resume/cancel and a secondary Reset control.
 
-## Accessibility and resilience
+During startup, show 5→1 centrally and the first target in the next panel.
+Change directly to the first target when brewing begins. Never interpolate water
+weights or wait for decorative animations to complete. Cancel/reset returns to
+the first target in Ready state; retry starts a fresh preparation countdown.
 
-- Japanese and English include control labels and document language.
-- Targets use tabular numerals; current actions have polite announcements.
-- Use native modal dialogs for focus containment, Escape and focus restoration.
-- Segmented choices support arrow keys. Controls have at least 44px height.
-- Storage failures must not prevent choosing a bean amount or brewing.
-- Preserve the timer calculation and wake-lock race protections. Test startup
-  cancellation, unmount, pause/resume, rounding and notification timing separately
-  from the three browser journeys.
+The next panel warms from sage to clay during the final five seconds. Its thin
+track represents time left in the current interval. The ten markers represent
+pour position, not a time-proportional axis. Current and next numbers keep their
+positions while timing updates. Decorative motion never drives recipe timing.
 
-## Offline and updates
+The final pour keeps its final water target and says to let the water drain.
+Its next label is “After this pour”, and its countdown explicitly denotes an
+estimated finish. Completion repeats that remaining water should be allowed to
+drain. The app never claims to have detected actual brewing progress.
 
-Cache the application, local voice files, icons for offline use.
-Show offline readiness on preparation after the service worker reports success.
-Wait for explicit update from preparation; never activate an app update in the
-middle of brewing. Initial installation needs a successful online visit.
+Keep essential brewing guidance and controls in one viewport at 320×568 and
+larger portrait sizes. Larger text can scroll naturally. Leaving or resetting an
+active/paused brew requires confirmation; reload/closing requests the browser's
+warning. Changing language retains time. Keep audio mute and settings in the
+header. Maintain screen wake lock when supported; physical behavior needs a
+phone check. Keep the page open during brewing.
 
-## Known device constraints
+## Completion and reading
 
-Real sound, haptics, wake lock, background suspension and operating-system process
-termination need physical phone checks. An interrupted or closed browser session
-is not recovered from storage. The user must keep the brewing screen open.
+A gently steaming cup replaces the dripper, with dose/water/time as a small
+receipt and Brew again as the main action. Coffee articles appear directly
+below completion, with three links and their sources. They are also accessible
+from preparation. Articles never replace brewing guidance. Unavailable news
+gets a calm empty state; offline brewing works fully. Requests have a timeout
+and are canceled when the view is removed. Rotating ads, background playlists,
+and public debug controls have been removed.
+
+## Audio, accessibility, and resilience
+
+Preserve the twelve local Japanese/English, male/female voice WAVs and five-second
+cue timing. Activate audio from the Start gesture. Protect a real cue from a
+late silent warm-up; stop playback when muted, canceled, paused, reset, or
+unmounted. React StrictMode's effect replay must not cancel startup audio.
+Preview uses its own audio element and stops on leaving/changing language/voice.
+
+Use native dialogs for focus containment, Escape, and focus restoration. Controls
+and preset buttons have 44px targets. Language and voice segments support arrow
+keys. Avoid announcing countdown ticks to screen readers; announce action/state
+changes politely. Use tabular numbers, high contrast, and explicit wording
+alongside color. Respect reduced motion. Storage failures cannot prevent brewing.
+
+After a successful online visit, cache the app and all voice files. App updates
+wait for explicit application from preparation and never reload an active brew.
+News/video need a network. Closing the browser does not preserve an active brew.
+
+## Verification
+
+Typecheck and Vitest cover recipe calculations, settings, timer transitions,
+notification boundaries, wake-lock races, and audio activation races. Three thin
+Playwright journeys exercise completion, language continuity, pause/reset,
+leaving confirmation, startup cancellation, and a small-phone no-scroll check.
+`npm run inspect:mobile` saves actual screenshots and asserts layout for Japanese
+and English at 390×844, 320×568 and 844×390, plus reduced motion at 430×932. It
+isolates external services; screenshots of news use an honest empty state.

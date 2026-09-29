@@ -16,18 +16,17 @@ export function useTimerOrchestrator() {
   const displayLanguage = useDisplayLanguage();
   const beans = useSessionStore((state) => state.beans);
   const { debugSpeed, startDelay } = useSettingsStore();
-  const { playSound, playFirstSound, vibrate, stop } = useNotification(displayLanguage);
+  const { playSound, playFirstSound, vibrate, stop, audioBlocked } =
+    useNotification(displayLanguage);
   const wakeLock = useWakeLock();
 
-  const steps = useMemo(
-    () => computeSteps(neoBrewMethod, beans),
-    [beans],
-  );
+  const steps = useMemo(() => computeSteps(neoBrewMethod, beans), [beans]);
   const timerSteps = useMemo(
-    () => steps.map((step) => ({
-      timeSec: step.timeSec,
-      isFinish: step.actionType === "none",
-    })),
+    () =>
+      steps.map((step) => ({
+        timeSec: step.timeSec,
+        isFinish: step.actionType === "none",
+      })),
     [steps],
   );
   const totalWater = getTotalWater(beans, neoBrewMethod.waterRatio);
@@ -90,6 +89,7 @@ export function useTimerOrchestrator() {
 
   return {
     steps,
+    audioBlocked,
     beans,
     totalWater,
     currentStep,
@@ -101,7 +101,13 @@ export function useTimerOrchestrator() {
     startupSeconds: controller.startupSeconds,
     startupProgress: controller.startupProgress,
     wakeLock,
-    handlePlayPause: () => { controller.toggle(); if (controller.isRunningOrStarting) stop(); },
-    handleReset: () => { stop(); controller.reset(); },
+    handlePlayPause: () => {
+      controller.toggle();
+      if (controller.isRunningOrStarting) stop();
+    },
+    handleReset: () => {
+      stop();
+      controller.reset();
+    },
   };
 }

@@ -11,11 +11,23 @@ export default defineConfig({
     locale: "en-US",
     serviceWorkers: "block",
     trace: "retain-on-failure",
+    launchOptions: process.env.BROWSER_EXECUTABLE_PATH
+      ? { executablePath: process.env.BROWSER_EXECUTABLE_PATH }
+      : {},
     screenshot: "only-on-failure",
   },
-  projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"], viewport: { width: 390, height: 844 } } }],
+  projects: [
+    {
+      name: "chromium",
+      use: {
+        ...devices["Desktop Chrome"],
+        viewport: { width: 390, height: 844 },
+      },
+    },
+  ],
   webServer: {
-    command: "npm run build && npm run preview -- --host 127.0.0.1 --port 4179 --strictPort",
+    command:
+      "npm run build && npm run preview -- --host 127.0.0.1 --port 4179 --strictPort",
     url: "http://127.0.0.1:4179",
     reuseExistingServer: false,
     timeout: 120_000,

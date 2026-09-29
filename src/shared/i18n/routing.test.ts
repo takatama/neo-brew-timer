@@ -13,26 +13,30 @@ describe("language-prefixed routing", () => {
   });
 
   it("keeps canonical URLs and safely redirects legacy or unsupported URLs", () => {
-    expect(resolveAppRoute("/en/setup", "", "", "ja", false)).toEqual({
+    expect(resolveAppRoute("/en/setup", "", "", "ja")).toEqual({
       language: "en",
       page: "setup",
       redirectTo: null,
     });
-    expect(resolveAppRoute("/timer", "?autostart=1", "#brew", "ja", false).redirectTo)
-      .toBe("/ja/timer?autostart=1#brew");
-    expect(resolveAppRoute("/fr/setup", "", "", "en", false).redirectTo)
-      .toBe("/en/setup");
-    expect(resolveAppRoute("/not-a-page", "", "", "ja", true).redirectTo)
-      .toBe("/ja/setup");
+    expect(
+      resolveAppRoute("/timer", "?autostart=1", "#brew", "ja").redirectTo,
+    ).toBe("/ja/timer?autostart=1#brew");
+    expect(resolveAppRoute("/fr/setup", "", "", "en").redirectTo).toBe(
+      "/en/setup",
+    );
+    expect(resolveAppRoute("/not-a-page", "", "", "ja").redirectTo).toBe(
+      "/ja/setup",
+    );
   });
 
-  it("uses intro before it is seen and setup afterwards for a root URL", () => {
-    expect(resolveAppRoute("/", "", "", "ja", false).redirectTo).toBe("/ja/intro");
-    expect(resolveAppRoute("/", "", "", "ja", true).redirectTo).toBe("/ja/setup");
+  it("opens preparation immediately and keeps the optional introduction available", () => {
+    expect(resolveAppRoute("/", "", "", "ja").redirectTo).toBe("/ja/setup");
+    expect(resolveAppRoute("/ja/intro", "", "", "ja").page).toBe("intro");
   });
 
   it("changes only the language while preserving page, query, and hash", () => {
-    expect(replacePathLanguage("/ja/timer", "en", "?autostart=1", "#brew"))
-      .toBe("/en/timer?autostart=1#brew");
+    expect(
+      replacePathLanguage("/ja/timer", "en", "?autostart=1", "#brew"),
+    ).toBe("/en/timer?autostart=1#brew");
   });
 });
