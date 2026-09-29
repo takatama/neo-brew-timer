@@ -39,6 +39,7 @@
   --cup: #f7f1e8;
   --cup-shade: #ddd0bf;
   --cup-line: rgba(64, 42, 28, 0.14);
+  --cup-ink: #6a5040;
   --cup-cast: rgba(58, 37, 26, 0.3);
   --steam: rgba(118, 95, 80, 0.34);
   --tick-dim: rgba(64, 42, 28, 0.11);
@@ -90,6 +91,7 @@
     --cup: #e7dccd;
     --cup-shade: #b8a591;
     --cup-line: rgba(0, 0, 0, 0.28);
+    --cup-ink: #1a110b;
     --cup-cast: rgba(0, 0, 0, 0.6);
     --steam: rgba(246, 236, 222, 0.34);
     --tick-dim: rgba(243, 232, 217, 0.1);
