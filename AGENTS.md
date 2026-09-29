@@ -39,7 +39,13 @@ src/
 ├── guide/                   # recipe sheet, Amazon links
 ├── music/                   # optional background music (player + track data)
 ├── i18n/                    # config, routing, translations
-├── ui/                      # Dial, FinishedCup, DoseRuler, PourRail, Sheet, controls, icons
+├── finish/                  # the 3D finished cup (three.js, lazy) and its chooser
+│   ├── model.ts             # cup, handle and saucer as solids of revolution
+│   ├── materials.ts         # toon ramp, ink outline, crema, ribbon steam
+│   ├── scene.ts             # lights, camera move from the dial into the cup
+│   ├── Cup3D.tsx            # canvas wrapper (lazy chunk)
+│   └── Finish.tsx           # 3D where possible, otherwise the SVG FinishedCup
+├── ui/                      # Dial, FinishedCup (SVG), DoseRuler, PourRail, Sheet, controls, icons
 └── styles/global.css        # tokens (light + dark), font, reset
 ```
 
@@ -66,6 +72,9 @@ src/
   swaps sources, because iOS permission belongs to the element. Voice clips
   are played from in-memory blobs because the offline cache can't seek.
 - **Numbers never count.** Targets change only at step boundaries.
+- **three.js stays out of the main bundle.** Only `finish/Cup3D.tsx` imports
+  it, through the dynamic import in `Finish.tsx`. Keep the SVG `FinishedCup`
+  as a faithful fallback: same framing, same style, same starting circle.
 
 ## Conventions
 

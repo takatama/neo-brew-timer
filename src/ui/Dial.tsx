@@ -131,7 +131,7 @@ export function Dial(props: DialProps) {
 
   const running = tone === "brewing" || tone === "countdown";
   const liquidMoves = !reducedMotion && tone !== "paused";
-  const animate = visible && (running || (tone === "done" && liquidMoves));
+  const animate = visible && running;
 
   /**
    * Paint the ring and liquid for this instant. Motion advances by the real

@@ -8,7 +8,7 @@ import { useDisplayLanguage } from "../i18n/DisplayLanguage";
 import { localizedPath, resolveRoute } from "../i18n/routing";
 import { useBeans, useSettings } from "../settings/store";
 import { Dial, type DialTone } from "../ui/Dial";
-import { FinishedCup } from "../ui/FinishedCup";
+import { Finish, preloadFinish } from "../finish/Finish";
 import { PourRail } from "../ui/PourRail";
 import { MusicButton } from "../ui/MusicButton";
 import { ConfirmDialog } from "../ui/Sheet";
@@ -83,6 +83,13 @@ export function BrewPage() {
     document.title = t("app.title");
   }, [t]);
 
+  // Fetch the 3D finish in the background once the brew is under way.
+  useEffect(() => {
+    if (status !== "running") return;
+    const timer = window.setTimeout(preloadFinish, 3000);
+    return () => window.clearTimeout(timer);
+  }, [status]);
+
   const goHome = () => navigate(localizedPath(language, "prepare"));
   const exit = () => (active ? setConfirm("exit") : goHome());
 
@@ -141,22 +148,29 @@ export function BrewPage() {
       <main className={styles.stage}>
         <div className={styles.dialArea}>
           <div className={styles.dialBox}>
-            {done ? <FinishedCup /> : (
-            <Dial
-              tone={tone}
-              label={label}
-              value={value}
-              unit={showsTarget ? "g" : undefined}
-              suffix={showsTarget ? t("brew.suffix") || undefined : undefined}
-              caption={caption}
-              captionValue={captionValue}
-              segments={segments}
-              leadSegments={tone === "countdown" ? 5 : Math.min(5, segments)}
-              approaching={approaching}
-              getProgress={brew.progress}
-              getLevel={brew.level}
-              stepKey={started ? String(current.index) : "pre"}
-            />
+            {/* At the finish the cup is laid over the full dial, which then fades:
+                both start as the same circle of coffee, so the handover is seamless. */}
+            <div className={done ? styles.dialAway : undefined}>
+              <Dial
+                tone={tone}
+                label={label}
+                value={value}
+                unit={showsTarget ? "g" : undefined}
+                suffix={showsTarget ? t("brew.suffix") || undefined : undefined}
+                caption={caption}
+                captionValue={captionValue}
+                segments={segments}
+                leadSegments={tone === "countdown" ? 5 : Math.min(5, segments)}
+                approaching={approaching}
+                getProgress={brew.progress}
+                getLevel={brew.level}
+                stepKey={started ? String(current.index) : "pre"}
+              />
+            </div>
+            {done && (
+              <div className={styles.finish}>
+                <Finish />
+              </div>
             )}
             <p className="visually-hidden" role="timer" aria-live="off">
               {tone === "countdown"

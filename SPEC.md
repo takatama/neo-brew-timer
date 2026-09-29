@@ -77,11 +77,16 @@ States:
 | Brewing | Target, ticking ring | Next / Get ready | Pause |
 | Paused | "Paused", frozen liquid, muted ring | Next | Start over · Resume |
 | Draining | Let it drain · 300g (15 s after the last pour began) | Next: Done ~3:30 | Pause |
-| Done | The full dial tilts into the surface of a porcelain cup on a saucer, seen from a three-quarter angle, with soft steam rising | "Enjoy your coffee." + summary | Brew again |
+| Done | A 3D cup: the camera pulls back from the full dial of coffee to a porcelain cup on its saucer, drawn in the app's illustrated style, with steam rising | "Enjoy your coffee." + summary | Brew again |
 
 - The finish is continuous with the brew: during the drain the face is full of
-  coffee, and that same circle tilts back into the cup, so the dial you have
-  been filling is revealed to be the cup.
+  coffee. The finish starts on that same circle, seen from straight above, and
+  the camera pulls back and down until the cup and saucer are in view — the
+  dial you have been filling was the cup. It is rendered in real 3D with three
+  tones of light, a fine ink outline and the app's palette. The 3D code is
+  fetched in the background during the brew; where WebGL is missing, the code
+  isn't ready, or motion is reduced, an SVG drawing of the same cup is shown
+  instead. The choice is made once, so the visual never swaps mid-animation.
 - At the instant brewing starts, the countdown's "1" is replaced directly by the
   first target. No zero, no intermediate state.
 - Pause freezes time and cues. Resuming inside a lead-in resumes the spoken

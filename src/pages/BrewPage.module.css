@@ -198,6 +198,29 @@
   line-height: 1.5;
 }
 
+.finish {
+  position: absolute;
+  inset: 0;
+  animation: finish-in 320ms var(--ease-out) both;
+}
+
+.dialAway {
+  animation: dial-away 480ms ease-out 220ms both;
+}
+
+@keyframes finish-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes dial-away {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
 /* ---------- Rail ---------- */
 
 .railBox {
