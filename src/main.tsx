@@ -1,25 +1,31 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import i18n from "./shared/i18n/config";
-import { choosePreferredLanguage, getUrlLanguage } from "./shared/i18n/routing";
+import i18n from "./i18n/config";
+import { choosePreferredLanguage, getUrlLanguage } from "./i18n/routing";
+import { SETTINGS_KEY } from "./settings/store";
 import { App } from "./app/App";
-import "./shared/styles/tokens.css";
+import "./styles/global.css";
 
-let savedLanguage: unknown;
-try {
-  const stored = localStorage.getItem("coco-timer-settings");
-  if (stored) {
-    const parsed = JSON.parse(stored);
-    savedLanguage = parsed.state?.language;
+function savedLanguage(): unknown {
+  try {
+    const stored = localStorage.getItem(SETTINGS_KEY);
+    return stored ? JSON.parse(stored).state?.language : undefined;
+  } catch {
+    return undefined;
   }
-} catch {
-  // Use the browser language when saved settings cannot be read.
 }
 
-const initialLanguage = getUrlLanguage(window.location.pathname)
-  ?? choosePreferredLanguage(savedLanguage, navigator.language);
+const language = getUrlLanguage(window.location.pathname)
+  ?? choosePreferredLanguage(savedLanguage(), navigator.language);
+await i18n.changeLanguage(language);
 
-await i18n.changeLanguage(initialLanguage);
+// Give the display face a brief moment so the first numbers don't swap fonts.
+if (document.fonts?.load) {
+  await Promise.race([
+    document.fonts.load('500 100px "Fraunces"', "0123456789g"),
+    new Promise((resolve) => setTimeout(resolve, 350)),
+  ]).catch(() => undefined);
+}
 
 const root = document.getElementById("root");
 if (root) {

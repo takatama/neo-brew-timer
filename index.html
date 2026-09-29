@@ -4,9 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>Neo Brew Timer</title>
-    <meta name="theme-color" content="#6d4c41" />
+    <meta name="description" content="A calm, voice-guided timer for Tetsu Kasuya's Neo Brew: ten pours at 1:15, with every scale target called out for you." />
+    <meta name="theme-color" content="#f2eadf" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#15100c" media="(prefers-color-scheme: dark)" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/pwa-192x192.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   </head>
   <body>
+    <noscript>Neo Brew Timer needs JavaScript to keep time.</noscript>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
     <script type="application/ld+json">

@@ -1,0 +1,162 @@
+{
+  "app": {
+    "name": "Neo Brew",
+    "title": "Neo Brew Timer"
+  },
+  "prepare": {
+    "eyebrow": "Tetsu Kasuya’s recipe",
+    "headline": "Ten pours,<br/>no guesswork.",
+    "lead": "Set your coffee. Every pour is called for you — when, and how much.",
+    "coffee": "Coffee",
+    "doseLabel": "Coffee in grams",
+    "less": "1 gram less",
+    "more": "1 gram more",
+    "water": "Water",
+    "pours": "Pours",
+    "time": "Time",
+    "poursValue": "{{count}} × {{amount}}",
+    "ready": "Before you start",
+    "grind": "Very coarse grind",
+    "temperature": "Water at 95–96°C",
+    "tare": "Zero the scale with the grounds in",
+    "start": "Start brewing",
+    "startCountdown": "5-second countdown, then bloom",
+    "startNow": "Starts right away with the bloom",
+    "guide": "Recipe",
+    "settings": "Settings"
+  },
+  "brew": {
+    "stepOf": "{{n}} / {{total}}",
+    "stepOfLabel": "Pour {{n}} of {{total}}",
+    "label": {
+      "startingIn": "Starting in",
+      "bloom": "Bloom",
+      "pour": "Pour to",
+      "last": "Last pour to",
+      "paused": "Paused",
+      "done": "Done",
+      "drain": "Let it drain"
+    },
+    "suffix": "",
+    "caption": {
+      "next": "next in",
+      "finish": "done in"
+    },
+    "enjoy": "Enjoy",
+    "card": {
+      "first": "First",
+      "next": "Next",
+      "soon": "Get ready",
+      "then": "Then",
+      "bloom": "Bloom with <b>{{amount}}</b>g",
+      "pourTo": "Pour to <b>{{amount}}</b>g",
+      "drain": "Let it drain",
+      "finishAt": "done ~{{time}}",
+      "added": "+{{amount}} g",
+      "done": "Done",
+      "aroundTime": "~{{time}}",
+      "before": "Before"
+    },
+    "start": "Start",
+    "pause": "Pause",
+    "resume": "Resume",
+    "cancel": "Cancel",
+    "reset": "Start over",
+    "again": "Brew again",
+    "exit": "End brew",
+    "mute": "Mute pour cues",
+    "unmute": "Turn pour cues on",
+    "musicPlay": "Play music",
+    "musicPause": "Pause music",
+    "done": {
+      "heading": "Enjoy your coffee.",
+      "summary": "{{beans}} g coffee · {{water}} g water · {{time}}",
+      "note": "The finish time is an estimate. If it’s still dripping, give it a moment."
+    },
+    "confirmExit": {
+      "title": "End this brew?",
+      "body": "The timer stops and this brew can’t be resumed.",
+      "confirm": "End brew",
+      "cancel": "Keep brewing"
+    },
+    "confirmReset": {
+      "title": "Start over?",
+      "body": "The timer goes back to 0:00.",
+      "confirm": "Start over",
+      "cancel": "Cancel"
+    },
+    "announce": {
+      "bloom": "Bloom. Pour to {{amount}} grams.",
+      "pour": "Pour to {{amount}} grams.",
+      "last": "Last pour. Pour to {{amount}} grams.",
+      "soon": "Next in 5 seconds: {{amount}} grams.",
+      "soonFinish": "Done in 5 seconds.",
+      "done": "Done. Enjoy your coffee.",
+      "paused": "Paused.",
+      "countdown": "Starting in 5 seconds. Bloom with {{amount}} grams.",
+      "drain": "Let it drain."
+    },
+    "a11y": {
+      "target": "{{label}}. Scale should read {{amount}} grams in total.",
+      "countdown": "Starting in {{seconds}} seconds",
+      "next": "{{time}} until the next pour.",
+      "finish": "{{time}} until done.",
+      "progress": "Brew progress: {{elapsed}} of {{total}}"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "cue": "Pour cue",
+    "cueHint": "Counts down the last five seconds before each pour.",
+    "voice": "Voice",
+    "chime": "Chime",
+    "off": "Off",
+    "voiceType": "Voice",
+    "male": "Male",
+    "female": "Female",
+    "sample": "Play sample",
+    "vibrate": "Vibrate",
+    "countdown": "5-second countdown before starting",
+    "music": "Background music",
+    "musicHint": "Streams today’s playlist while you brew.",
+    "developer": "Developer",
+    "speed": "Run the timer 5× faster",
+    "close": "Done"
+  },
+  "guide": {
+    "title": "Neo Brew",
+    "byline": "A recipe by Tetsu Kasuya, 2016 World Brewers Cup champion",
+    "intro": "Ten pours at a 1:15 ratio with the HARIO V60 Dripper Neo: a bloom, then a small pour every 15 seconds. It’s done in about three and a half minutes.",
+    "numbersTitle": "Reading the numbers",
+    "numbers": "Every number is the total your scale should read — not the amount to add. Zero the scale once, with the grounds in, and never again during the brew.",
+    "scheduleTitle": "Pour schedule for {{beans}} g",
+    "colTime": "Time",
+    "colScale": "Scale",
+    "colAdd": "Add",
+    "bloom": "Bloom",
+    "finish": "Done",
+    "needTitle": "You’ll need",
+    "videoTitle": "Watch it brewed",
+    "videoFrameTitle": "How to brew Neo Brew",
+    "affiliate": "Links go to Amazon. As an Amazon Associate, Neo Brew Timer earns from qualifying purchases.",
+    "close": "Close",
+    "items": {
+      "dripper": "HARIO V60 Dripper Neo",
+      "filter": "V60 paper filters",
+      "scale": "Coffee scale",
+      "kettle": "Pour-over kettle",
+      "grinder": "Grinder",
+      "beans": "Light-roast coffee"
+    }
+  },
+  "pwa": {
+    "ready": "Ready to brew offline",
+    "update": "An update is ready",
+    "apply": "Update"
+  },
+  "error": {
+    "title": "Something went wrong",
+    "back": "Back to start"
+  }
+}

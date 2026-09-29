@@ -1,0 +1,57 @@
+.rail {
+  width: 100%;
+}
+
+.track {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 12px;
+}
+
+.segment {
+  position: relative;
+  flex-basis: 0;
+  height: 6px;
+  border-radius: 99px;
+  overflow: hidden;
+  background: var(--tick-dim);
+  transition: height 320ms var(--ease-out);
+}
+
+.segment[data-state="current"] {
+  height: 10px;
+}
+
+.segment[data-state="done"] .fill {
+  transform: scaleX(1) !important;
+}
+
+/* The last pour's window is mostly drawdown; show it as a gentle fade. */
+.segment[data-last] {
+  background: linear-gradient(90deg, var(--tick-dim) 25%, color-mix(in srgb, var(--tick-dim) 45%, transparent));
+}
+
+.fill {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--coffee);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+.segment[data-state="current"] .fill {
+  background: linear-gradient(90deg, var(--coffee), var(--coffee-top));
+}
+
+.times {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}

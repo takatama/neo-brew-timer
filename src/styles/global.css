@@ -1,0 +1,213 @@
+/* Only the Latin subset with every axis (opsz, wght, SOFT, WONK). */
+@font-face {
+  font-family: "Fraunces";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url("../../node_modules/@fontsource-variable/fraunces/files/fraunces-latin-full-normal.woff2") format("woff2-variations");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+  color-scheme: light;
+
+  --bg: #f2eadf;
+  --bg-sink: #e9dfd1;
+  --surface: #fbf7f1;
+  --surface-2: #f5eee4;
+  --ink: #2a1e17;
+  --ink-2: #57463a;
+  --muted: #766152;
+  --line: rgba(64, 42, 28, 0.12);
+  --line-strong: rgba(64, 42, 28, 0.22);
+
+  --accent: #c8672a;
+  --accent-soft: rgba(200, 103, 42, 0.12);
+  --accent-ink: #9a4a17;
+
+  --coffee-top: #9b6641;
+  --coffee: #6f4329;
+  --coffee-deep: #4a2a19;
+  --crema: #d9a36e;
+  --on-coffee: #fff6ea;
+
+  --primary: #3a251a;
+  --primary-ink: #fbf3e8;
+  --dial-face: #f8f1e7;
+  --thumb: #fffdf9;
+  --cup-light: #ffffff;
+  --cup: #f7f1e8;
+  --cup-shade: #ddd0bf;
+  --cup-line: rgba(64, 42, 28, 0.14);
+  --cup-ink: #6a5040;
+  --cup-cast: rgba(58, 37, 26, 0.3);
+  --steam: rgba(118, 95, 80, 0.34);
+  --tick-dim: rgba(64, 42, 28, 0.11);
+  --tick-lit: #6a4029;
+
+  --shadow-soft: 0 1px 2px rgba(58, 37, 26, 0.06), 0 8px 24px -12px rgba(58, 37, 26, 0.22);
+  --shadow-lift: 0 2px 4px rgba(58, 37, 26, 0.08), 0 18px 40px -18px rgba(58, 37, 26, 0.38);
+
+  --font-display: "Fraunces", "Hiragino Mincho ProN", "Yu Mincho", "YuMincho", "Noto Serif JP", Georgia, serif;
+  --font-ui: system-ui, -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Segoe UI", sans-serif;
+
+  --radius-xl: 28px;
+  --radius-lg: 20px;
+  --radius-md: 14px;
+  --gutter: 20px;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --bg: #15100c;
+    --bg-sink: #0f0b08;
+    --surface: #211813;
+    --surface-2: #2a1f18;
+    --ink: #f3e8d9;
+    --ink-2: #d4c2ae;
+    --muted: #a08b79;
+    --line: rgba(243, 232, 217, 0.1);
+    --line-strong: rgba(243, 232, 217, 0.2);
+
+    --accent: #f0a25c;
+    --accent-soft: rgba(240, 162, 92, 0.14);
+    --accent-ink: #f6b87d;
+
+    --coffee-top: #87522f;
+    --coffee: #633a20;
+    --coffee-deep: #3e2313;
+    --crema: #b57d4f;
+    --on-coffee: #fff6ea;
+
+    --primary: #f3e8d9;
+    --primary-ink: #231811;
+    --dial-face: #1c1510;
+    --thumb: #3b2d24;
+    --cup-light: #f6eee4;
+    --cup: #e7dccd;
+    --cup-shade: #b8a591;
+    --cup-line: rgba(0, 0, 0, 0.28);
+    --cup-ink: #1a110b;
+    --cup-cast: rgba(0, 0, 0, 0.6);
+    --steam: rgba(246, 236, 222, 0.34);
+    --tick-dim: rgba(243, 232, 217, 0.1);
+    --tick-lit: #e6cdb0;
+
+    --shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.3), 0 10px 30px -14px rgba(0, 0, 0, 0.7);
+    --shadow-lift: 0 2px 6px rgba(0, 0, 0, 0.35), 0 20px 44px -18px rgba(0, 0, 0, 0.8);
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  background: var(--bg);
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: none;
+}
+
+/* A whisper of paper grain for warmth. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.35 0 0 0 0 0.24 0 0 0 0 0.16 0 0 0 0.07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@media (prefers-color-scheme: dark) {
+  body::before {
+    opacity: 0.35;
+    mix-blend-mode: screen;
+  }
+}
+
+#root {
+  position: relative;
+  z-index: 1;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+button,
+input,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+a {
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Numerals set in the display face. It has proportional figures only, so
+   anything that ticks is laid out in fixed-width cells (see Dial). */
+.display {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-variation-settings: "SOFT" 100, "WONK" 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
