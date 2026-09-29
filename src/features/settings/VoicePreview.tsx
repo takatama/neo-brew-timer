@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDisplayLanguage } from "../../shared/i18n/DisplayLanguage";
 import { useSettingsStore } from "./store";
@@ -8,9 +8,17 @@ export function VoicePreview() {
   const { t } = useTranslation();
   const language = useDisplayLanguage();
   const voice = useSettingsStore((state) => state.voice);
+  const soundEnabled = useSettingsStore((state) => state.isSoundEnabled());
   const [playing, setPlaying] = useState(false);
   const [failed, setFailed] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const playbackId = useRef(0);
+  const stop = useCallback(() => {
+    playbackId.current += 1;
+    audioRef.current?.pause();
+    setPlaying(false);
+    setFailed(false);
+  }, []);
   useEffect(() => {
     setPlaying(false);
     setFailed(false);
@@ -21,28 +29,31 @@ export function VoicePreview() {
     const ended = () => setPlaying(false);
     audio.addEventListener("ended", ended);
     return () => {
+      playbackId.current += 1;
       audio.pause();
       audio.removeEventListener("ended", ended);
       audioRef.current = null;
     };
   }, [language, voice]);
+  useEffect(() => {
+    if (!soundEnabled) stop();
+  }, [soundEnabled, stop]);
   const toggle = () => {
     const audio = audioRef.current;
     if (!audio) return;
     if (playing) {
-      audio.pause();
-      setPlaying(false);
+      stop();
       return;
     }
+    const id = ++playbackId.current;
     setFailed(false);
+    setPlaying(true);
     audio.currentTime = 0;
-    void audio
-      .play()
-      .then(() => setPlaying(true))
-      .catch(() => {
-        setFailed(true);
-        setPlaying(false);
-      });
+    void audio.play().catch(() => {
+      if (playbackId.current !== id || audioRef.current !== audio) return;
+      setFailed(true);
+      setPlaying(false);
+    });
   };
   return (
     <div className={styles.preview}>

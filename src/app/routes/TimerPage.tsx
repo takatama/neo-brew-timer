@@ -130,7 +130,7 @@ export function TimerPage() {
       {finished && (
         <>
           <section className={styles.finishScene}>
-            <p className="eyebrow">A MOMENT WELL BREWED</p>
+            <p className="eyebrow">{t("experience.finishEyebrow")}</p>
             <BrewIllustration
               finished
               animated

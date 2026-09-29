@@ -157,6 +157,10 @@ npm run deploy
 
 Make sure your Pages project is configured to deploy the `dist/` directory.
 
+Pull request previews are deployed automatically by Cloudflare Pages. In a PR,
+open **Checks → Cloudflare Pages** to find the deployment URL and its stable
+branch alias. Preview changes are separate from the production site.
+
 ## Project Structure
 
 ```

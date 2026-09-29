@@ -5,10 +5,13 @@ guides a complete brew around the number on the coffee scale. The recipe is
 unchanged; its presentation, preparation, completion and audio activation have
 been rebuilt.
 
+[Try the latest PR preview](https://codex-neo-brew-experience.neo-brew-timer.pages.dev/)
+
 ![Preparation, brewing and completion at 390×844](screenshots/overview.png)
 
-These are actual Chromium screenshots of the implemented app, not design
-mockups. Voice is muted for the repeatable screenshot inspection; the product
+These actual Chromium screenshots record the initial redesign. The PR preview
+includes the follow-up Japanese editorial-copy localization. Voice is muted for
+the repeatable screenshot inspection; the product
 defaults to voice and vibration. Articles use the genuine empty state rather
 than invented news. Japanese glyphs use the installed Noto CJK fonts; a device's
 available serif font determines the final letterforms.
@@ -111,7 +114,7 @@ also led to fixes for warm-up races and StrictMode startup cleanup.
 Final checks:
 
 - `npm run typecheck`: passed.
-- `npm run test`: 14 files, 74 tests passed, including recipe boundaries,
+- `npm run test`: 15 files, 77 tests passed, including recipe boundaries,
   wake-lock races, storage failure and asynchronous audio activation.
 - `npm run build`: passed; PWA precaches 22 entries including all 12 voice WAVs.
 - `npm run test:e2e`: all three complete user journeys passed: dose and language
@@ -124,6 +127,10 @@ Final checks:
   is needed. No browser page errors were recorded.
 - Real WAV playback was checked separately in Chromium: preview, first cue,
   subsequent cue and mute. These were actual audio elements, not test doubles.
+- PR review fixes localize all new editorial copy and stop preview playback on
+  mute, including cancellation while playback is pending. Both Setup and
+  Settings were verified with real WAV playback, and all 63 layout views were
+  rechecked after localization.
 - A production service worker was installed, its voice cache checked, the
   browser put offline, and a complete brew run after reloading without page
   errors.

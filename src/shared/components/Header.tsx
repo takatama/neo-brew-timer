@@ -32,8 +32,10 @@ export function Header({ brewing = false }: { brewing?: boolean }) {
             <path d="m9 13 5 8m7-8-5 8" opacity=".5" />
           </svg>
           <div>
-            <span className={styles.wordmark}>neo brew</span>
-            <span className={styles.subtitle}>A LITTLE DAILY RITUAL</span>
+            <span className={styles.wordmark}>{t("app.wordmark")}</span>
+            <span className={styles.subtitle}>
+              {t("experience.brandTagline")}
+            </span>
           </div>
         </div>
         <div className={styles.actions}>

@@ -1,6 +1,7 @@
 {
   "app": {
     "title": "Neo Brew Timer",
+    "wordmark": "neo brew",
     "footer": "Neo Brew Timer"
   },
   "settings": {
@@ -149,6 +150,12 @@
     "back": "準備画面に戻る"
   },
   "experience": {
+    "brandTagline": "毎日の、小さなひととき",
+    "setupEyebrow": "ひと息、淹れましょう",
+    "doseEyebrow": "コーヒー",
+    "introEyebrow": "10回の注湯で、いつもの一杯を",
+    "finishEyebrow": "淹れたてのひととき",
+    "footerNote": "あなたのコーヒー時間に。",
     "setupHeading": "いい一杯を、\nいつもの朝に。",
     "setupLead": "10回の注湯。\n合図に合わせるだけ。",
     "dosePresets": "よく使う豆の量",

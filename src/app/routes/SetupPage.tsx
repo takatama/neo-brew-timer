@@ -54,7 +54,7 @@ export function SetupPage() {
     <main className={`content ${styles.setup}`}>
       <section className={styles.hero}>
         <div>
-          <p className="eyebrow">MAKE A MOMENT</p>
+          <p className="eyebrow">{t("experience.setupEyebrow")}</p>
           <h1>
             {t("experience.setupHeading")
               .split("\n")
@@ -72,7 +72,7 @@ export function SetupPage() {
       <section className={styles.recipeCard} aria-label={t("setup.heading")}>
         <div className={styles.doseHeader}>
           <label htmlFor="coffee-dose">{t("setup.beans")}</label>
-          <span className="eyebrow">COFFEE</span>
+          <span className="eyebrow">{t("experience.doseEyebrow")}</span>
         </div>
         <div className={styles.stepper}>
           <button
@@ -259,7 +259,7 @@ export function SetupPage() {
       <CoffeeReading collapsible />
       <footer className={styles.credit}>
         {t("experience.recipeCredit")}
-        <span>Made for your coffee moment.</span>
+        <span>{t("experience.footerNote")}</span>
       </footer>
     </main>
   );

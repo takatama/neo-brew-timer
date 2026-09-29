@@ -1,6 +1,7 @@
 {
   "app": {
     "title": "Neo Brew Timer",
+    "wordmark": "neo brew",
     "footer": "Neo Brew Timer"
   },
   "settings": {
@@ -149,6 +150,12 @@
     "back": "Back to preparation"
   },
   "experience": {
+    "brandTagline": "A LITTLE DAILY RITUAL",
+    "setupEyebrow": "MAKE A MOMENT",
+    "doseEyebrow": "COFFEE",
+    "introEyebrow": "TEN POURS. ONE LOVELY MOMENT.",
+    "finishEyebrow": "A MOMENT WELL BREWED",
+    "footerNote": "Made for your coffee moment.",
     "setupHeading": "A little ritual.\nA lovely cup.",
     "setupLead": "Ten pours.\nFollow the gentle cues.",
     "dosePresets": "Common coffee amounts",

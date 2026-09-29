@@ -14,7 +14,7 @@ export function IntroPage() {
     <main className={`content ${styles.intro}`}>
       <BrewIllustration animated className={styles.hero} />
       <div className={styles.copy}>
-        <p className="eyebrow">TEN POURS. ONE LOVELY MOMENT.</p>
+        <p className="eyebrow">{t("experience.introEyebrow")}</p>
         <h1>{t("intro.heading")}</h1>
         <p>{t("experience.introLead")}</p>
         <small>{t("experience.recipeCredit")}</small>
