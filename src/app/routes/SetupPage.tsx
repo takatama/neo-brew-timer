@@ -4,9 +4,10 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useSessionStore } from "../../features/timer/store";
 import { useSettingsStore } from "../../features/settings/store";
 import type { BgmDayOfWeek } from "../../features/settings/types";
-import { neoBrewMethod, computeSteps, getTotalWater } from "../../features/recipe";
+import { neoBrewMethod, computeSteps, formatTime, getTotalWater } from "../../features/recipe";
 import { CoffeeNews } from "../../features/timer/components/CoffeeNews";
 import { useCoffeeNews } from "../../features/timer/hooks/useCoffeeNews";
+import { readBrewNote } from "../../features/timer/brewNote";
 import styles from "./SetupPage.module.css";
 import { getEquipmentItems, type SupportedLanguage } from "../../shared/affiliate/amazon";
 import { useDisplayLanguage } from "../../shared/i18n/DisplayLanguage";
@@ -21,6 +22,7 @@ export function SetupPage() {
   const { beans, setBeans } = useSessionStore();
   const { debugEnabled, startDelay, debugBgmDayOfWeek, setDebugBgmDayOfWeek } = useSettingsStore();
   const { news, loading: newsLoading } = useCoffeeNews(displayLanguage, debugEnabled);
+  const [doseInput, setDoseInput] = useState<string | null>(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
 
   useEffect(() => {
@@ -31,6 +33,7 @@ export function SetupPage() {
     }
   }, [searchParams, setBeans]);
 
+  const [previous] = useState(readBrewNote);
   const lang: SupportedLanguage = displayLanguage;
   const totalWater = getTotalWater(beans, neoBrewMethod.waterRatio);
   const pourSteps = computeSteps(neoBrewMethod, beans).filter(
@@ -44,40 +47,55 @@ export function SetupPage() {
 
   return (
     <main className="content">
-      <header className={styles.heading}><h1>{t("setup.heading")}</h1></header>
-      <section className="card">
-        <div className={styles.stepperRow}>
-          <span className={styles.beansLabel}>{t("setup.beans")}</span>
-          <div className={styles.stepperControls}>
-            <button
-              className={styles.btnIcon}
-              onClick={() => setBeans(Math.max(1, beans - 1))}
-              aria-label={t("setup.decrease")}
-              disabled={beans <= 1}
-            >
-              −
-            </button>
-            <div className={styles.beansValue}>{beans}g</div>
-            <button
-              className={styles.btnIcon}
-              onClick={() => setBeans(beans + 1)}
-              aria-label={t("setup.increase")}
-              disabled={beans >= 100}
-            >
-              ＋
-            </button>
+      <section className={styles.recipeCard}>
+        <header className={styles.heading}>
+          <h1>{t("setup.heading")}</h1>
+          <p>{t("setup.overview")} · {t("setup.prepHint")}</p>
+        </header>
+        <div className={styles.recipeBody}>
+          <div className={styles.stepperRow}>
+            <label className={styles.beansLabel} htmlFor="bean-dose">{t("setup.beans")}</label>
+            <div className={styles.stepperControls}>
+              <button className={styles.btnIcon} onClick={() => setBeans(beans - 1)}
+                aria-label={t("setup.decrease")} disabled={beans <= 1}>−</button>
+              <div className={styles.beansValue}>
+                <input id="bean-dose" type="text" inputMode="numeric" pattern="[0-9]*"
+                  value={doseInput ?? beans} maxLength={3}
+                  onFocus={event => event.currentTarget.select()}
+                  onChange={event => {
+                    const value = event.target.value;
+                    if (!/^\d{0,3}$/.test(value)) return;
+                    setDoseInput(value);
+                    const dose = Number(value);
+                    if (dose >= 1 && dose <= 100) setBeans(dose);
+                  }}
+                  onBlur={() => {
+                    if (doseInput) setBeans(Number(doseInput));
+                    setDoseInput(null);
+                  }}
+                  onKeyDown={event => { if (event.key === "Enter") event.currentTarget.blur(); }}
+                /><small>g</small>
+              </div>
+              <button className={styles.btnIcon} onClick={() => setBeans(beans + 1)}
+                aria-label={t("setup.increase")} disabled={beans >= 100}>＋</button>
+            </div>
           </div>
-        </div>
-        <div className={styles.calculatedWater}>
-          <span className={styles.calculatedWaterLabel}>{t("setup.water")}</span>
-          <span className={styles.calculatedWaterValue}>{totalWater}g</span>
-          <span className={styles.waterRatio}>1:{neoBrewMethod.waterRatio}</span>
+          <div className={styles.metrics} aria-live="polite">
+            <div><span>{t("setup.water")}</span><strong>{totalWater}<small>g</small></strong></div>
+            <div><span>{t("setup.firstPour")}</span><strong>{pourSteps[0].increment}<small>g</small></strong></div>
+            <div><span>{t("setup.ratio")}</span><strong>1:{neoBrewMethod.waterRatio}</strong></div>
+          </div>
+          <button className={styles.btnPrimary} onClick={handleStart}>{t("setup.start")}</button>
         </div>
       </section>
-
-      <button className={styles.btnPrimary} onClick={handleStart}>
-        {t("setup.start")}
-      </button>
+      {previous && <section className={`card ${styles.noteCard}`}>
+        <h2>{t("note.previous")}</h2>
+        <span>{new Intl.DateTimeFormat(displayLanguage, { month: "short", day: "numeric" }).format(previous.savedAt)} · {previous.beans}g</span>
+        <p>{previous.text}</p>
+        {previous.beans !== beans && <button className="choice" onClick={() => setBeans(previous.beans)}>
+          {t("note.useDose", { beans: previous.beans })}
+        </button>}
+      </section>}
 
       <details className="card" open={detailsOpen} onToggle={(e) => setDetailsOpen((e.target as HTMLDetailsElement).open)}>
         <summary className={styles.detailsSummary}>
@@ -96,23 +114,15 @@ export function SetupPage() {
           <section aria-labelledby="pour-guide-heading">
             <h2 id="pour-guide-heading" className={styles.detailsSubTitle}>{t("setup.steps")}</h2>
             <p className={styles.detailsText}>{t("setup.recipeSummary")}</p>
-            <ol className={styles.stepList}>
-              {pourSteps.map((step, idx) => (
-                <li key={step.timeSec} className={styles.stepItem}>
-                  <span className={styles.stepNumber}>STEP {idx + 1}</span>
-                  <span className={styles.stepInstruction}>
-                    {t(step.actionType === "bloom" ? "setup.stepBloom" : "setup.stepPourTo", {
-                      amount: step.cumulative,
-                    })}
-                  </span>
-                  <span className={styles.stepDuration}>
-                    {t("setup.stepDuration", {
-                      seconds: neoBrewMethod.steps[idx + 1].timeSec - step.timeSec,
-                    })}
-                  </span>
-                </li>
-              ))}
-            </ol>
+            <table className={styles.schedule}>
+              <thead><tr>
+                {["setup.startTime", "setup.addWater", "setup.scale"].map(key => <th scope="col" key={key}>{t(key)}</th>)}
+              </tr></thead>
+              <tbody>{pourSteps.map(step => <tr key={step.timeSec}>
+                <th scope="row">{formatTime(step.timeSec)}</th>
+                <td>+{step.increment}g</td><td>{step.cumulative}g</td>
+              </tr>)}</tbody>
+            </table>
           </section>
           <RecipeVideo className={styles.detailsVideo} />
           <section aria-labelledby="label-equipment">

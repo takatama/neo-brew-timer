@@ -13,7 +13,7 @@ export function NextStepPreview({ step, animationMode = "none", animationProgres
   const { t } = useTranslation();
   return (
     <div className={`${styles.preview} ${expanded ? styles.expanded : ""}`} data-expanded={expanded || undefined}>
-      <span className={styles.label}>{t("timer.nextStep")}</span>
+      <span className={styles.label}>{t(expanded ? "timer.firstStep" : "timer.nextStep")}</span>
       <span className={styles.action}>
         {step.actionType === "none"
           ? t("timer.finish")

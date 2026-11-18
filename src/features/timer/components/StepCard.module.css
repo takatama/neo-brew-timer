@@ -16,3 +16,5 @@
   .overall { margin: 10px 0 0; }
 }
 @media (prefers-reduced-motion: reduce) { .countdownContent { transition: none; } }
+
+.increment { margin: 6px 0 0; color: var(--md-text-muted); font-size: .9rem; font-variant-numeric: tabular-nums; }

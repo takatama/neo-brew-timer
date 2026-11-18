@@ -74,7 +74,12 @@
     "decrease": "Decrease beans by 1g",
     "scaleHint": "The weight shown is total water added. Zero your scale only before the first pour.",
     "startImmediately": "Starts as soon as you tap",
-    "recipeSummary": "Pour 15 times the coffee amount in water, divided across ten pours. Each target is the total water shown on your scale."
+    "recipeSummary": "Pour 15 times the coffee amount in water, divided across ten pours. Each target is the total water shown on your scale.",
+    "firstPour": "First pour",
+    "ratio": "Brew ratio",
+    "startTime": "Start time",
+    "addWater": "Add",
+    "scale": "Scale target"
   },
   "timer": {
     "currentStep": "Current Step",
@@ -137,7 +142,8 @@
     "leaveTitle": "End this brew?",
     "targetAmount": "{{amount}}g",
     "targetSuffix": "",
-    "targetAccessible": "Cumulative water target {{amount}}g"
+    "targetAccessible": "Cumulative water target {{amount}}g",
+    "increment": "Add {{amount}}g this pour"
   },
   "stepLabels": [
     "Bloom",
@@ -191,5 +197,15 @@
   "error": {
     "title": "Unable to display this screen",
     "back": "Back to preparation"
+  },
+  "note": {
+    "previous": "Last brew note",
+    "useDose": "Use {{beans}}g",
+    "title": "Record this brew",
+    "label": "Taste, beans or grind",
+    "placeholder": "Sweet finish. Keep this grind next time.",
+    "save": "Save as last brew note",
+    "saved": "Saved on this device.",
+    "error": "Could not save on this device."
   }
 }

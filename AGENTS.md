@@ -9,7 +9,7 @@ See `SPEC.md` for full UI/UX specification.
 
 - **Language:** TypeScript (strict mode)
 - **UI:** React 19, React Router (SPA)
-- **State:** Zustand (settings persisted to localStorage, session state in-memory)
+- **State:** Zustand (settings persisted to localStorage, bean dose and intro flag stored locally)
 - **i18n:** react-i18next with JSON translation files (`src/shared/i18n/{ja,en}.json`)
 - **Styling:** CSS Modules (`.module.css`) + global design tokens (`tokens.css`)
 - **Build:** Vite 8, `public/` as publicDir, vite-plugin-pwa for offline support
@@ -33,7 +33,7 @@ src/
 │   │   ├── SettingsModal.tsx / .module.css
 │   │   └── store.ts / types.ts
 │   └── timer/
-│       ├── store.ts               # Session store (beans, flavor, introSeen)
+│       ├── store.ts               # Session store (beans, introSeen)
 │       ├── hooks/
 │       │   ├── useTimer.ts        # Shared timer adapter
 │       │   ├── useTimerOrchestrator.ts  # Recipe, notifications, URL, and controller integration
@@ -86,7 +86,7 @@ public/                            # Vite publicDir — served as-is at /
 | Layer    | Tool                 | Persisted    | Examples                                           |
 | -------- | -------------------- | ------------ | -------------------------------------------------- |
 | Settings | Zustand + persist    | localStorage | language, notifyMode, voice, startDelay, debugSpeed |
-| Session  | Zustand (no persist) | No           | beans, flavor, introSeen                           |
+| Session  | Zustand              | localStorage | beans, introSeen                                   |
 | Derived  | useMemo / computed   | No           | computedSteps, currentStepIndex, waterAmounts      |
 
 ### i18n

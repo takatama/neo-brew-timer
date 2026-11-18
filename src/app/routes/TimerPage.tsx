@@ -111,6 +111,7 @@ export function TimerPage() {
 
       {currentStep?.actionType === "none" && (
         <FinishCard
+          beans={beans}
           news={news}
           newsLoading={newsLoading}
         />

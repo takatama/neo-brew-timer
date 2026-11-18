@@ -71,7 +71,7 @@ pours differ by at most 1g, stay positive, and sum to the intended total.
 
 ## Completion and extras
 
-- Clearly announce completion and offer Brew again.
+- Clearly announce completion and offer Brew again. An optional tasting note saves the dose and text on this device. Show the last saved note on preparation and allow restoring its dose.
 - Keep coffee news collapsed. Do not request it during normal brewing.
 - Music remains an optional feature, off by default for new settings.
 - External news and music are not required for offline brewing.
