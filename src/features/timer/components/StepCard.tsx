@@ -37,6 +37,7 @@ export function StepCard({ step, stepIndex, totalSteps, remainingSeconds,
           : <div className={styles.target} aria-label={t("timer.targetAccessible", { amount: step.cumulative })}>
               {step.cumulative}<span>g</span>{t("timer.targetSuffix") && <span className={styles.targetSuffix}>{t("timer.targetSuffix")}</span>}
             </div>}
+        {!starting && <p className={styles.increment}>{t("timer.increment", { amount: step.increment })}</p>}
       </div>}
       countdown={<div className={`${styles.countdownContent} ${starting ? styles.countdownHidden : ""}`} aria-hidden={starting}>
         <span className={styles.targetLabel}>{t(lastPour ? "timer.untilFinish" : "timer.untilNext")}</span>

@@ -12,3 +12,8 @@
   .expanded .action { font-size: clamp(1.35rem, 7vw, 1.75rem); }
 }
 @media (max-height: 700px) { .expanded { min-height: 126px; } .expanded .label, .expanded .action { transform: translateY(24px); } .expanded .artwork, .expanded .artwork > * { height: 126px; } }
+@media (max-height: 610px) {
+  .preview, .artwork, .artwork > * { height: 56px; min-height: 56px; }
+  .expanded, .expanded .artwork, .expanded .artwork > * { height: 88px; min-height: 88px; }
+  .expanded .label, .expanded .action { transform: none; }
+}

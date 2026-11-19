@@ -96,3 +96,22 @@
 .controls { position: sticky; bottom: 0; z-index: 5; background: #f8f5ef; padding-block: 8px max(8px, env(safe-area-inset-bottom)); }
 .controls > button:only-child { grid-column: 1 / -1; }
 @media (max-height: 700px) { .summary { margin-block: -10px; } }
+
+@media (max-height: 700px) {
+  .brewScreen { gap: 6px; padding: 8px 12px; }
+  .brewScreen .summary { margin: 0; }
+  .controls { position: static; padding-top: 0; }
+}
+@media (orientation: landscape) and (max-height: 500px) {
+  .brewScreen { padding-block: 2px; }
+  .summary { min-height: 34px; }
+  .controls .btn { min-height: 44px; }
+}
+@media (max-height: 610px) {
+  main.brewScreen { gap: 4px; padding: 2px 10px 6px; }
+  .brewScreen .controls { padding-bottom: max(4px, env(safe-area-inset-bottom)); }
+}
+@media (max-height: 610px) {
+  .controls { grid-template-columns: minmax(0, 1fr) auto; }
+  .controls .btn { white-space: nowrap; min-height: 44px; padding: 8px 12px; }
+}

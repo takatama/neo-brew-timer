@@ -33,6 +33,9 @@ describe("intro page", () => {
     expect(screen.getByRole("heading", { level: 2, name: "用意するもの" })).toBeVisible();
     expect(screen.getByRole("button", { name: "豆の量を設定する" })).toBeVisible();
 
+    fireEvent.click(screen.getByRole("button", { name: "次の一湯を見る" }));
+    expect(screen.getByText("お湯の合計目標 63gまで")).toBeVisible();
+    expect(useSessionStore.getState().beans).toBe(24);
     fireEvent.click(screen.getByRole("button", { name: "豆の量を設定する" }));
 
     expect(screen.getByText("setup destination")).toBeVisible();

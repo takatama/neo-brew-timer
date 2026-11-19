@@ -42,7 +42,11 @@
     "continue": "豆の量を設定する",
     "videoHeading": "淹れ方を動画で確認",
     "videoTitle": "Neo Brewの淹れ方",
-    "imageAlt": "コーヒーの入ったサーバーとカップ"
+    "imageAlt": "コーヒーの入ったサーバーとカップ",
+    "purpose": "スケールを最初に一度だけゼロに。注ぐたびに、次に何gで止めるかをタイマーが知らせます。",
+    "sample": "豆21gで注ぎ方を試す",
+    "sampleNext": "次の一湯を見る",
+    "sampleReset": "最初の一湯に戻る"
   },
   "setup": {
     "beans": "豆の量",
@@ -74,7 +78,12 @@
     "decrease": "豆を1g減らす",
     "scaleHint": "表示のgは、注いだお湯の合計です。スケールを0gに合わせるのは最初だけです。",
     "startImmediately": "押すとすぐにスタート",
-    "recipeSummary": "豆の量の15倍のお湯を、10回に分けて注ぎます。表示される数字は、スケール上のお湯の合計です。"
+    "recipeSummary": "豆の量の15倍のお湯を、10回に分けて注ぎます。表示される数字は、スケール上のお湯の合計です。",
+    "firstPour": "最初の一湯",
+    "ratio": "豆：お湯",
+    "startTime": "開始時刻",
+    "addWater": "注ぐ量",
+    "scale": "スケールの表示"
   },
   "timer": {
     "currentStep": "今のステップ",
@@ -137,7 +146,8 @@
     "leaveTitle": "抽出を終了しますか？",
     "targetAmount": "{{amount}}g",
     "targetSuffix": "まで",
-    "targetAccessible": "お湯の合計目標 {{amount}}gまで"
+    "targetAccessible": "お湯の合計目標 {{amount}}gまで",
+    "increment": "今回注ぐ量　+{{amount}}g"
   },
   "stepLabels": [
     "蒸らし",
@@ -191,5 +201,15 @@
   "error": {
     "title": "画面を表示できませんでした",
     "back": "準備画面に戻る"
+  },
+  "note": {
+    "previous": "前回の抽出メモ",
+    "useDose": "豆を{{beans}}gに戻す",
+    "title": "今回の一杯を記録",
+    "label": "味・豆・挽き目のメモ",
+    "placeholder": "甘みがよく出た。次も同じ挽き目で。",
+    "save": "前回のメモとして保存",
+    "saved": "保存しました。次の「抽出の準備」で見返せます。",
+    "error": "保存できませんでした。"
   }
 }

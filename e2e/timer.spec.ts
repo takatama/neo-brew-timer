@@ -29,6 +29,8 @@ const remaining = (page: Page) => page.getByRole("timer");
 
 test("setup carries the chosen amount into a brew that reaches completion", async ({ page }) => {
   await page.getByRole("button", { name: "Increase beans by 1g", exact: true }).click();
+  await page.getByText("Recipe & guide", { exact: true }).click();
+  await expect(page.getByRole("row", { name: "0:30 +31g 63g" })).toBeVisible();
   await page.getByRole("button", { name: "Brew coffee", exact: true }).click();
   await expect(page).toHaveURL(/\/en\/timer$/);
   await expect(page.getByText("Beans 21g", { exact: true })).toBeVisible();
@@ -43,6 +45,19 @@ test("setup carries the chosen amount into a brew that reaches completion", asyn
   await expect(page.getByRole("heading", { name: "Bloom" })).toBeVisible();
   await expect(page.getByLabel("Cumulative water target 32g")).toBeVisible();
   await expect(page.getByText("63g", { exact: true })).toBeVisible();
+  for (const viewport of [{ width: 320, height: 568 }, { width: 844, height: 390 }]) {
+    await page.setViewportSize(viewport);
+    const timeline = page.getByRole("img", { name: "Timeline", exact: true });
+    const pause = page.getByRole("button", { name: "Pause", exact: true });
+    await expect(timeline).toBeInViewport({ ratio: 1 });
+    await expect(pause).toBeInViewport({ ratio: 1 });
+    await expect.poll(async () => {
+      const track = await timeline.boundingBox();
+      const control = await pause.boundingBox();
+      return track && control && track.y + track.height <= control.y;
+    }).toBe(true);
+  }
+  await page.setViewportSize({ width: 390, height: 844 });
   const timeBeforeLanguageChange = (await remaining(page).innerText()).match(/\d+:\d{2}/)?.[0];
   await page.getByRole("button", { name: "Settings", exact: true }).click();
   await page.getByRole("radio", { name: "日本語", exact: true }).click();
@@ -57,8 +72,18 @@ test("setup carries the chosen amount into a brew that reaches completion", asyn
   await page.clock.fastForward("04:00");
   await expect(page.getByText("Enjoy your coffee", { exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: "Pause", exact: true })).toHaveCount(0);
+  await page.getByText("Record this brew").click();
+  await page.getByLabel("Taste, beans or grind").fill("Sweet at 24 clicks");
+  await page.getByRole("button", { name: "Save as last brew note" }).click();
+  await expect(page.getByText("Saved. Find this note on the setup screen.")).toBeVisible();
   await page.getByRole("button", { name: "Brew again", exact: true }).click();
   await expect(page.getByRole("button", { name: "Brew coffee", exact: true })).toBeVisible();
+  await page.reload();
+  await expect(page.getByText("Sweet at 24 clicks")).toBeVisible();
+  await page.getByRole("textbox").fill("35");
+  await page.getByRole("textbox").press("Enter");
+  await page.getByRole("button", { name: "Use 21g" }).click();
+  await expect(page.getByRole("textbox")).toHaveValue("21");
 });
 
 test("pause holds time, resume advances it, and confirmed reset returns to idle", async ({ page }) => {
@@ -83,9 +108,11 @@ test("pause holds time, resume advances it, and confirmed reset returns to idle"
   await page.getByRole("dialog").getByRole("button", { name: "Reset", exact: true }).click();
   await expect(page.getByRole("dialog")).toHaveCount(0);
   await expect(page.getByRole("button", { name: "Brew coffee", exact: true })).toBeVisible();
-  await expect(remaining(page)).toHaveText("0:30 left");
+  await expect(page.getByLabel("Starting in 5s")).toBeVisible();
+  await expect(remaining(page)).toHaveCount(0);
   await page.clock.runFor(6_000);
-  await expect(remaining(page)).toHaveText("0:30 left");
+  await expect(page.getByLabel("Starting in 5s")).toBeVisible();
+  await expect(remaining(page)).toHaveCount(0);
 });
 
 test("canceling the startup countdown prevents a delayed start and allows retry", async ({ page }) => {
@@ -96,13 +123,14 @@ test("canceling the startup countdown prevents a delayed start and allows retry"
   await expect(page.getByRole("heading", { name: "Starting in" })).toBeVisible();
   await expect(page.getByLabel("Starting in 5s")).toBeVisible();
   await expect(page.getByRole("img", { name: "Timeline", exact: true })).toBeVisible();
-  const idle = await remaining(page).innerText();
+  await expect(remaining(page)).toHaveCount(0);
   await page.clock.runFor(8_000);
-  await expect(remaining(page)).toHaveText(idle);
+  await expect(page.getByLabel("Starting in 5s")).toBeVisible();
+  await expect(remaining(page)).toHaveCount(0);
   await expect(page.getByRole("button", { name: "Brew coffee", exact: true })).toBeVisible();
 
   await page.getByRole("button", { name: "Brew coffee", exact: true }).click();
   await page.clock.runFor(8_000);
   await expect(page.getByRole("button", { name: "Pause", exact: true })).toBeVisible();
-  await expect(remaining(page)).not.toHaveText(idle);
+  await expect(remaining(page)).toHaveText("0:27 left");
 });

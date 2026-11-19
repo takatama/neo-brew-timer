@@ -69,7 +69,7 @@ export function TimerPage() {
   };
 
   return (
-    <main className="content">
+    <main className={`content ${styles.brewScreen}`}>
       <section className={styles.summary}>
         <div className={styles.chipRow}>
           <span className={styles.chip}>
@@ -111,6 +111,7 @@ export function TimerPage() {
 
       {currentStep?.actionType === "none" && (
         <FinishCard
+          beans={beans}
           news={news}
           newsLoading={newsLoading}
         />
