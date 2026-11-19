@@ -18,3 +18,11 @@
 @media (prefers-reduced-motion: reduce) { .countdownContent { transition: none; } }
 
 .increment { margin: 6px 0 0; color: var(--md-text-muted); font-size: .9rem; font-variant-numeric: tabular-nums; }
+
+@media (max-height: 610px) {
+  .countdownContent { display: grid; grid-template-columns: 1fr auto; align-items: baseline; }
+  .countdownContent > :last-child { grid-column: 1 / -1; }
+  .stepVerb { margin: 0; }
+  .overall { margin: 2px 0 0; }
+  .increment { margin: 0; }
+}

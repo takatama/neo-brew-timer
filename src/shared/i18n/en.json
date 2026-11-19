@@ -42,7 +42,11 @@
     "continue": "Set coffee amount",
     "videoHeading": "Watch how to brew",
     "videoTitle": "How to brew Neo Brew",
-    "imageAlt": "A coffee server and cup filled with coffee"
+    "imageAlt": "A coffee server and cup filled with coffee",
+    "purpose": "Zero your scale once. With each pour, the timer shows the weight to stop at.",
+    "sample": "Try the pours with 21g of coffee",
+    "sampleNext": "See the next pour",
+    "sampleReset": "Back to the first pour"
   },
   "setup": {
     "beans": "Beans",
@@ -205,7 +209,7 @@
     "label": "Taste, beans or grind",
     "placeholder": "Sweet finish. Keep this grind next time.",
     "save": "Save as last brew note",
-    "saved": "Saved on this device.",
+    "saved": "Saved. Find this note on the setup screen.",
     "error": "Could not save on this device."
   }
 }

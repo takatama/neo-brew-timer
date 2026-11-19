@@ -76,7 +76,7 @@ function AppShell({ page }: { page: AppPage }) {
   };
 
   return (
-    <div className={`${styles.app} ${shouldShowMiniPlayer && !isTimerPage ? styles.withMiniPlayer : ""}`}>
+    <div className={`${styles.app} ${isTimerPage ? styles.brewing : ""} ${shouldShowMiniPlayer && !isTimerPage ? styles.withMiniPlayer : ""}`}>
       <Header />
       <OfflineNotice visible={isSetupPage} />
       <ErrorBoundary>

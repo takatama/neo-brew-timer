@@ -45,6 +45,19 @@ test("setup carries the chosen amount into a brew that reaches completion", asyn
   await expect(page.getByRole("heading", { name: "Bloom" })).toBeVisible();
   await expect(page.getByLabel("Cumulative water target 32g")).toBeVisible();
   await expect(page.getByText("63g", { exact: true })).toBeVisible();
+  for (const viewport of [{ width: 320, height: 568 }, { width: 844, height: 390 }]) {
+    await page.setViewportSize(viewport);
+    const timeline = page.getByRole("img", { name: "Timeline", exact: true });
+    const pause = page.getByRole("button", { name: "Pause", exact: true });
+    await expect(timeline).toBeInViewport({ ratio: 1 });
+    await expect(pause).toBeInViewport({ ratio: 1 });
+    await expect.poll(async () => {
+      const track = await timeline.boundingBox();
+      const control = await pause.boundingBox();
+      return track && control && track.y + track.height <= control.y;
+    }).toBe(true);
+  }
+  await page.setViewportSize({ width: 390, height: 844 });
   const timeBeforeLanguageChange = (await remaining(page).innerText()).match(/\d+:\d{2}/)?.[0];
   await page.getByRole("button", { name: "Settings", exact: true }).click();
   await page.getByRole("radio", { name: "日本語", exact: true }).click();
@@ -62,7 +75,7 @@ test("setup carries the chosen amount into a brew that reaches completion", asyn
   await page.getByText("Record this brew").click();
   await page.getByLabel("Taste, beans or grind").fill("Sweet at 24 clicks");
   await page.getByRole("button", { name: "Save as last brew note" }).click();
-  await expect(page.getByText("Saved on this device.")).toBeVisible();
+  await expect(page.getByText("Saved. Find this note on the setup screen.")).toBeVisible();
   await page.getByRole("button", { name: "Brew again", exact: true }).click();
   await expect(page.getByRole("button", { name: "Brew coffee", exact: true })).toBeVisible();
   await page.reload();

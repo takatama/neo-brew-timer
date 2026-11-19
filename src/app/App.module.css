@@ -9,3 +9,6 @@
 .withMiniPlayer :global(.content) {
   padding-bottom: calc(100px + env(safe-area-inset-bottom));
 }
+@media (orientation: landscape) and (max-height: 500px) {
+  .brewing { max-width: 880px; }
+}

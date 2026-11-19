@@ -4,13 +4,15 @@
 
 Neo Brew Timer is a React SPA, step-driven brewing timer designed for hands-busy coffee brewing. It guides 10 pours at a 1:15 coffee-to-water ratio, with audio/vibration support so you do not need to keep staring at the screen.
 
+[作品を見る・設計と検証を読む（日本語）](docs/coffee-at-the-scale.md)
+
 ## Pages
 
-- `/{ja|en}/intro` – optional recipe introduction (also available from setup details)
+- `/{ja|en}/intro` – first-visit introduction and interactive pour preview
 - `/{ja|en}/setup` – beans, total water and start; recipe, instructions and equipment are in the optional Recipe & guide disclosure
 - `/{ja|en}/timer` – main timer UI
 
-`/` opens Setup directly in the saved or browser language. Unprefixed links redirect to the matching language URL. Changing language preserves an active brew. The chosen bean amount is remembered on this device.
+`/` opens the introduction on the first visit and Setup after the user continues from the introduction. Unprefixed links redirect to the matching language URL. Changing language preserves an active brew. The chosen bean amount is remembered on this device.
 A five-second preparation delay is on by default and can be disabled in Settings.
 With the delay off, brewing starts immediately without countdown audio. During
 brewing, large cumulative scale targets stay visible alongside the next pour.
